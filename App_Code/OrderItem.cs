@@ -6,13 +6,13 @@ namespace BusinessLayer
     
     public class OrderItem
     {
-        public int orderId { get; set; }
+        public int OrderId { get; set; }
         
-        public int capId { get; set; }
+        public int CapId { get; set; }
         
-        public int colourId { get; set; }
+        public int ColourId { get; set; }
 
-        public int quantity { get; set; }
+        public int Quantity { get; set; }
 
         public virtual Cap Cap { get; set; }
 

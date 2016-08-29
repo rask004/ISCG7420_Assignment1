@@ -66,7 +66,7 @@ public partial class AdminSupplier : System.Web.UI.Page
             int itemId = Convert.ToInt32(e.CommandArgument);
             string name = controller.GetSupplierName(itemId);
             string contact = controller.GetSupplierContactNumber(itemId);
-            string email = controller.GetSupplierEmailAddress(itemId);
+            string email = controller.GetSupplierEmail(itemId);
             if (name == null)
             {
                 lblSupplierId.Text = String.Empty;

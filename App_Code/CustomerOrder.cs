@@ -11,9 +11,9 @@ namespace BusinessLayer
             
         }
 
-        public int userId { get; set; }
+        public int UserId { get; set; }
 
-        public string status { get; set; }
+        public string Status { get; set; }
 
         public virtual Customer Customer { get; set; }
     }

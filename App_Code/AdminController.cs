@@ -24,13 +24,6 @@ namespace BusinessLayer
             _dm = DataManager.Instance;
         }
 
-
-
-
-
-
-        #region NewMethods
-
         /// <summary>
         ///     
         /// </summary>
@@ -325,9 +318,9 @@ namespace BusinessLayer
         ///     Get a list of categories
         /// </summary>
         /// <returns></returns>
-        public List<BusinessLayer.Category> GetCategories()
+        public List<Category> GetCategories()
         {
-            List<BusinessLayer.Category> items = _dm.GetAllCategories();
+            List<Category> items = _dm.GetAllCategories();
             return items;
         }
 
@@ -335,9 +328,9 @@ namespace BusinessLayer
         ///     Get a list of colours
         /// </summary>
         /// <returns>List of all colours</returns>
-        public List<BusinessLayer.Colour> GetColours()
+        public List<Colour> GetColours()
         {
-            List<BusinessLayer.Colour> items = _dm.GetAllColours();
+            List<Colour> items = _dm.GetAllColours();
             return items;
         }
 
@@ -412,10 +405,67 @@ namespace BusinessLayer
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<Supplier> GetSuppliers()
+        {
+            return _dm.GetAllSuppliers();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetSupplierName(int id)
+        {
+            Supplier item = _dm.GetSingleSupplierById(id);
+            return item.Name;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetSupplierContactNumber(int id)
+        {
+            Supplier item = _dm.GetSingleSupplierById(id);
+            return item.ContactNumber;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetSupplierEmail(int id)
+        {
+            Supplier item = _dm.GetSingleSupplierById(id);
+            return item.Email;
+        }
 
 
-        #endregion NewMethods
-
+        /// <summary>
+        ///     Update the database with the colour represented by this id and name.
+        /// </summary>
+        /// <param name="id">id of the Colour. May be for a new category.</param>
+        /// <param name="name">name of the colour.</param>
+        /// <param name="contactNumber"></param>
+        /// <param name="email"></param>
+        public void AddOrUpdateSupplier(int id, string name, string contactNumber, string email)
+        {
+            if (id < 0)
+            {
+                _dm.AddNewSupplier(name, contactNumber, email);
+            }
+            else
+            {
+                _dm.UpdateExistingSupplier(id, name, contactNumber, email);
+            }
+        }
 
     }
 }

@@ -124,7 +124,15 @@ namespace DataLayer
 
         private readonly string _updateColour = "update Colour set name=? where id=?;";
 
-        
+        private readonly string _insertSupplier = "insert into Supplier (name, contactNumber, emailAddress) values (?, ?, ?);";
+
+        private readonly string _updateSupplier = "update Supplier set name=? contactNumber=? emailAddress=? where id=?;";
+
+        private readonly string _selectAllSuppliers = "select * from Supplier;";
+
+        private readonly string _selectSingleSupplierById = "Select * from Supplier where id=?;";
+
+
         private DataManager()
         {
             _connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["DeveloperExpressConnection"]
@@ -718,7 +726,7 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     OleDb method to get list of all customers.
+        ///     get list of all Category.
         /// </summary>
         /// <returns></returns>
         public List<Category> GetAllCategories()
@@ -755,7 +763,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Return a single customer referenced by id. If no customer fetched, return null.
+        ///     Return a single Category referenced by id. If no Category fetched, return null.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -794,8 +802,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Add a new admin with this login  and email
-        ///     Use randomised password for security.
+        ///     Add a new Category with this name
         /// </summary>
         /// <param name="name"></param>
         public void AddNewCategory(string name)
@@ -807,7 +814,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Update an existing admin by id.
+        ///     Update an existing Category by id.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -827,7 +834,7 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     OleDb method to get list of all customers.
+        ///     get list of all Colour.
         /// </summary>
         /// <returns></returns>
         public List<Colour> GetAllColours()
@@ -838,7 +845,7 @@ namespace DataLayer
             try
             {
                 _connection.Open();
-                reader = (new OleDbCommand(_selectAllCategories, _connection)).ExecuteReader();
+                reader = (new OleDbCommand(_selectAllColours, _connection)).ExecuteReader();
 
                 if (reader.HasRows)
                 {
@@ -876,7 +883,7 @@ namespace DataLayer
 
             try
             {
-                OleDbCommand command = new OleDbCommand(_selectSingleCustomerById, _connection);
+                OleDbCommand command = new OleDbCommand(_selectSingleColourById, _connection);
                 command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
                 command.Parameters["@IDENTIFIER"].Value = id;
                 reader = (command.ExecuteReader());
@@ -903,8 +910,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Add a new admin with this login  and email
-        ///     Use randomised password for security.
+        ///     Add a new Colour with this name
         /// </summary>
         /// <param name="name"></param>
         public void AddNewColour(string name)
@@ -916,7 +922,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Update an existing admin by id.
+        ///     Update an existing Colour by id.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -934,8 +940,129 @@ namespace DataLayer
         }
 
 
+        /// <summary>
+        ///     get list of all suppliers.
+        /// </summary>
+        /// <returns></returns>
+        public List<Supplier> GetAllSuppliers()
+        {
+            List<Supplier> records = new List<Supplier>();
+            OleDbDataReader reader = null;
 
-        
+            try
+            {
+                _connection.Open();
+                reader = (new OleDbCommand(_selectAllSuppliers, _connection)).ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        Supplier item = new Supplier();
+                        item.ID = Convert.ToInt32(reader["id"]);
+                        item.Name = reader["name"].ToString();
+                        item.Email = reader["emailAddress"].ToString();
+                        item.ContactNumber = reader["contactNumber"].ToString();
+                        records.Add(item);
+                    }
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                _connection.Close();
+            }
+
+            return records;
+        }
+
+        /// <summary>
+        ///     Return a single supplier referenced by id. If no supplier fetched, return null.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Supplier GetSingleSupplierById(int id)
+        {
+            OleDbDataReader reader = null;
+            Supplier item = null;
+
+            try
+            {
+                _connection.Open();
+                OleDbCommand command = new OleDbCommand(_selectSingleSupplierById, _connection);
+                command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
+                command.Parameters["@IDENTIFIER"].Value = id;
+                reader = (command.ExecuteReader());
+
+
+                if (reader.HasRows && reader.Read())
+                {
+                    item = new Supplier();
+                    item.ID = Convert.ToInt32(reader["id"]);
+                    item.Name = reader["name"].ToString();
+                    item.Email = reader["emailAddress"].ToString();
+                    item.ContactNumber = reader["contactNumber"].ToString();
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                _connection.Close();
+            }
+
+
+            return item;
+        }
+
+        /// <summary>
+        ///     Add a new supplier with this name, contact number  and email
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="contactNumber"></param>
+        /// <param name="email"></param>
+        public void AddNewSupplier(string name, string contactNumber, string email)
+        {
+            OleDbCommand command = new OleDbCommand(_insertSupplier, _connection);
+            command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@CONTACTNUMBER", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@EMAIL", OleDbType.VarChar));
+            command.Parameters["@NAME"].Value = name;
+            command.Parameters["@CONTACTNUMBER"].Value = contactNumber;
+            command.Parameters["@EMAIL"].Value = email;
+            RunDbCommandNoResults(command);
+        }
+
+        /// <summary>
+        ///     Update an existing supplier by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="contactNumber"></param>
+        /// <param name="email"></param>
+        public void UpdateExistingSupplier(int id, string name, string contactNumber, string email)
+        {
+            OleDbCommand command =
+                new OleDbCommand(_updateSupplier,
+                    _connection);
+            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@CONTACTNUMBER", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@EMAIL", OleDbType.VarChar));
+            command.Parameters["@IDENTIFIER"].Value = id;
+            command.Parameters["@NAME"].Value = name;
+            command.Parameters["@CONTACTNUMBER"].Value = contactNumber;
+            command.Parameters["@EMAIL"].Value = email;
+
+            RunDbCommandNoResults(command);
+        }
+
+
     }
 
 }
