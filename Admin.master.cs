@@ -6,7 +6,14 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using SecurityLayer;
 
+/// <summary>
+///     Backend presentation code for Admin Master.
+/// 
+///     11-8-16 14:00       AskewR04        Updated master page for easier update management in content sections.
+///     19-8-16 12:00       AskewR04        Added authentication checks and login.
+/// </summary>
 public partial class SiteMaster : MasterPage
 {
     private const string AntiXsrfTokenKey = "__AntiXsrfToken";
@@ -66,7 +73,17 @@ public partial class SiteMaster : MasterPage
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        try
+        {
+            MasterAdminSessionCheck.Text =
+                Security.UserNameSessionIdentifier + "=" + Session[Security.UserNameSessionIdentifier].ToString() +
+                ";" + Security.AuthenticationSessionIdentifier + "=" +
+                Session[Security.AuthenticationSessionIdentifier].ToString();
+        }
+        catch (NullReferenceException ex)
+        {
+            MasterAdminSessionCheck.Text = "Could not find Session login and auth info, or User is not logged in.";
+        }
     }
 
     protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
@@ -74,7 +91,7 @@ public partial class SiteMaster : MasterPage
         Context.GetOwinContext().Authentication.SignOut();
     }
 
-    protected void Login_OnClick(object sender, EventArgs e)
+    protected void Logout_OnClick(object sender, EventArgs e)
     {
         
     }
