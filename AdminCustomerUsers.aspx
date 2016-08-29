@@ -1,5 +1,4 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.master" AutoEventWireup="true" CodeFile="AdminCustomerUsers.aspx.cs" Inherits="AdminUsers" %>
-<%@ Import Namespace="asp_Assignment" %>
 
 <%--  
     The Admin page for the SiteUsers Entity - Customers.

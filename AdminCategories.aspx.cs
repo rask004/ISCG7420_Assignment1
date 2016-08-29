@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using asp_Assignment;
+using Common;
 using WebGrease.Css.Extensions;
 using BusinessLayer;
 using SecurityLayer;
@@ -162,7 +157,7 @@ public partial class AdminCategories : System.Web.UI.Page
 
             Reload_Sidebar();
 
-            lblMessageJumboTron.Text = "SUCCESS: Category added or updated: " + id + ", " + txtCategoryName.Text;            
+            lblMessageJumboTron.Text = "SUCCESS: Category added or updated: " + txtCategoryName.Text;            
         }
         
     }

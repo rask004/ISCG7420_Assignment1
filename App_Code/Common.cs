@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Mail;
 
-namespace asp_Assignment
+namespace Common
 {
     public static class GeneralConstants
     {

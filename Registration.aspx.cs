@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using asp_Assignment;
+using Common;
 using SecurityLayer;
 
 public partial class Registration : System.Web.UI.Page

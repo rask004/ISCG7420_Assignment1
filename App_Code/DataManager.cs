@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
-using System.Data.Entity.Core;
 using System.Data.OleDb;
 using System.Linq;
 using System.Web;
@@ -129,7 +127,7 @@ namespace DataLayer
         
         private DataManager()
         {
-            _connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["ReleaseConnection"]
+            _connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["DeveloperExpressConnection"]
                 .ConnectionString);
 
             BuildDatabase();
@@ -723,9 +721,9 @@ namespace DataLayer
         ///     OleDb method to get list of all customers.
         /// </summary>
         /// <returns></returns>
-        public List<BusinessLayer.Category> GetAllCategories()
+        public List<Category> GetAllCategories()
         {
-            List<BusinessLayer.Category> records = new List<BusinessLayer.Category>();
+            List<Category> records = new List<Category>();
             OleDbDataReader reader = null;
 
             try
@@ -737,7 +735,7 @@ namespace DataLayer
                 {
                     while (reader.Read())
                     {
-                        BusinessLayer.Category category = new BusinessLayer.Category();
+                        Category category = new Category();
                         category.ID = Convert.ToInt32(reader["id"]);
                         category.Name = reader["name"].ToString();
                         records.Add(category);
@@ -761,11 +759,11 @@ namespace DataLayer
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public BusinessLayer.Category GetSingleCategoryById(int id)
+        public Category GetSingleCategoryById(int id)
         {
             _connection.Open();
             OleDbDataReader reader = null;
-            BusinessLayer.Category category = null;
+            Category category = null;
 
             try
             {
@@ -777,7 +775,7 @@ namespace DataLayer
 
                 if (reader.HasRows && reader.Read())
                 {
-                    category = new BusinessLayer.Category();
+                    category = new Category();
                     category.ID = Convert.ToInt32(reader["id"]);
                     category.Name = reader["name"].ToString();
                 }
@@ -832,9 +830,9 @@ namespace DataLayer
         ///     OleDb method to get list of all customers.
         /// </summary>
         /// <returns></returns>
-        public List<BusinessLayer.Colour> GetAllColours()
+        public List<Colour> GetAllColours()
         {
-            List<BusinessLayer.Colour> records = new List<BusinessLayer.Colour>();
+            List<Colour> records = new List<Colour>();
             OleDbDataReader reader = null;
 
             try
@@ -846,7 +844,7 @@ namespace DataLayer
                 {
                     while (reader.Read())
                     {
-                        BusinessLayer.Colour colour = new BusinessLayer.Colour();
+                        Colour colour = new Colour();
                         colour.ID = Convert.ToInt32(reader["id"]);
                         colour.Name = reader["name"].ToString();
                         records.Add(colour);
@@ -870,11 +868,11 @@ namespace DataLayer
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public BusinessLayer.Colour GetSingleColourById(int id)
+        public Colour GetSingleColourById(int id)
         {
             _connection.Open();
             OleDbDataReader reader = null;
-            BusinessLayer.Colour colour = null;
+            Colour colour = null;
 
             try
             {
@@ -886,7 +884,7 @@ namespace DataLayer
 
                 if (reader.HasRows && reader.Read())
                 {
-                    colour = new BusinessLayer.Colour();
+                    colour = new Colour();
                     colour.ID = Convert.ToInt32(reader["id"]);
                     colour.Name = reader["name"].ToString();
                 }

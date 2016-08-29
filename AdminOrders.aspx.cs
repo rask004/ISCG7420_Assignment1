@@ -4,9 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using asp_Assignment;
+using Common;
 using BusinessLayer;
 using DataLayer;
+using Microsoft.Ajax.Utilities;
 using SecurityLayer;
 
 /// <summary>
@@ -105,17 +106,17 @@ public partial class AdminOrders : System.Web.UI.Page
                 foreach (var orderItem in orderItems)
                 {
                     tr = new TableRow();
-                    tc = new TableCell {Text = orderItem.Cap.name};
+                    tc = new TableCell {Text = orderItem.Cap.Name};
                     tr.Cells.Add(tc);
-                    tc = new TableCell {Text = orderItem.Colour.name};
+                    tc = new TableCell {Text = orderItem.Colour.Name};
                     tr.Cells.Add(tc);
                     tc = new TableCell {Text = orderItem.quantity.ToString()};
                     tr.Cells.Add(tc);
-                    tc = new TableCell {Text = orderItem.Cap.price.ToString()};
+                    tc = new TableCell {Text = orderItem.Cap.Price.ToString()};
                     tr.Cells.Add(tc);
                     tblOrderItemListing.Rows.Add(tr);
 
-                    subTotal += Convert.ToDouble(orderItem.Cap.price * orderItem.quantity);
+                    subTotal += Convert.ToDouble(orderItem.Cap.Price * orderItem.quantity);
                 }
             }
 

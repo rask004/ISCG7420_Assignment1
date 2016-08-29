@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Spatial;
 
 namespace BusinessLayer
 {
@@ -14,17 +11,17 @@ namespace BusinessLayer
             
         }
 
-        public string name { get; set; }
+        public string Name { get; set; }
 
-        public double price { get; set; }
+        public double Price { get; set; }
 
-        public string description { get; set; }
+        public string Description { get; set; }
 
-        public string imageUrl { get; set; }
+        public string ImageUrl { get; set; }
 
-        public int supplierId { get; set; }
+        public int SupplierId { get; set; }
 
-        public int categoryId { get; set; }
+        public int CategoryId { get; set; }
 
         public virtual Category Category { get; set; }
 

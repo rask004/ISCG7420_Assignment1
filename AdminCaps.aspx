@@ -1,5 +1,4 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.master" AutoEventWireup="true" CodeFile="AdminCaps.aspx.cs" Inherits="AdminCaps" %>
-<%@ Import Namespace="asp_Assignment" %>
 
 <%--  
     The Admin page for the Product Entity.
