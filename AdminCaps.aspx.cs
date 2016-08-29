@@ -14,7 +14,6 @@ using Common;
 using WebGrease.Css.Extensions;
 using BusinessLayer;
 using SecurityLayer;
-using Category = BusinessLayer.Category;
 
 // TODO: fix issue with file uploader.
 
@@ -33,6 +32,26 @@ public partial class AdminCaps : System.Web.UI.Page
         AdminController controller = new AdminController();
         dbrptSideBarItems.DataSource = controller.GetCaps();
         dbrptSideBarItems.DataBind();
+
+        List<Category> categories = controller.GetCategories();
+        List<Supplier> suppliers = controller.GetSuppliers();
+        if (categories.Count == 0 || suppliers.Count == 0)
+        {
+            btnAddCap.Enabled = false;
+        }
+        else
+        {
+            btnAddCap.Enabled = true;
+        }
+
+        ddlCapCategories.DataSource = controller.GetCategories();
+        ddlCapCategories.DataBind();
+        ddlCapCategories.DataTextField = "name";
+        ddlCapCategories.DataValueField = "id";
+        ddlCapSuppliers.DataSource = controller.GetSuppliers();
+        ddlCapSuppliers.DataBind();
+        ddlCapSuppliers.DataTextField = "name";
+        ddlCapSuppliers.DataValueField = "id";
     }
 
     /// <summary>
@@ -44,18 +63,6 @@ public partial class AdminCaps : System.Web.UI.Page
     {
         if (!Page.IsPostBack)
         {
-            AdminController controller = new AdminController();
-            List<BusinessLayer.Category> categories = controller.GetCategories();
-            List<BusinessLayer.Supplier> suppliers = controller.GetSuppliers();
-            if (categories.Count == 0 || suppliers.Count == 0)
-            {
-                btnAddCap.Enabled = false;
-            }
-            else
-            {
-                btnAddCap.Enabled = true;
-            }
-
             txtCapName.MaxLength = GeneralConstants.CapNameMaxLength;
             txtCapDescription.MaxLength = GeneralConstants.CapDescriptionMaxLength;
 
@@ -64,14 +71,7 @@ public partial class AdminCaps : System.Web.UI.Page
             txtCapDescription.Width = new Unit(txtCapDescription.MaxLength / 3 + 2, UnitType.Em);
             txtCapDescription.Height = new Unit(6, UnitType.Em);
 
-            ddlCapCategories.DataSource = controller.GetCategories();
-            ddlCapCategories.DataBind();
-            ddlCapCategories.DataTextField = "name";
-            ddlCapCategories.DataValueField = "id";
-            ddlCapSuppliers.DataSource = controller.GetSuppliers();
-            ddlCapSuppliers.DataBind();
-            ddlCapSuppliers.DataTextField = "name";
-            ddlCapSuppliers.DataValueField = "id";
+            
 
             Reload_Sidebar();
 
@@ -93,7 +93,7 @@ public partial class AdminCaps : System.Web.UI.Page
             AdminController controller = new AdminController();
             int itemId = Convert.ToInt32(e.CommandArgument);
             string name = controller.GetCapName(itemId);
-            string price = controller.GetCapPrice(itemId);
+            string price = controller.GetCapPrice(itemId).ToString();
             string desc = controller.GetCapDescription(itemId);
             string pictureUrl = controller.GetCapImageUrl(itemId);
             lblCapId.Text = itemId.ToString();
@@ -152,8 +152,6 @@ public partial class AdminCaps : System.Web.UI.Page
         {
             ddlImgCapList.Enabled = true;
         }
-
-        
 
         imgCapImagePreview.ImageUrl = GeneralConstants.CapImageNewDefault;
 
@@ -233,12 +231,12 @@ public partial class AdminCaps : System.Web.UI.Page
             }
 
             controller.AddOrUpdateCap(id,
-                    txtCapName.Text, Convert.ToDouble(txtCapPrice.Text), txtCapDescription.Text,
-                    imgCapImagePreview.ImageUrl);
+                txtCapName.Text, Convert.ToDouble(txtCapPrice.Text), txtCapDescription.Text,
+                imgCapImagePreview.ImageUrl, Convert.ToInt32(ddlCapCategories.SelectedValue), Convert.ToInt32(ddlCapSuppliers.SelectedValue));
 
             Reload_Sidebar();
 
-            lblMessageJumboTron.Text = "SUCCESS: Cap added or updated: " + lblCapId.Text + ", " +
+            lblMessageJumboTron.Text = "SUCCESS: Cap added or updated: " +
                                         txtCapName.Text +
                                         ", " + imgCapImagePreview.ImageUrl;
                             

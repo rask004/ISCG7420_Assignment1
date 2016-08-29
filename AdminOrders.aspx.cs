@@ -60,9 +60,9 @@ public partial class AdminOrders : System.Web.UI.Page
         {
             AdminController controller = new AdminController();
             int orderId = Convert.ToInt32(e.CommandArgument);
-            Decimal customerId = controller.GetOrderCustomerId(orderId);
-            string customerFirstName = controller.GetUserFirstName(Convert.ToInt32(customerId));
-            string customerLastName = controller.GetUserLastName(Convert.ToInt32(customerId));
+            int customerId = controller.GetCustomerByOrderId(orderId);
+            string customerFirstName = controller.GetCustomerFirstName(customerId);
+            string customerLastName = controller.GetCustomerFirstName(customerId);
 
             string orderStatus = controller.GetOrderStatus(orderId);
 
@@ -110,13 +110,13 @@ public partial class AdminOrders : System.Web.UI.Page
                     tr.Cells.Add(tc);
                     tc = new TableCell {Text = orderItem.Colour.Name};
                     tr.Cells.Add(tc);
-                    tc = new TableCell {Text = orderItem.quantity.ToString()};
+                    tc = new TableCell {Text = orderItem.Quantity.ToString()};
                     tr.Cells.Add(tc);
                     tc = new TableCell {Text = orderItem.Cap.Price.ToString()};
                     tr.Cells.Add(tc);
                     tblOrderItemListing.Rows.Add(tr);
 
-                    subTotal += Convert.ToDouble(orderItem.Cap.Price * orderItem.quantity);
+                    subTotal += Convert.ToDouble(orderItem.Cap.Price * orderItem.Quantity);
                 }
             }
 

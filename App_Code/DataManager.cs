@@ -132,6 +132,18 @@ namespace DataLayer
 
         private readonly string _selectSingleSupplierById = "Select * from Supplier where id=?;";
 
+        private readonly string _selectAllCaps = "select * from Cap;";
+
+        private readonly string _selectSingleCapById = "Select * from Cap where id=?;";
+
+        private readonly string _insertCap = "insert into Cap (name, price, description, imageUrl, categoryId, supplierId) values (?, ?, ?);";
+
+        private readonly string _updateCap = "update Cap set name=? price=? description=? imageUrl=? categoryId=? supplierId=? where id=?;";
+
+        private readonly string _updateCapCategoryId = "update Cap set categoryId=? where id=?;";
+
+        private readonly string _updateCapSupplierId = "update Cap set supplierId=? where id=?;";
+
 
         private DataManager()
         {
@@ -1038,6 +1050,7 @@ namespace DataLayer
             RunDbCommandNoResults(command);
         }
 
+
         /// <summary>
         ///     Update an existing supplier by id.
         /// </summary>
@@ -1054,6 +1067,7 @@ namespace DataLayer
             command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@CONTACTNUMBER", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@EMAIL", OleDbType.VarChar));
+
             command.Parameters["@IDENTIFIER"].Value = id;
             command.Parameters["@NAME"].Value = name;
             command.Parameters["@CONTACTNUMBER"].Value = contactNumber;
@@ -1063,6 +1077,193 @@ namespace DataLayer
         }
 
 
-    }
+        /// <summary>
+        ///     get list of all cap.
+        /// </summary>
+        /// <returns></returns>
+        public List<Cap> GetAllCaps()
+        {
+            List<Cap> records = new List<Cap>();
+            OleDbDataReader reader = null;
 
+            try
+            {
+                _connection.Open();
+                reader = (new OleDbCommand(_selectAllCaps, _connection)).ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        Cap item = new Cap();
+                        item.ID = Convert.ToInt32(reader["id"]);
+                        item.Name = reader["name"].ToString();
+                        item.Price = Convert.ToDouble(reader["price"]);
+                        item.Description = reader["description"].ToString();
+                        item.ImageUrl = reader["imageUrl"].ToString();
+                        item.CategoryId = Convert.ToInt32(reader["categoryId"]);
+                        item.SupplierId = Convert.ToInt32(reader["supplierId"]);
+                        item.Category = GetSingleCategoryById(item.CategoryId);
+                        item.Supplier = GetSingleSupplierById(item.SupplierId);
+                        records.Add(item);
+                    }
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                _connection.Close();
+            }
+
+            return records;
+        }
+
+
+        /// <summary>
+        ///     Return a single cap referenced by id. If no cap fetched, return null.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Cap GetSingleCapById(int id)
+        {
+            OleDbDataReader reader = null;
+            Cap item = null;
+
+            try
+            {
+                _connection.Open();
+                OleDbCommand command = new OleDbCommand(_selectSingleCapById, _connection);
+                command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
+                command.Parameters["@IDENTIFIER"].Value = id;
+                reader = (command.ExecuteReader());
+
+
+                if (reader.HasRows && reader.Read())
+                {
+                    item = new Cap();
+                    item.ID = Convert.ToInt32(reader["id"]);
+                    item.Name = reader["name"].ToString();
+                    item.Price = Convert.ToDouble(reader["price"]);
+                    item.Description = reader["description"].ToString();
+                    item.ImageUrl = reader["imageUrl"].ToString();
+                    item.CategoryId = Convert.ToInt32(reader["categoryId"]);
+                    item.SupplierId = Convert.ToInt32(reader["supplierId"]);
+                    item.Category = GetSingleCategoryById(item.CategoryId);
+                    item.Supplier = GetSingleSupplierById(item.SupplierId);
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                _connection.Close();
+            }
+
+            return item;
+        }
+
+
+        /// <summary>
+        ///     Add a new cap with this name and data.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="price"></param>
+        /// <param name="description"></param>
+        /// <param name="imageUrl"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="supplierId"></param>
+        public void AddNewCap(string name, double price, string description, string imageUrl, int categoryId, int supplierId)
+        {
+            OleDbCommand command = new OleDbCommand(_insertCap, _connection);
+            command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@PRICE", OleDbType.Double));
+            command.Parameters.Add(new OleDbParameter("@DESCRIPTION", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@IMAGEURL", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@CATEGORYID", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@SUPPLIERID", OleDbType.Integer));
+            command.Parameters["@NAME"].Value = name;
+            command.Parameters["@PRICE"].Value = price;
+            command.Parameters["@DESCRIPTION"].Value = description;
+            command.Parameters["@IMAGEURL"].Value = imageUrl;
+            command.Parameters["@CATEGORYID"].Value = categoryId;
+            command.Parameters["@SUPPLIERID"].Value = supplierId;
+            RunDbCommandNoResults(command);
+        }
+
+
+        /// <summary>
+        ///     Update an existing cap by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="price"></param>
+        /// <param name="description"></param>
+        /// <param name="imageUrl"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="supplierId"></param>
+        public void UpdateExistingCap(int id, string name, double price, string description, string imageUrl, int categoryId, int supplierId)
+        {
+            OleDbCommand command = new OleDbCommand(_updateCap, _connection);
+            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@PRICE", OleDbType.Double));
+            command.Parameters.Add(new OleDbParameter("@DESCRIPTION", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@IMAGEURL", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@CATEGORYID", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@SUPPLIERID", OleDbType.Integer));
+            command.Parameters["@IDENTIFIER"].Value = id;
+            command.Parameters["@NAME"].Value = name;
+            command.Parameters["@PRICE"].Value = price;
+            command.Parameters["@DESCRIPTION"].Value = description;
+            command.Parameters["@IMAGEURL"].Value = imageUrl;
+            command.Parameters["@CATEGORYID"].Value = categoryId;
+            command.Parameters["@SUPPLIERID"].Value = supplierId;
+            RunDbCommandNoResults(command);
+        }
+
+        /// <summary>
+        ///     Update an existing cap by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="price"></param>
+        /// <param name="description"></param>
+        /// <param name="imageUrl"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="supplierId"></param>
+        public void UpdateExistingCapSupplierId(int id, int supplierId)
+        {
+            OleDbCommand command = new OleDbCommand(_updateCapSupplierId, _connection);
+            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@SUPPLIERID", OleDbType.Integer));
+            command.Parameters["@IDENTIFIER"].Value = id;
+            command.Parameters["@SUPPLIERID"].Value = supplierId;
+            RunDbCommandNoResults(command);
+        }
+
+        /// <summary>
+        ///     Update an existing cap by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="price"></param>
+        /// <param name="description"></param>
+        /// <param name="imageUrl"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="supplierId"></param>
+        public void UpdateExistingCapCategoryId(int id, int categoryId)
+        {
+            OleDbCommand command = new OleDbCommand(_updateCapCategoryId, _connection);
+            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@CATEGORYID", OleDbType.Integer));
+            command.Parameters["@IDENTIFIER"].Value = id;
+            command.Parameters["@CATEGORYID"].Value = categoryId;
+            RunDbCommandNoResults(command);
+        }
+    }
 }

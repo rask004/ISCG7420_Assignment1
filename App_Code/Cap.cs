@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace BusinessLayer
 {
 
-    public class Cap
+    public class Cap :BaseBusinessObject
     {
         public Cap()
         {
