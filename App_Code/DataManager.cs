@@ -144,6 +144,16 @@ namespace DataLayer
 
         private readonly string _updateCapSupplierId = "update Cap set supplierId=? where id=?;";
 
+        private readonly string _selectAllOrders = "select * from CustomerOrder;";
+
+        private readonly string _selectSingleOrderById = "Select * from CustomerOrder where id=?;";
+
+        private readonly string _insertOrder = "insert into CustomerOrder (status, userId) values (?, ?);";
+
+        private readonly string _updateOrderStatus = "update CustomerOrder set status=? where id=?;";
+
+        private readonly string _selectAllOrderItemsWithMatchingOrderId = "select * from OrderItem where orderId=?";
+
 
         private DataManager()
         {
@@ -218,12 +228,7 @@ namespace DataLayer
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new DataManager();
-                }
-
-                return _instance;
+                return new DataManager();
             }
         }
 
@@ -1264,6 +1269,165 @@ namespace DataLayer
             command.Parameters["@IDENTIFIER"].Value = id;
             command.Parameters["@CATEGORYID"].Value = categoryId;
             RunDbCommandNoResults(command);
+        }
+
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <returns></returns>
+        public List<CustomerOrder> GetAllOrders()
+        {
+            List<CustomerOrder> records = new List<CustomerOrder>();
+            OleDbDataReader reader = null;
+
+            try
+            {
+                _connection.Open();
+                reader = (new OleDbCommand(_selectAllOrders, _connection)).ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        CustomerOrder item = new CustomerOrder();
+                        item.ID = Convert.ToInt32(reader["id"]);
+                        item.Status = reader["status"].ToString();
+                        item.UserId = Convert.ToInt32(reader["userId"]);
+                        item.Customer = GetSingleCustomerById(item.UserId);
+                        records.Add(item);
+                    }
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                _connection.Close();
+            }
+
+            return records;
+        }
+
+
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public CustomerOrder GetSingleOrderById(int id)
+        {
+            OleDbDataReader reader = null;
+            CustomerOrder item = null;
+
+            try
+            {
+                _connection.Open();
+                OleDbCommand command = new OleDbCommand(_selectSingleOrderById, _connection);
+                command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
+                command.Parameters["@IDENTIFIER"].Value = id;
+                reader = (command.ExecuteReader());
+
+
+                if (reader.HasRows && reader.Read())
+                {
+                    item = new CustomerOrder();
+                    item.ID = Convert.ToInt32(reader["id"]);
+                    item.Status = reader["status"].ToString();
+                    item.UserId = Convert.ToInt32(reader["userId"]);
+                    item.Customer = GetSingleCustomerById(item.UserId);
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                _connection.Close();
+            }
+
+            return item;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        public void UpdateOrderStatus(int id, string status)
+        {
+            OleDbCommand command = new OleDbCommand(_updateOrderStatus, _connection);
+            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@STATUS", OleDbType.VarChar));
+            command.Parameters["@IDENTIFIER"].Value = id;
+            command.Parameters["@STATUS"].Value = status;
+            RunDbCommandNoResults(command);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="customerId"></param>
+        public void InsertNewOrder(string status, int customerId)
+        {
+            OleDbCommand command = new OleDbCommand(_insertOrder, _connection);
+            command.Parameters.Add(new OleDbParameter("@STATUS", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@CUSTOMERID", OleDbType.Integer));
+            command.Parameters["@STATUS"].Value = status;
+            command.Parameters["@CUSTOMERID"].Value = customerId;
+            RunDbCommandNoResults(command);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public List<OrderItem> GetAllOrderItemsByOrderId(int orderId)
+        {
+            List<OrderItem> records = new List<OrderItem>();
+            OleDbDataReader reader = null;
+
+            OleDbCommand command = new OleDbCommand(_selectAllOrderItemsWithMatchingOrderId, _connection);
+            command.Parameters.Add(new OleDbParameter("@ORDERID", OleDbType.Integer));
+            command.Parameters["@ORDERID"].Value = orderId;
+
+            try
+            {
+                _connection.Open();
+                reader = (command).ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        OrderItem item = new OrderItem();
+                        item.OrderId = Convert.ToInt32(reader["orderId"]);
+                        item.CapId = Convert.ToInt32(reader["capId"]);
+                        item.ColourId = Convert.ToInt32(reader["colourId"]);
+                        item.Quantity = Convert.ToInt32(reader["quantity"]);
+                        item.CustomerOrder = GetSingleOrderById(item.OrderId);
+                        item.Cap = GetSingleCapById(item.CapId);
+                        item.Colour = GetSingleColourById(item.ColourId);
+                        records.Add(item);
+                    }
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                _connection.Close();
+            }
+
+            return records;
         }
     }
 }

@@ -60,7 +60,8 @@ public partial class AdminOrders : System.Web.UI.Page
         {
             AdminController controller = new AdminController();
             int orderId = Convert.ToInt32(e.CommandArgument);
-            int customerId = controller.GetCustomerByOrderId(orderId);
+            Customer customer = controller.GetCustomerByOrderId(orderId);
+            int customerId = customer.ID;
             string customerFirstName = controller.GetCustomerFirstName(customerId);
             string customerLastName = controller.GetCustomerFirstName(customerId);
 

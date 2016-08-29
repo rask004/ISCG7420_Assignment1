@@ -566,5 +566,57 @@ namespace BusinessLayer
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<CustomerOrder> GetOrders()
+        {
+            return _dm.GetAllOrders();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public Customer GetCustomerByOrderId(int orderId)
+        {
+            CustomerOrder order = _dm.GetSingleOrderById(orderId);
+            return _dm.GetSingleCustomerById(order.UserId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public string GetOrderStatus(int orderId)
+        {
+            CustomerOrder order = _dm.GetSingleOrderById(orderId);
+            return order.Status;
+        }
+
+
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        public void UpdateOrderStatus(int id, string status)
+        {
+            _dm.UpdateOrderStatus(id, status);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public List<OrderItem> GetItemsForOrderWithId(int id)
+        {
+            return _dm.GetAllOrderItemsByOrderId(id);
+        }
+
     }
 }
