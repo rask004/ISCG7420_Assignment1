@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Web;
@@ -17,7 +18,6 @@ namespace DataLayer
     /// </summary>
     public class DataManager
     {
-        // Singleton: Enforce that there is only ever one _instance at any time. Reduces used resources.
         private static DataManager _instance;
 
         private readonly OleDbConnection _connection;
@@ -30,7 +30,7 @@ namespace DataLayer
                                                      "isDisabled  bit     DEFAULT 0 ); END ";
 
         private readonly string _buildOrderTable = "if OBJECT_ID(N'dbo.CustomerOrder', N'U') is NULL BEGIN " +
-                                                   "create table dbo.CustomerOrder(id int IDENTITY(1, 1)   primary key, userId  numeric(2, 0)    not null Foreign Key References dbo.SiteUser(id), " +
+                                                   "create table dbo.CustomerOrder(id int IDENTITY(1, 1)   primary key, userId  int    not null Foreign Key References dbo.SiteUser(id), " +
                                                    "status  nvarchar(7) not null DEFAULT 'waiting'); END ";
 
         private readonly string _buildSupplierTable = "if OBJECT_ID(N'dbo.Supplier', N'U') is NULL BEGIN " +
@@ -45,14 +45,9 @@ namespace DataLayer
 
         private readonly string _buildCapTable = "if OBJECT_ID(N'dbo.Cap', N'U') is NULL BEGIN " +
                                                  "create table dbo.Cap(id int IDENTITY(1, 1)   primary key, name    nvarchar(40)    not null, " +
-                                                 "price   numeric(3, 2)    not null, description nvarchar(512)   not null, imageUrl nvarchar(96) not null, " +
+                                                 "price   real    not null, description nvarchar(512)   not null, imageUrl nvarchar(96) not null, " +
                                                  "supplierId  int     not null    Foreign Key References dbo.Supplier(id), " +
                                                  "categoryId  int     not null    Foreign Key References dbo.Category(id)); END ";
-
-        private readonly string _buildCapColourTable = "if OBJECT_ID(N'dbo.CapColour', N'U') is NULL BEGIN " +
-                                                       "create table dbo.CapColour(colourId    int     not null    Foreign Key References dbo.Colour(id), " +
-                                                       "capId       int         not null    Foreign Key References dbo.Cap(id), " +
-                                                       "Constraint  capColour_pk    Primary Key(colourId, capId)); END ";
 
         private readonly string _buildOrderItemTable = "if OBJECT_ID(N'dbo.OrderItem', N'U') is NULL BEGIN " +
                                                        "create table dbo.OrderItem(orderId     int     not null    Foreign Key References dbo.CustomerOrder(id), " +
@@ -126,7 +121,7 @@ namespace DataLayer
 
         private readonly string _insertSupplier = "insert into Supplier (name, contactNumber, emailAddress) values (?, ?, ?);";
 
-        private readonly string _updateSupplier = "update Supplier set name=? contactNumber=? emailAddress=? where id=?;";
+        private readonly string _updateSupplier = "update Supplier set name=?, contactNumber=?, emailAddress=? where id=?;";
 
         private readonly string _selectAllSuppliers = "select * from Supplier;";
 
@@ -138,7 +133,7 @@ namespace DataLayer
 
         private readonly string _insertCap = "insert into Cap (name, price, description, imageUrl, categoryId, supplierId) values (?, ?, ?);";
 
-        private readonly string _updateCap = "update Cap set name=? price=? description=? imageUrl=? categoryId=? supplierId=? where id=?;";
+        private readonly string _updateCap = "update Cap set name=?, price=?, description=?, imageUrl=?, categoryId=?, supplierId=? where id=?;";
 
         private readonly string _updateCapCategoryId = "update Cap set categoryId=? where id=?;";
 
@@ -186,9 +181,6 @@ namespace DataLayer
             dbCommand = new OleDbCommand(_buildCapTable, _connection);
             RunDbCommandNoResults(dbCommand);
 
-            dbCommand = new OleDbCommand(_buildCapColourTable, _connection);
-            RunDbCommandNoResults(dbCommand);
-
             dbCommand = new OleDbCommand(_buildOrderItemTable, _connection);
             RunDbCommandNoResults(dbCommand);
 
@@ -211,12 +203,19 @@ namespace DataLayer
         {
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
                 dbCommand.ExecuteNonQuery();
             }
             finally
             {
-                _connection.Close();
+                if (_connection.State == ConnectionState.Open)
+                {
+                    _connection.Close();
+                }
+                
             }
             
         }
@@ -243,10 +242,13 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
                 reader = (new OleDbCommand(_selectAllCustomers, _connection)).ExecuteReader();
 
-                if (reader.HasRows)
+                if (reader != null && reader.HasRows)
                 {
                     while (reader.Read())
                     {
@@ -297,12 +299,16 @@ namespace DataLayer
         /// <returns></returns>
         public Customer GetSingleCustomerById(int id)
         {
-            _connection.Open();
             OleDbDataReader reader = null;
             Customer customer = null;
 
             try
             {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 OleDbCommand command = new OleDbCommand(_selectSingleCustomerById, _connection);
                 command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
                 command.Parameters["@IDENTIFIER"].Value = id;
@@ -310,7 +316,7 @@ namespace DataLayer
                 reader = (command.ExecuteReader());
 
 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     customer = new Customer();
                     customer.ID = Convert.ToInt32(reader["id"]);
@@ -328,16 +334,13 @@ namespace DataLayer
                     customer.IsDisabled = Convert.ToBoolean(reader["isDisabled"]);
 
                 }
-
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
             finally
             {
-                reader.Close();
+                if (reader != null)
+                {
+                    reader.Close();
+                }
                 _connection.Close();
             }
 
@@ -352,18 +355,21 @@ namespace DataLayer
         /// <returns></returns>
         public Customer GetSingleCustomerByLogin(string login)
         {
-            _connection.Open();
             Customer customer = null;
             OleDbDataReader reader = null;
 
             try
             {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
                 OleDbCommand command = new OleDbCommand(_selectSingleCustomerByLogin, _connection);
                 command.Parameters.Add(new OleDbParameter("@LOGIN", OleDbType.VarChar));
                 command.Parameters["@LOGIN"].Value = login;
                 reader = (command.ExecuteReader());
                 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     customer = new Customer();
                     customer.ID = Convert.ToInt32(reader["id"]);
@@ -399,22 +405,25 @@ namespace DataLayer
         /// <summary>
         ///     Return a single customer referenced by email. If no customer fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
         /// <returns></returns>
         public Customer GetSingleCustomerByEmail(string email)
         {
-            _connection.Open();
             OleDbDataReader reader = null;
             Customer customer = null;
 
             try
             {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 OleDbCommand command = new OleDbCommand(_selectSingleCustomerByEmail, _connection);
                 command.Parameters.Add(new OleDbParameter("@EMAIL", OleDbType.VarChar));
                 command.Parameters["@EMAIL"].Value = email;
                 reader = (command.ExecuteReader());
 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     customer = new Customer();
                     customer.ID = Convert.ToInt32(reader["id"]);
@@ -570,7 +579,10 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
                 reader = (new OleDbCommand(_selectAllAdmins, _connection)).ExecuteReader();
 
                 if (reader.HasRows)
@@ -608,19 +620,22 @@ namespace DataLayer
         /// <returns></returns>
         public Administrator GetSingleAdministratorById(int id)
         {
-            _connection.Open();
             OleDbDataReader reader = null;
             Administrator record = null;
 
             try
             {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
                 OleDbCommand command = new OleDbCommand(_selectSingleAdminById, _connection);
                 command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
                 command.Parameters["@IDENTIFIER"].Value = id;
                 reader = (command.ExecuteReader());
 
 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     record = new Administrator();
                     record.ID = Convert.ToInt32(reader["id"]);
@@ -649,18 +664,21 @@ namespace DataLayer
         /// <returns></returns>
         public Administrator GetSingleAdministratorByLogin(string login)
         {
-            _connection.Open();
             OleDbDataReader reader = null;
             Administrator record = null;
 
             try
             {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
                 OleDbCommand command = new OleDbCommand(_selectSingleAdminByLogin, _connection);
                 command.Parameters.Add(new OleDbParameter("@LOGIN", OleDbType.VarChar));
                 command.Parameters["@LOGIN"].Value = login;
                 reader = (command.ExecuteReader());
 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     record = new Administrator();
                     record.ID = Convert.ToInt32(reader["id"]);
@@ -753,7 +771,10 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
                 reader = (new OleDbCommand(_selectAllCategories, _connection)).ExecuteReader();
 
                 if (reader.HasRows)
@@ -786,19 +807,23 @@ namespace DataLayer
         /// <returns></returns>
         public Category GetSingleCategoryById(int id)
         {
-            _connection.Open();
             OleDbDataReader reader = null;
             Category category = null;
 
             try
             {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 OleDbCommand command = new OleDbCommand(_selectSingleCategoryById, _connection);
                 command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
                 command.Parameters["@IDENTIFIER"].Value = id;
                 reader = (command.ExecuteReader());
 
 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     category = new Category();
                     category.ID = Convert.ToInt32(reader["id"]);
@@ -861,7 +886,11 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 reader = (new OleDbCommand(_selectAllColours, _connection)).ExecuteReader();
 
                 if (reader.HasRows)
@@ -894,19 +923,23 @@ namespace DataLayer
         /// <returns></returns>
         public Colour GetSingleColourById(int id)
         {
-            _connection.Open();
             OleDbDataReader reader = null;
             Colour colour = null;
 
             try
             {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 OleDbCommand command = new OleDbCommand(_selectSingleColourById, _connection);
                 command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
                 command.Parameters["@IDENTIFIER"].Value = id;
                 reader = (command.ExecuteReader());
 
 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     colour = new Colour();
                     colour.ID = Convert.ToInt32(reader["id"]);
@@ -968,7 +1001,11 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 reader = (new OleDbCommand(_selectAllSuppliers, _connection)).ExecuteReader();
 
                 if (reader.HasRows)
@@ -1008,14 +1045,18 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 OleDbCommand command = new OleDbCommand(_selectSingleSupplierById, _connection);
                 command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
                 command.Parameters["@IDENTIFIER"].Value = id;
                 reader = (command.ExecuteReader());
 
 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     item = new Supplier();
                     item.ID = Convert.ToInt32(reader["id"]);
@@ -1068,15 +1109,14 @@ namespace DataLayer
             OleDbCommand command =
                 new OleDbCommand(_updateSupplier,
                     _connection);
-            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
             command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@CONTACTNUMBER", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@EMAIL", OleDbType.VarChar));
-
-            command.Parameters["@IDENTIFIER"].Value = id;
+            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
             command.Parameters["@NAME"].Value = name;
             command.Parameters["@CONTACTNUMBER"].Value = contactNumber;
             command.Parameters["@EMAIL"].Value = email;
+            command.Parameters["@IDENTIFIER"].Value = id;
 
             RunDbCommandNoResults(command);
         }
@@ -1093,7 +1133,11 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 reader = (new OleDbCommand(_selectAllCaps, _connection)).ExecuteReader();
 
                 if (reader.HasRows)
@@ -1103,14 +1147,18 @@ namespace DataLayer
                         Cap item = new Cap();
                         item.ID = Convert.ToInt32(reader["id"]);
                         item.Name = reader["name"].ToString();
-                        item.Price = Convert.ToDouble(reader["price"]);
+                        item.Price = Convert.ToSingle(reader["price"]);
                         item.Description = reader["description"].ToString();
                         item.ImageUrl = reader["imageUrl"].ToString();
                         item.CategoryId = Convert.ToInt32(reader["categoryId"]);
                         item.SupplierId = Convert.ToInt32(reader["supplierId"]);
-                        item.Category = GetSingleCategoryById(item.CategoryId);
-                        item.Supplier = GetSingleSupplierById(item.SupplierId);
                         records.Add(item);
+                    }
+
+                    foreach (Cap cap in records)
+                    {
+                        cap.Category = GetSingleCategoryById(cap.CategoryId);
+                        cap.Supplier = GetSingleSupplierById(cap.SupplierId);
                     }
                 }
             }
@@ -1139,19 +1187,23 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 OleDbCommand command = new OleDbCommand(_selectSingleCapById, _connection);
                 command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
                 command.Parameters["@IDENTIFIER"].Value = id;
                 reader = (command.ExecuteReader());
 
 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     item = new Cap();
                     item.ID = Convert.ToInt32(reader["id"]);
                     item.Name = reader["name"].ToString();
-                    item.Price = Convert.ToDouble(reader["price"]);
+                    item.Price = Convert.ToSingle(reader["price"]);
                     item.Description = reader["description"].ToString();
                     item.ImageUrl = reader["imageUrl"].ToString();
                     item.CategoryId = Convert.ToInt32(reader["categoryId"]);
@@ -1166,6 +1218,7 @@ namespace DataLayer
                 {
                     reader.Close();
                 }
+
                 _connection.Close();
             }
 
@@ -1182,7 +1235,7 @@ namespace DataLayer
         /// <param name="imageUrl"></param>
         /// <param name="categoryId"></param>
         /// <param name="supplierId"></param>
-        public void AddNewCap(string name, double price, string description, string imageUrl, int categoryId, int supplierId)
+        public void AddNewCap(string name, Single price, string description, string imageUrl, int categoryId, int supplierId)
         {
             OleDbCommand command = new OleDbCommand(_insertCap, _connection);
             command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
@@ -1211,23 +1264,23 @@ namespace DataLayer
         /// <param name="imageUrl"></param>
         /// <param name="categoryId"></param>
         /// <param name="supplierId"></param>
-        public void UpdateExistingCap(int id, string name, double price, string description, string imageUrl, int categoryId, int supplierId)
+        public void UpdateExistingCap(int id, string name, Single price, string description, string imageUrl, int categoryId, int supplierId)
         {
             OleDbCommand command = new OleDbCommand(_updateCap, _connection);
-            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
             command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@PRICE", OleDbType.Double));
             command.Parameters.Add(new OleDbParameter("@DESCRIPTION", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@IMAGEURL", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@CATEGORYID", OleDbType.Integer));
             command.Parameters.Add(new OleDbParameter("@SUPPLIERID", OleDbType.Integer));
-            command.Parameters["@IDENTIFIER"].Value = id;
+            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
             command.Parameters["@NAME"].Value = name;
             command.Parameters["@PRICE"].Value = price;
             command.Parameters["@DESCRIPTION"].Value = description;
             command.Parameters["@IMAGEURL"].Value = imageUrl;
             command.Parameters["@CATEGORYID"].Value = categoryId;
             command.Parameters["@SUPPLIERID"].Value = supplierId;
+            command.Parameters["@IDENTIFIER"].Value = id;
             RunDbCommandNoResults(command);
         }
 
@@ -1282,7 +1335,11 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 reader = (new OleDbCommand(_selectAllOrders, _connection)).ExecuteReader();
 
                 if (reader.HasRows)
@@ -1304,6 +1361,7 @@ namespace DataLayer
                 {
                     reader.Close();
                 }
+
                 _connection.Close();
             }
 
@@ -1323,14 +1381,18 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 OleDbCommand command = new OleDbCommand(_selectSingleOrderById, _connection);
                 command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
                 command.Parameters["@IDENTIFIER"].Value = id;
                 reader = (command.ExecuteReader());
 
 
-                if (reader.HasRows && reader.Read())
+                if (reader != null && reader.HasRows && reader.Read())
                 {
                     item = new CustomerOrder();
                     item.ID = Convert.ToInt32(reader["id"]);
@@ -1345,6 +1407,7 @@ namespace DataLayer
                 {
                     reader.Close();
                 }
+
                 _connection.Close();
             }
 
@@ -1360,10 +1423,10 @@ namespace DataLayer
         public void UpdateOrderStatus(int id, string status)
         {
             OleDbCommand command = new OleDbCommand(_updateOrderStatus, _connection);
-            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
             command.Parameters.Add(new OleDbParameter("@STATUS", OleDbType.VarChar));
-            command.Parameters["@IDENTIFIER"].Value = id;
+            command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
             command.Parameters["@STATUS"].Value = status;
+            command.Parameters["@IDENTIFIER"].Value = id;
             RunDbCommandNoResults(command);
         }
 
@@ -1399,7 +1462,11 @@ namespace DataLayer
 
             try
             {
-                _connection.Open();
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
                 reader = (command).ExecuteReader();
 
                 if (reader.HasRows)
@@ -1424,6 +1491,7 @@ namespace DataLayer
                 {
                     reader.Close();
                 }
+
                 _connection.Close();
             }
 

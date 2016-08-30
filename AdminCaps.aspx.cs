@@ -231,7 +231,7 @@ public partial class AdminCaps : System.Web.UI.Page
             }
 
             controller.AddOrUpdateCap(id,
-                txtCapName.Text, Convert.ToDouble(txtCapPrice.Text), txtCapDescription.Text,
+                txtCapName.Text, Convert.ToSingle(txtCapPrice.Text), txtCapDescription.Text,
                 imgCapImagePreview.ImageUrl, Convert.ToInt32(ddlCapCategories.SelectedValue), Convert.ToInt32(ddlCapSuppliers.SelectedValue));
 
             Reload_Sidebar();

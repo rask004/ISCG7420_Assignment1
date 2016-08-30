@@ -554,7 +554,7 @@ namespace BusinessLayer
         /// <param name="imageUrl"></param>
         /// <param name="categoryId"></param>
         /// <param name="supplierId"></param>
-        public void AddOrUpdateCap(int id, string name, double price, string description, string imageUrl, int categoryId, int supplierId)
+        public void AddOrUpdateCap(int id, string name, Single price, string description, string imageUrl, int categoryId, int supplierId)
         {
             if (id < 0)
             {
