@@ -267,7 +267,7 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        ///     Update the ppassword of an existing admin.
+        ///     Update the password of an existing admin.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="password"></param>
@@ -303,7 +303,7 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        ///     Find one customer using a login name
+        ///     Find one customer using an email name
         ///     Returns the first customer found.
         /// </summary>
         /// <param name="login"></param>
@@ -388,10 +388,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        ///     Update the database with the colour represented by this id and name.
+        ///     Update the database with the category represented by this id and name.
         /// </summary>
-        /// <param name="id">id of the Colour. May be for a new category.</param>
-        /// <param name="name">name of the colour.</param>
+        /// <param name="id">id of the category. May be for a new category.</param>
+        /// <param name="name">name of the category.</param>
         public void AddOrUpdateCategory(int id, string name)
         {
             if (id < 0)
@@ -449,10 +449,10 @@ namespace BusinessLayer
 
 
         /// <summary>
-        ///     Update the database with the colour represented by this id and name.
+        ///     Update the database with the supplier represented by this data
         /// </summary>
-        /// <param name="id">id of the Colour. May be for a new category.</param>
-        /// <param name="name">name of the colour.</param>
+        /// <param name="id">id of the supplier. May be for a new supplier.</param>
+        /// <param name="name">name of the supplier.</param>
         /// <param name="contactNumber"></param>
         /// <param name="email"></param>
         public void AddOrUpdateSupplier(int id, string name, string contactNumber, string email)
@@ -465,6 +465,157 @@ namespace BusinessLayer
             {
                 _dm.UpdateExistingSupplier(id, name, contactNumber, email);
             }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<Cap> GetCaps()
+        {
+            return _dm.GetAllCaps();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetCapName(int id)
+        {
+            Cap item = _dm.GetSingleCapById(id);
+            return item.Name;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Double GetCapPrice(int id)
+        {
+            Cap item = _dm.GetSingleCapById(id);
+            return item.Price;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetCapDescription(int id)
+        {
+            Cap item = _dm.GetSingleCapById(id);
+            return item.Description;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetCapImageUrl(int id)
+        {
+            Cap item = _dm.GetSingleCapById(id);
+            return item.ImageUrl;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Category GetCapCategory(int id)
+        {
+            Cap item = _dm.GetSingleCapById(id);
+            return _dm.GetSingleCategoryById(item.CategoryId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Supplier GetCapSupplier(int id)
+        {
+            Cap item = _dm.GetSingleCapById(id);
+            return _dm.GetSingleSupplierById(item.SupplierId);
+        }
+
+
+        /// <summary>
+        ///     Update the database with the cap represented by this data
+        /// </summary>
+        /// <param name="id">id of the cap. May be for a new cap.</param>
+        /// <param name="name">name of the cap.</param>
+        /// <param name="price"></param>
+        /// <param name="description"></param>
+        /// <param name="imageUrl"></param>
+        /// <param name="categoryId"></param>
+        /// <param name="supplierId"></param>
+        public void AddOrUpdateCap(int id, string name, Single price, string description, string imageUrl, int categoryId, int supplierId)
+        {
+            if (id < 0)
+            {
+                _dm.AddNewCap(name, price, description, imageUrl, categoryId, supplierId);
+            }
+            else
+            {
+                _dm.UpdateExistingCap(id, name, price, description, imageUrl, categoryId, supplierId);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<CustomerOrder> GetOrders()
+        {
+            return _dm.GetAllOrders();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public Customer GetCustomerByOrderId(int orderId)
+        {
+            CustomerOrder order = _dm.GetSingleOrderById(orderId);
+            return _dm.GetSingleCustomerById(order.UserId);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public string GetOrderStatus(int orderId)
+        {
+            CustomerOrder order = _dm.GetSingleOrderById(orderId);
+            return order.Status;
+        }
+
+
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        public void UpdateOrderStatus(int id, string status)
+        {
+            _dm.UpdateOrderStatus(id, status);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public List<OrderItem> GetItemsForOrderWithId(int id)
+        {
+            return _dm.GetAllOrderItemsByOrderId(id);
         }
 
     }

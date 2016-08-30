@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace BusinessLayer
 {
 
-    public class Cap
+    public class Cap :BaseBusinessObject
     {
         public Cap()
         {
@@ -13,7 +13,7 @@ namespace BusinessLayer
 
         public string Name { get; set; }
 
-        public double Price { get; set; }
+        public Single Price { get; set; }
 
         public string Description { get; set; }
 
