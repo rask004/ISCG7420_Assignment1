@@ -14,7 +14,9 @@ namespace Common
 
         public static readonly string CapPriceNew = "00.00";
 
-        public static readonly string CapImageNewDefault = "~/Images/Cap_NoImage.png";
+        public static readonly string CapImageDefaultFileName = "~/Images/Cap_NoImage.png";
+
+        public static readonly string CapImageDefaultListName = "Default";
 
         public static readonly string ImagesUploadFolder = "~/UploadFiles";
 

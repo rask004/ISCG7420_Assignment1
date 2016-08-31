@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Activities.Statements;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -18,8 +19,6 @@ namespace DataLayer
     /// </summary>
     public class DataManager
     {
-        private static DataManager _instance;
-
         private readonly OleDbConnection _connection;
 
         private readonly string _buildSiteUserTable = "if OBJECT_ID(N'dbo.SiteUser', N'U') is NULL BEGIN " +
@@ -585,7 +584,7 @@ namespace DataLayer
                 }
                 reader = (new OleDbCommand(_selectAllAdmins, _connection)).ExecuteReader();
 
-                if (reader.HasRows)
+                if (reader != null && reader.HasRows)
                 {
                     while (reader.Read())
                     {
@@ -777,7 +776,7 @@ namespace DataLayer
                 }
                 reader = (new OleDbCommand(_selectAllCategories, _connection)).ExecuteReader();
 
-                if (reader.HasRows)
+                if (reader != null && reader.HasRows)
                 {
                     while (reader.Read())
                     {
@@ -893,7 +892,7 @@ namespace DataLayer
 
                 reader = (new OleDbCommand(_selectAllColours, _connection)).ExecuteReader();
 
-                if (reader.HasRows)
+                if (reader != null && reader.HasRows)
                 {
                     while (reader.Read())
                     {
@@ -1008,7 +1007,7 @@ namespace DataLayer
 
                 reader = (new OleDbCommand(_selectAllSuppliers, _connection)).ExecuteReader();
 
-                if (reader.HasRows)
+                if (reader != null && reader.HasRows)
                 {
                     while (reader.Read())
                     {
@@ -1140,7 +1139,7 @@ namespace DataLayer
 
                 reader = (new OleDbCommand(_selectAllCaps, _connection)).ExecuteReader();
 
-                if (reader.HasRows)
+                if (reader != null && reader.HasRows)
                 {
                     while (reader.Read())
                     {
@@ -1155,6 +1154,8 @@ namespace DataLayer
                         records.Add(item);
                     }
 
+                    // These may close the connection after finding the relevant object.
+                    // As DataReader requires an open connection, finish using the DataReader before using these methods.
                     foreach (Cap cap in records)
                     {
                         cap.Category = GetSingleCategoryById(cap.CategoryId);
@@ -1208,9 +1209,16 @@ namespace DataLayer
                     item.ImageUrl = reader["imageUrl"].ToString();
                     item.CategoryId = Convert.ToInt32(reader["categoryId"]);
                     item.SupplierId = Convert.ToInt32(reader["supplierId"]);
+                }
+
+                // These may close the connection after finding the relevant object.
+                // As DataReader requires an open connection, finish using the DataReader before using these methods.
+                if (item != null)
+                {
                     item.Category = GetSingleCategoryById(item.CategoryId);
                     item.Supplier = GetSingleSupplierById(item.SupplierId);
                 }
+                
             }
             finally
             {
@@ -1308,12 +1316,7 @@ namespace DataLayer
         ///     Update an existing cap by id.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="price"></param>
-        /// <param name="description"></param>
-        /// <param name="imageUrl"></param>
         /// <param name="categoryId"></param>
-        /// <param name="supplierId"></param>
         public void UpdateExistingCapCategoryId(int id, int categoryId)
         {
             OleDbCommand command = new OleDbCommand(_updateCapCategoryId, _connection);
@@ -1342,7 +1345,7 @@ namespace DataLayer
 
                 reader = (new OleDbCommand(_selectAllOrders, _connection)).ExecuteReader();
 
-                if (reader.HasRows)
+                if (reader != null && reader.HasRows)
                 {
                     while (reader.Read())
                     {
@@ -1350,8 +1353,14 @@ namespace DataLayer
                         item.ID = Convert.ToInt32(reader["id"]);
                         item.Status = reader["status"].ToString();
                         item.UserId = Convert.ToInt32(reader["userId"]);
-                        item.Customer = GetSingleCustomerById(item.UserId);
                         records.Add(item);
+                    }
+
+                    // These may close the connection after finding the relevant object.
+                    // As DataReader requires an open connection, finish using the DataReader before using these methods.
+                    foreach (var customerOrder in records)
+                    {
+                        customerOrder.Customer = GetSingleCustomerById(customerOrder.UserId);
                     }
                 }
             }
@@ -1456,12 +1465,20 @@ namespace DataLayer
             List<OrderItem> records = new List<OrderItem>();
             OleDbDataReader reader = null;
 
+            // As each order item references a cap and colour, keep a list of the caps and colours retrieved
+            // then if separate orderItems reference the same Cap or colour, reuse that cap or colour
+            // more efficient for time and memory.
+            Dictionary<int, Cap> foundCaps = new Dictionary<int, Cap>();
+            Dictionary<int, Colour> foundColours = new Dictionary<int, Colour>();
+
             OleDbCommand command = new OleDbCommand(_selectAllOrderItemsWithMatchingOrderId, _connection);
             command.Parameters.Add(new OleDbParameter("@ORDERID", OleDbType.Integer));
             command.Parameters["@ORDERID"].Value = orderId;
 
             try
             {
+                CustomerOrder order = GetSingleOrderById(orderId);
+
                 if (_connection.State != ConnectionState.Open)
                 {
                     _connection.Open();
@@ -1469,7 +1486,7 @@ namespace DataLayer
 
                 reader = (command).ExecuteReader();
 
-                if (reader.HasRows)
+                if (reader != null && reader.HasRows)
                 {
                     while (reader.Read())
                     {
@@ -1478,11 +1495,38 @@ namespace DataLayer
                         item.CapId = Convert.ToInt32(reader["capId"]);
                         item.ColourId = Convert.ToInt32(reader["colourId"]);
                         item.Quantity = Convert.ToInt32(reader["quantity"]);
-                        item.CustomerOrder = GetSingleOrderById(item.OrderId);
-                        item.Cap = GetSingleCapById(item.CapId);
-                        item.Colour = GetSingleColourById(item.ColourId);
+                        item.CustomerOrder = order;
                         records.Add(item);
                     }
+
+                    // make sure if repeat caps / colours are retrieved, they are reused.
+                    // so OrderItems with same cap / colour will reference that same Cap / colour object.
+                    foreach (var orderItem in records)
+                    {
+                        if (foundCaps.ContainsKey(orderItem.CapId))
+                        {
+                            orderItem.Cap = foundCaps[orderItem.CapId];
+                        }
+                        else
+                        {
+                            Cap cap = GetSingleCapById(orderItem.CapId);
+                            orderItem.Cap = cap;
+                            foundCaps[orderItem.CapId] = cap;
+                        }
+
+                        if (foundColours.ContainsKey(orderItem.ColourId))
+                        {
+                            orderItem.Colour = foundColours[orderItem.ColourId];
+                        }
+                        else
+                        {
+                            Colour colour = GetSingleColourById(orderItem.ColourId);
+                            orderItem.Colour = colour;
+                            foundColours[orderItem.ColourId] = colour;
+                        }
+                    }
+
+                    // Suppliers and categories will still be duplicated, until this is fixed.
                 }
             }
             finally
@@ -1496,6 +1540,19 @@ namespace DataLayer
             }
 
             return records;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="capId"></param>
+        /// <param name="colourId"></param>
+        /// <param name="quantity"></param>
+        public void InsertNewOrderItem(int orderId, int capId, int colourId, int quantity)
+        {
+            throw new NotImplementedException("Insert New OrderItems is not implemented yet.");
         }
     }
 }

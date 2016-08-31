@@ -247,7 +247,7 @@
                         </span>
                     </div>
                     <div class="col-md-4">
-                        <asp:DropDownList ID="ddlImgCapList" Enabled="False" runat="server"/>
+                        <asp:DropDownList ID="ddlImgCapList" Enabled="False" AutoPostBack="True" OnSelectedIndexChanged="ddlImgCapList_ChangeSelection" runat="server"/>
                     </div>
                     <div class="col-md-4">
                         <span class="ContentShiftRight">

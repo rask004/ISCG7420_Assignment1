@@ -15,8 +15,6 @@ using WebGrease.Css.Extensions;
 using BusinessLayer;
 using SecurityLayer;
 
-// TODO: fix issue with file uploader.
-
 /// <summary>
 ///      
 /// The Admin page for the Product Entity.
@@ -54,6 +52,28 @@ public partial class AdminCaps : System.Web.UI.Page
         ddlCapSuppliers.DataValueField = "id";
     }
 
+    private void PrepareListOfUploadedImages()
+    {
+        DirectoryInfo uploadedDirectoryInfo = new DirectoryInfo(Server.MapPath(GeneralConstants.ImagesUploadFolder));
+        ddlImgCapList.Items.Clear();
+
+        ddlImgCapList.Items.Add(new ListItem { Text = GeneralConstants.CapImageDefaultListName, Value = GeneralConstants.CapImageDefaultFileName });
+
+        // permitted types are in MIME form. Cannot directly compare to extension.
+        // but each type will include the extension.
+        foreach (var file in uploadedDirectoryInfo.GetFiles())
+        {
+            foreach (var permittedMimeType in GeneralConstants.PermittedContentTypes)
+            {
+                if (permittedMimeType.Contains(file.Extension.Substring(1)))
+                {
+                    ddlImgCapList.Items.Add(new ListItem { Text=file.Name, Value=GeneralConstants.ImagesUploadFolder + "/" + file.Name });
+                    break;
+                }
+            }
+        }
+    }
+
     /// <summary>
     ///     Load the page, prepare the table of items, and the admin form
     /// </summary>
@@ -71,7 +91,8 @@ public partial class AdminCaps : System.Web.UI.Page
             txtCapDescription.Width = new Unit(txtCapDescription.MaxLength / 3 + 2, UnitType.Em);
             txtCapDescription.Height = new Unit(6, UnitType.Em);
 
-            
+            PrepareListOfUploadedImages();
+            ddlImgCapList.SelectedIndex = 0;
 
             Reload_Sidebar();
 
@@ -101,13 +122,18 @@ public partial class AdminCaps : System.Web.UI.Page
             txtCapPrice.Text = price;
             txtCapDescription.Text = desc;
 
-            if (pictureUrl == null)
+            string[] pictureUrlParts = pictureUrl.Split('/');
+
+            string pictureFileName = pictureUrlParts[pictureUrlParts.Length - 1];
+
+            if (pictureFileName == null || ddlImgCapList.Items.FindByText(pictureFileName) == null)
             {
-                imgCapImagePreview.ImageUrl = GeneralConstants.CapImageNewDefault;
+                ddlImgCapList.SelectedIndex = 0;
             }
             else
             {
-                imgCapImagePreview.ImageUrl = pictureUrl;
+                ddlImgCapList.SelectedIndex = ddlImgCapList.Items.IndexOf(ddlImgCapList.Items.FindByText(pictureFileName));
+                ddlImgCapList_ChangeSelection(this, e);
             }
             
             txtCapPrice.Enabled = true;
@@ -124,6 +150,23 @@ public partial class AdminCaps : System.Web.UI.Page
 
             lblMessageJumboTron.Text = "Item " + lblCapId.Text + " Loaded.";
             
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void ddlImgCapList_ChangeSelection(object sender, EventArgs e)
+    {
+        if (ddlImgCapList.SelectedItem.Text.Equals(GeneralConstants.CapImageDefaultListName))
+        {
+            imgCapImagePreview.ImageUrl = ddlImgCapList.SelectedItem.Value;
+        }
+        else
+        {
+            imgCapImagePreview.ImageUrl = ddlImgCapList.SelectedItem.Value;
         }
     }
 
@@ -147,13 +190,15 @@ public partial class AdminCaps : System.Web.UI.Page
         if (ddlImgCapList.Items.Count == 0)
         {
             ddlImgCapList.Enabled = false;
+            ddlImgCapList.SelectedIndex = 0;
         }
         else
         {
             ddlImgCapList.Enabled = true;
+            ddlImgCapList.SelectedIndex = 0;
         }
 
-        imgCapImagePreview.ImageUrl = GeneralConstants.CapImageNewDefault;
+        imgCapImagePreview.ImageUrl = GeneralConstants.CapImageDefaultFileName;
 
         txtCapName.Focus();
 
@@ -173,7 +218,7 @@ public partial class AdminCaps : System.Web.UI.Page
         txtCapName.Enabled = false;
         txtCapDescription.Enabled = false;
         txtCapPrice.Enabled = false;
-        imgCapImagePreview.ImageUrl = GeneralConstants.CapImageNewDefault;
+        imgCapImagePreview.ImageUrl = GeneralConstants.CapImageDefaultFileName;
         ddlCapCategories.Enabled = false;
         ddlCapSuppliers.Enabled = false;
 
@@ -235,6 +280,8 @@ public partial class AdminCaps : System.Web.UI.Page
                 imgCapImagePreview.ImageUrl, Convert.ToInt32(ddlCapCategories.SelectedValue), Convert.ToInt32(ddlCapSuppliers.SelectedValue));
 
             Reload_Sidebar();
+
+            PrepareListOfUploadedImages();
 
             lblMessageJumboTron.Text = "SUCCESS: Cap added or updated: " +
                                         txtCapName.Text +
