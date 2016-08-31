@@ -16,6 +16,9 @@ using SecurityLayer;
 /// </summary>
 public partial class AdminUsers : System.Web.UI.Page
 {
+    /// <summary>
+    /// 
+    /// </summary>
     private void Reload_Sidebar()
     {
         AdminController controller = new AdminController();

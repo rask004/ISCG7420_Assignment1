@@ -21,11 +21,11 @@
             </div>
             <div class="col-md-4">
                 <span>
-                    <input type="file" id="uploadFileImage" name="uploadFileImage" onclick="previewFile()"/>
+                    <asp:FileUpload ID="fupImageUploader" runat="server"/>
                 </span>
             </div>
             <div class="col-md-4">
-                <!-- submit file button -->
+                <asp:Button ID="btnUploadImage" Text="Upload..." OnClick="btnUploadImage_OnClick" runat="server"/>
             </div>
             <div class="col-md-2">
                 <span class="BlankRow"></span>
@@ -39,7 +39,7 @@
                 <span class="BlankRow"></span>
             </div>
             <div class="col-md-8">
-                Status message will show here.
+                <asp:Label ID="lblStatusMessage" runat="server" Text="Ready."/>
             </div>
             <div class="col-md-2">
                 <span class="BlankRow"></span>
@@ -53,7 +53,25 @@
                 <span class="BlankRow"></span>
             </div>
             <div class="col-md-8">
-                <div id="fileListingDiv" class="container-fluid" style="border: 1px solid black;" runat="server"></div>
+                <div id="fileListingDiv" class="container-fluid" runat="server">
+                    <asp:DataList RepeatDirection="Vertical" OnItemDataBound="dtlUploadedImages_OnItemDataBound" RepeatColumns="2" RepeatLayout="Table" 
+                        CellSpacing="10" CellPadding="5" ID="dtlUploadedImages" runat="server">
+                        <ItemTemplate>
+                            <td runat="server" style="border: black 1px solid; padding: 0.5%">
+                                <p>
+                                    <asp:Image ID="imgCurrentImage" ImageUrl=<%# DataBinder.Eval(Container.DataItem, "Value") %> runat="server"/>
+                                </p>
+                                <p>
+                                    <%# DataBinder.Eval(Container.DataItem, "Text") %>
+                                </p>
+                                <p>
+                                    <asp:Button ID="btnDeleteImage" Text="Delete" runat="server"/>
+                                </p>
+
+                            </td>
+                        </ItemTemplate>
+                    </asp:DataList>
+                </div>
             </div>
             
             <div class="col-md-2">
