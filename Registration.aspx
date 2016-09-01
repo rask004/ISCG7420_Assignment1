@@ -350,8 +350,7 @@
                     <div class="col-md-5">
                         <span class="ContentShiftLeft DecoSubHeader">
                             <H5 style="margin-left: 33.3%"><b>
-                                <input ID="btnResetRegistration" type="reset" value="Reset" 
-                                    onclick="this.form.reset(); return false;" OnServerClick="Reset_Click" runat="server"/>
+                                <input ID="btnResetRegistration" type="reset" value="Reset" OnClick="Reset_Click" runat="server"/>
                             </b></H5>
                         </span>
                     </div>
@@ -359,7 +358,7 @@
                         <span class="ContentShiftRight DecoSubHeader">
                             <H5 style="margin-left: 33.3%"><b>
                                 <input ID="btnSubmitRegistration" name="submitRegistration" 
-                                    type="submit" value="Register" OnServerClick="Register_Click" runat="server"/>
+                                    type="submit" value="Register" OnClick="Register_Click" runat="server"/>
                             </b></H5>
                         </span>
                     </div>
