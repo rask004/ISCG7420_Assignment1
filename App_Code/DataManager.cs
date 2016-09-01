@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Activities.Statements;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7,7 +8,7 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Web;
 using BusinessLayer;
-
+using System.IO;
 
 namespace DataLayer
 {
@@ -151,7 +152,7 @@ namespace DataLayer
 
         private DataManager()
         {
-            _connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["DeveloperExpressConnection"]
+            _connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["ReleaseConnection"]
                 .ConnectionString);
 
             BuildDatabase();
@@ -207,6 +208,19 @@ namespace DataLayer
                     _connection.Open();
                 }
                 dbCommand.ExecuteNonQuery();
+            }
+            catch (OleDbException ex)
+            {
+                /* 
+                using (StreamWriter writer = new StreamWriter("Logs/Errors", true, Encoding.UTF8))
+                {
+                    writer.WriteLine("Exception: " + ex.Message);
+                    writer.WriteLine("Inner Exception: " + ex.InnerException.Message);
+                    writer.Flush();
+                } 
+                */
+               
+                throw ex;
             }
             finally
             {
