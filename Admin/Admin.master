@@ -14,16 +14,15 @@
 <head runat="server">
     <asp:ContentPlaceHolder ID="TitlePlaceholder" runat="server">
         <title>Quality Caps Website</title>
-        <script type="text/javascript" src="~/JS/common.js">
+        <script type="text/javascript" src="../Content/common.js">
         </script>
-        <script type="text/javascript" src="~/JS/Validation.js">
+        <script type="text/javascript" src="../Content/Validation.js">
         </script>
      </asp:ContentPlaceHolder>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <%--Bootstrap CSS code--%>
     <webopt:bundlereference runat="server" path="~/Content/css" />
-    <link rel="stylesheet" type="text/css" href="~/CSS/Common.css"/>
 </head>
 <body>
     

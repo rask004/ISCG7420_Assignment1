@@ -2,9 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
     <title>Administration - Home Page</title>
-    <script type="text/javascript" src="~/JS/common.js" >
+    <script type="text/javascript" src="~/Content/common.js" >
     </script>
-    <script type="text/javascript" src="~/JS/Validation.js">
+    <script type="text/javascript" src="~/Content/Validation.js">
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
