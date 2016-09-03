@@ -10,7 +10,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="AdminContentMain" Runat="Server">
-    <div class="container-fluid PageSection" style="max-width: 66%; ">
+    <div class="container-fluid PageSection" >
         <div style="text-align: center; display: table-cell; vertical-align: middle">
                 <asp:Login ID="lgnAdminSection" runat="server"></asp:Login>
                 <!-- add asp controls for reset password -->

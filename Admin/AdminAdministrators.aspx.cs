@@ -32,6 +32,19 @@ public partial class AdminUsers : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session[Security.SessionIdentifierLogin] == null
+            || Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            // redirect to Login page
+        }
+        else
+        {
+            // get login name through Session SessionIdentifierLogin
+            // retrieve password hash using login and AdminController.
+            // request security token comparison, if not matching then permanent redirect.
+
+        }
+
         if (!Page.IsPostBack)
         {
             txtUserEmail.MaxLength = GeneralConstants.EmailMaxLength;

@@ -26,14 +26,14 @@
 
     void Session_Start(object sender, EventArgs e) 
     {
-        Session[Security.UserNameSessionIdentifier] = null;
-        Session[Security.AuthenticationSessionIdentifier] = null;
+        Session[Security.SessionIdentifierLogin] = null;
+        Session[Security.SessionIdentifierSecurityToken] = null;
     }
 
     void Session_End(object sender, EventArgs e) 
     {
-        Session[Security.UserNameSessionIdentifier] = null;
-        Session[Security.AuthenticationSessionIdentifier] = null;
+        Session[Security.SessionIdentifierLogin] = null;
+        Session[Security.SessionIdentifierSecurityToken] = null;
     }
 
 </script>

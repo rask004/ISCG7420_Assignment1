@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -178,17 +179,21 @@ public partial class Registration : System.Web.UI.Page
         }
         else
         {
-            lblErrorMessages.Text = "Form is Valid. New Customer has been created.";
-
             PublicController controller = new PublicController();
 
             // add the registered user to the db.
-            controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
+            /*controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
                 txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
-                txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
+                txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text); */
             
             // email the Customer their registration details.
             // TODO: get emailing working on the web server.
+
+            StringBuilder builder = new StringBuilder("~/Customer/Login.aspx");
+            builder.Append("?").Append(GeneralConstants.QueryStringGeneralMessageKey);
+            builder.Append("=").Append(GeneralConstants.QueryStringGeneralMessageSuccessfulRegistration);
+
+            Response.RedirectPermanent(builder.ToString());
         }
 
         

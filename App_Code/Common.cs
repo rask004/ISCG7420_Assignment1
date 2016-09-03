@@ -3,6 +3,9 @@ using System.Net.Mail;
 
 namespace Common
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class GeneralConstants
     {
         public static readonly string CustomerUserType = "C";
@@ -71,8 +74,15 @@ namespace Common
         public static readonly string LogFileDefaultLocation = "~/Logs/Site.Log";
 
         public static readonly string LoggerApplicationStateKey = "GlobalLogger";
+
+        public static readonly string QueryStringGeneralMessageKey = "message";
+
+        public static readonly string QueryStringGeneralMessageSuccessfulRegistration = "e5vt8n57";
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class GeneralFunctions
     {
         public static void SendEmail(string destinationEmail, string subject, string messageBody, string replyToEmail)

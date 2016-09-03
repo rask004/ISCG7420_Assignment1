@@ -76,9 +76,9 @@ public partial class SiteMaster : MasterPage
         try
         {
             MasterAdminSessionCheck.Text =
-                Security.UserNameSessionIdentifier + "=" + Session[Security.UserNameSessionIdentifier].ToString() +
-                ";" + Security.AuthenticationSessionIdentifier + "=" +
-                Session[Security.AuthenticationSessionIdentifier].ToString();
+                Security.SessionIdentifierLogin + "=" + Session[Security.SessionIdentifierLogin].ToString() +
+                ";" + Security.SessionIdentifierSecurityToken + "=" +
+                Session[Security.SessionIdentifierSecurityToken].ToString();
         }
         catch (NullReferenceException ex)
         {
