@@ -17,6 +17,9 @@ using SecurityLayer;
 /// </summary>
 public partial class AdminColours : System.Web.UI.Page
 {
+    /// <summary>
+    /// 
+    /// </summary>
     private void Reload_Sidebar()
     {
         AdminController controller = new AdminController();

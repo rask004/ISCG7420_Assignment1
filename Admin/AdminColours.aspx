@@ -1,24 +1,23 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.master" AutoEventWireup="true" CodeFile="AdminCategories.aspx.cs" Inherits="AdminCategories" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/Admin.master" AutoEventWireup="true" CodeFile="AdminColours.aspx.cs" Inherits="AdminColours" %>
 
 <%--  
-    The Admin page for the Category Entity.
+    The Admin page for the Colour Entity.
     
     Change Log:
-        10-8-16  15:01       AskewR04        Created page and layout.
-        11-8-16  19:00       AskewR04        Updated page to meet changes in master page, and improved with Data controls.
+        18-8-16  12:00       AskewR04        Created page and layout.
 
 --%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <title>Administration - Categories</title>
-    <script type="text/javascript" src="JS/common.js" >
+    <title>Administration - Colours</title>
+    <script type="text/javascript" src="~/Content/common.js" >
     </script>
-    <script type="text/javascript" src="JS/Validation.js">
+    <script type="text/javascript" src="~/Content/Validation.js">
     </script>
 </asp:Content>
 
-<asp:Content ID="AdminCategorySideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
-    <div id="CategoryListingSection" class="AdminSection" 
+<asp:Content ID="AdminColourSideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
+    <div id="ColourListingSection" class="AdminSection" 
         style="position: fixed; overflow-y: scroll; overflow-x: hidden; width: 22%; max-height:86%">
         <%-- to be filled with items from the currently used DB Table --%>
         <div class="row">
@@ -73,8 +72,8 @@
     </div>
 </asp:Content>
 
-<asp:Content ID="AdminCategoryMain" ContentPlaceHolderID="AdminContentMain" Runat="Server">
-    <div id="CategoryEditingForm" class="container AdminSection" runat="server">
+<asp:Content ID="AdminColourMain" ContentPlaceHolderID="AdminContentMain" Runat="Server">
+    <div id="ColourEditingForm" class="container AdminSection" runat="server">
         <div class="row">
             <span class="BlankRow"></span>
         </div>
@@ -84,8 +83,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <span class="ContentShiftRight">
-                            <asp:Button ID="btnAddCategory" CausesValidation="false" OnClick="AddButton_Click" 
-                                CssClass="MainButton" Text="Add New Category..." runat="server"/>
+                            <asp:Button ID="btnAddColour" CausesValidation="false" OnClick="AddButton_Click" 
+                                CssClass="MainButton" Text="Add New Colour..." runat="server"/>
                         </span>
                     </div>
                 </div>
@@ -98,13 +97,13 @@
                     </div>
                     <div class="col-md-4">
                         <span>
-                            <b><asp:Label CssClass="MainItemHeader" ID="lblCategoryIdHeader" runat="server" AssociatedControlID="lblCategoryId" 
+                            <b><asp:Label CssClass="MainItemHeader" ID="lblColourIdHeader" runat="server" AssociatedControlID="lblColourId" 
                                                 Text="ID:" /></b>
                         </span>
                     </div>
                     <div class="col-md-4">
                         <span class="ContentShiftRight ">
-                            <b><asp:Label ID="lblCategoryId" Text="Category_Id" runat="server" /></b>
+                            <b><asp:Label ID="lblColourId" Text="Colour_Id" runat="server" /></b>
                         </span>
                     </div>
                     <div class="col-md-2">
@@ -117,12 +116,12 @@
                     </div>
                     <div class="col-md-4">
                         <span>
-                            <asp:Label ID="lblCategoryNameHeader" runat="server" AssociatedControlID="txtCategoryName" 
-                                                CssClass="MainItemHeader" Text="Category Name:" />
+                            <asp:Label ID="lblColourNameHeader" runat="server" AssociatedControlID="txtColourName" 
+                                                CssClass="MainItemHeader" Text="Colour Name:" />
                         </span>
                     </div>
                     <div class="col-md-4">
-                        <span class="ContentShiftRight"><asp:TextBox ID="txtCategoryName" Enabled="false" runat="server" /></span>
+                        <span class="ContentShiftRight"><asp:TextBox ID="txtColourName" Enabled="false" runat="server" /></span>
                     </div>
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
@@ -135,15 +134,15 @@
                     </div>
                     <div class="col-md-4">
                         <span class="ContentShiftLeft"><b>
-                            <asp:RequiredFieldValidator ID="valRequiredCategoryName" runat="server" 
-                            ControlToValidate="txtCategoryName"
-                            ErrorMessage="The Category Name is a required field." ForeColor="red"
+                            <asp:RequiredFieldValidator ID="valRequiredColourName" runat="server" 
+                            ControlToValidate="txtColourName"
+                            ErrorMessage="The Colour Name is a required field." ForeColor="red"
                             />
-                            <asp:CustomValidator runat="server"  ID="valCharsCategoryName"
-                            ControlToValidate="txtCategoryName"
-                            ErrorMessage="The Category Name must only have alphabetic characters, spaces, commas, periods or apostrophes."
+                            <asp:CustomValidator runat="server"  ID="valCharsColourName"
+                            ControlToValidate="txtColourName"
+                            ErrorMessage="The Colour Name must only have alphabetic characters, spaces, commas, periods or apostrophes."
                             ClientValidationFunction="ValidateNameString"
-                            OnServerValidate="CategoryNameValidation"
+                            OnServerValidate="ColourNameValidation"
                             Display="Static"
                             ForeColor="Red"
                             />
@@ -188,12 +187,9 @@
             </ContentTemplate>
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="btnSaveChanges" />
-                <asp:AsyncPostBackTrigger ControlID="btnAddCategory"/>
+                <asp:AsyncPostBackTrigger ControlID="btnAddColour"/>
                 <asp:AsyncPostBackTrigger ControlID="btnCancelChanges"/>
             </Triggers>
         </asp:UpdatePanel>
     </div>
 </asp:Content>
-
-
-

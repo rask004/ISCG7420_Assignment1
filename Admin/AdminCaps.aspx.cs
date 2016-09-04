@@ -25,6 +25,9 @@ using SecurityLayer;
 /// </summary>
 public partial class AdminCaps : System.Web.UI.Page
 {
+    /// <summary>
+    /// 
+    /// </summary>
     private void Reload_Sidebar()
     {
         AdminController controller = new AdminController();
@@ -52,6 +55,9 @@ public partial class AdminCaps : System.Web.UI.Page
         ddlCapSuppliers.DataValueField = "id";
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     private void PrepareListOfUploadedImages()
     {
         DirectoryInfo uploadedDirectoryInfo = new DirectoryInfo(Server.MapPath(GeneralConstants.ImagesUploadFolder));

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.master" AutoEventWireup="true" CodeFile="AdminCustomerUsers.aspx.cs" Inherits="AdminUsers" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/Admin.master" AutoEventWireup="true" CodeFile="AdminCustomerUsers.aspx.cs" Inherits="AdminUsers" %>
 
 <%--  
     The Admin page for the SiteUsers Entity - Customers.
@@ -12,9 +12,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
     <title>Administration - Customers</title>
-    <script type="text/javascript" src="JS/common.js" >
+    <script type="text/javascript" src="~/Content/common.js" >
     </script>
-    <script type="text/javascript" src="JS/Validation.js">
+    <script type="text/javascript" src="~/Content/Validation.js">
     </script>
 </asp:Content>
 

@@ -14,16 +14,15 @@
 <head runat="server">
     <asp:ContentPlaceHolder ID="TitlePlaceholder" runat="server">
         <title>Quality Caps Website</title>
-        <script type="text/javascript" src="JS/common.js">
+        <script type="text/javascript" src="../Content/common.js">
         </script>
-        <script type="text/javascript" src="JS/Validation.js">
+        <script type="text/javascript" src="../Content/Validation.js">
         </script>
      </asp:ContentPlaceHolder>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <%--Bootstrap CSS code--%>
     <webopt:bundlereference runat="server" path="~/Content/css" />
-    <link rel="stylesheet" type="text/css" href="~/CSS/Common.css"/>
 </head>
 <body>
     
@@ -47,21 +46,21 @@
                          <span class="icon-bar"></span>
                          <span class="icon-bar"></span>
                       </button>
-                    <a class="navbar-left" runat="server" href="~/AdminHome"><img ID="imgLogo" runat="server" Height="80" alt="Logo" src="~/Images/Logo.png"/></a>
+                    <a class="navbar-left" runat="server" href="~/Admin/AdminHome"><img ID="imgLogo" runat="server" Height="80" alt="Logo" src="~/Images/Logo.png"/></a>
                 </div>
                 <%--links--%>
                 <div class="navbar-collapse collapse col-md-9" style="float:right">
                     <div class="container">
                         <span style="float:left">
                             <ul class="nav navbar-nav">
-                                <li><a style="color: white" runat="server" href="~/AdminImages">Manage Images</a></li>
-                                <li><a style="color: white" runat="server" href="~/AdminAdministrators">Administrators</a></li>
-                                <li><a style="color: white" runat="server" href="~/AdminCustomerUsers">Customers</a></li>
-                                <li><a style="color: white" runat="server" href="~/AdminSuppliers">Suppliers</a></li>
-                                <li><a style="color: white" runat="server" href="~/AdminCategories">Categories</a></li>
-                                <li><a style="color: white" runat="server" href="~/AdminCaps">Products</a></li>
-                                <li><a style="color: white" runat="server" href="~/AdminColours">Colours</a></li>
-                                <li><a style="color: white" runat="server" href="~/AdminOrders">Orders</a></li>
+                                <li><a style="color: white" runat="server" href="~/Admin/AdminImages">Manage Images</a></li>
+                                <li><a style="color: white" runat="server" href="~/Admin/AdminAdministrators">Administrators</a></li>
+                                <li><a style="color: white" runat="server" href="~/Admin/AdminCustomerUsers">Customers</a></li>
+                                <li><a style="color: white" runat="server" href="~/Admin/AdminSuppliers">Suppliers</a></li>
+                                <li><a style="color: white" runat="server" href="~/Admin/AdminCategories">Categories</a></li>
+                                <li><a style="color: white" runat="server" href="~/Admin/AdminCaps">Products</a></li>
+                                <li><a style="color: white" runat="server" href="~/Admin/AdminColours">Colours</a></li>
+                                <li><a style="color: white" runat="server" href="~/Admin/AdminOrders">Orders</a></li>
                             </ul>
                         </span>
                     </div>

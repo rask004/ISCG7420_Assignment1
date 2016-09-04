@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Web;
+using Common;
+using CommonLogging;
 using DataLayer;
 using SecurityLayer;
 
@@ -10,9 +14,11 @@ namespace BusinessLayer
     /// <summary>
     /// Business Layer controller for Adnin pages.
     /// </summary>
-    public class AdminController
+    public class AdminController :IDisposable
     {
         private readonly DataManager _dm;
+
+        private readonly Logger _logger;
 
         /// <summary>
         ///     Constructor
@@ -22,6 +28,11 @@ namespace BusinessLayer
         {
             // get reference to Data Manager here.
             _dm = DataManager.Instance;
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.AdminController :: AdminController Created.");
+            _logger = (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger);
+            _logger.Log(LoggingLevel.Info, builder.ToString());
         }
 
         /// <summary>
@@ -31,6 +42,10 @@ namespace BusinessLayer
         public List<Customer> GetCustomers()
         {
             List<Customer> items = _dm.GetAllCustomers();
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomers :: Retrieved all Customers.");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return items;
         }
 
@@ -42,6 +57,11 @@ namespace BusinessLayer
         public string GetCustomerFirstName(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerFirstName :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for FirstName");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.FirstName;
         }
 
@@ -53,6 +73,11 @@ namespace BusinessLayer
         public string GetCustomerLastName(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerLastName :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for LastName");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.LastName;
         }
 
@@ -64,6 +89,11 @@ namespace BusinessLayer
         public string GetCustomerLogin(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerLogin :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for Login");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.Login;
         }
 
@@ -75,6 +105,11 @@ namespace BusinessLayer
         public string GetCustomerEmail(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerEmail :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for Email");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.Email;
         }
 
@@ -86,6 +121,11 @@ namespace BusinessLayer
         public string GetCustomerHomeNumber(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerHomeNumber :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for HomeNumber");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.HomeNumber;
         }
 
@@ -97,6 +137,11 @@ namespace BusinessLayer
         public string GetCustomerWorkNumber(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerWorkNumber :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for WorkNumber");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.WorkNumber;
         }
 
@@ -108,6 +153,11 @@ namespace BusinessLayer
         public string GetCustomerMobileNumber(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerMobileNumber :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for MobileNumber");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.MobileNumber;
         }
 
@@ -119,6 +169,11 @@ namespace BusinessLayer
         public string GetCustomerStreetAddress(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerStreetAddress :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for StreetAddress");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.StreetAddress;
         }
 
@@ -130,6 +185,11 @@ namespace BusinessLayer
         public string GetCustomerSuburb(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerSuburb :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for Suburb");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.Suburb;
         }
 
@@ -141,6 +201,11 @@ namespace BusinessLayer
         public string GetCustomerCity(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCustomerCity :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for City");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.City;
         }
 
@@ -152,6 +217,11 @@ namespace BusinessLayer
         public bool GetIsCustomerDisabled(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetIsCustomerDisabled :: Retrieved Single Customer: ");
+            builder.Append(id);
+            builder.Append(" for IsDisabled");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return customer.IsDisabled;
         }
 
@@ -164,6 +234,11 @@ namespace BusinessLayer
         public void DisableCustomer(int id)
         {
             _dm.DisableExistingCustomer(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.DisableCustomer :: Disabled Customer: ");
+            builder.Append(id);
+            _logger.Log(LoggingLevel.Info, builder.ToString());
+
         }
 
         /// <summary>
@@ -198,6 +273,21 @@ namespace BusinessLayer
                 _dm.UpdateExistingCustomer(id, email, login, firstName, lastName, homeNumber,
                     workNumber, mobileNumber, streetAddress, suburb, city);
             }
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.AddOrUpdateCustomer :: Completed Update, Single Customer: ");
+            if (id < 0)
+            {
+                builder.Append(firstName);
+                builder.Append(" ");
+                builder.Append(lastName);
+            }
+            else
+            {
+                builder.Append(id);
+            }
+            _logger.Log(LoggingLevel.Info, builder.ToString());
+
         }
 
         /// <summary>
@@ -209,6 +299,11 @@ namespace BusinessLayer
         {
             string hash = Security.GetPasswordHash(password);
             _dm.UpdateExistingCustomerPassword(id, hash);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.UpdateCustomerPassword :: Completed Update, Single Customer: ");
+            builder.Append(id);
+            _logger.Log(LoggingLevel.Info, builder.ToString());
+
         }
 
 
@@ -219,6 +314,9 @@ namespace BusinessLayer
         public List<Administrator> GetAdministrators()
         {
             List<Administrator> items = _dm.GetAllAdministrators();
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetAdministrators :: Retrieved all administrators ");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return items;
         }
 
@@ -230,6 +328,11 @@ namespace BusinessLayer
         public string GetAdminLogin(int id)
         {
             Administrator admin = _dm.GetSingleAdministratorById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetAdminLogin :: Retrieved Single Admin: ");
+            builder.Append(id);
+            builder.Append(" for Login");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return admin.Login;
         }
 
@@ -241,6 +344,11 @@ namespace BusinessLayer
         public string GetAdminEmail(int id)
         {
             Administrator admin = _dm.GetSingleAdministratorById(id);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetAdminEmail :: Retrieved Single Admin: ");
+            builder.Append(id);
+            builder.Append(" for Email");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return admin.Email;
         }
 
@@ -264,6 +372,19 @@ namespace BusinessLayer
                 // update admin
                 _dm.UpdateExistingAdmin(id, email, login);
             }
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.AddOrUpdateAdmin :: Completed Update, Admin: ");
+            if (id < 0)
+            {
+                builder.Append(login);
+            }
+            else
+            {
+                builder.Append(id);
+            }
+            
+            _logger.Log(LoggingLevel.Info, builder.ToString());
         }
 
         /// <summary>
@@ -274,6 +395,10 @@ namespace BusinessLayer
         public void UpdateAdminPassword(int id, string password)
         {
             string hash = Security.GetPasswordHash(password);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.UpdateAdminPassword :: Updated Admin: ");
+            builder.Append(id);
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             _dm.UpdateExistingAdminPassword(id, hash);
         }
 
@@ -287,8 +412,12 @@ namespace BusinessLayer
         /// <returns>The first matching SiteUser (admin) or null</returns>
         public Administrator FindAdminByLoginName(string login)
         {
-            return _dm.GetSingleAdministratorByLogin(login);
-
+            Administrator admin =  _dm.GetSingleAdministratorByLogin(login);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.FindAdminByLoginName :: Retrieved Single Admin: ");
+            builder.Append(admin.ID);
+            _logger.Log(LoggingLevel.Info, builder.ToString());
+            return admin;
         }
 
         /// <summary>
@@ -299,7 +428,12 @@ namespace BusinessLayer
         /// <returns>The first matching Customer or null</returns>
         public Customer FindCustomerByLogin(string login)
         {
-            return _dm.GetSingleCustomerByLogin(login);
+            Customer customer = _dm.GetSingleCustomerByLogin(login);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.FindCustomerByLogin :: Retrieved Single Customer: ");
+            builder.Append(customer.ID);
+            _logger.Log(LoggingLevel.Info, builder.ToString());
+            return customer;
         }
 
         /// <summary>
@@ -310,7 +444,12 @@ namespace BusinessLayer
         /// <returns>The first matching Customer or null</returns>
         public Customer FindCustomerByEmail(string email)
         {
-            return _dm.GetSingleCustomerByEmail(email);
+            Customer customer = _dm.GetSingleCustomerByEmail(email);
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.FindCustomerByEmail :: Retrieved Single Customer: ");
+            builder.Append(customer.ID);
+            _logger.Log(LoggingLevel.Info, builder.ToString());
+            return customer;
         }
 
 
@@ -321,6 +460,9 @@ namespace BusinessLayer
         public List<Category> GetCategories()
         {
             List<Category> items = _dm.GetAllCategories();
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCategories :: Retrieved All Categories ");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return items;
         }
 
@@ -331,6 +473,9 @@ namespace BusinessLayer
         public List<Colour> GetColours()
         {
             List<Colour> items = _dm.GetAllColours();
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.GetCategories :: Retrieved All Colours ");
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return items;
         }
 
@@ -343,12 +488,21 @@ namespace BusinessLayer
         public string GetColourName(int id)
         {
             var item = _dm.GetSingleColourById(id);
+            StringBuilder builder;
 
             if (item == null)
             {
+                builder = new StringBuilder();
+                builder.Append("AdminController.GetColourName :: Failed to retrieve Single Colour. ID: ");
+                builder.Append(id);
+                _logger.Log(LoggingLevel.Error, builder.ToString());
                 return null;
             }
 
+            builder = new StringBuilder();
+            builder.Append("AdminController.GetColourName :: Retrieved Single Colour: ");
+            builder.Append(id);
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return item.Name;
         }
 
@@ -361,12 +515,21 @@ namespace BusinessLayer
         public string GetCategoryName(int id)
         {
             var item = _dm.GetSingleCategoryById(id);
+            StringBuilder builder;
 
             if (item == null)
             {
+                builder = new StringBuilder();
+                builder.Append("AdminController.GetCategoryName :: Failed to retrieve Single Category. ID: ");
+                builder.Append(id);
+                _logger.Log(LoggingLevel.Error, builder.ToString());
                 return null;
             }
 
+            builder = new StringBuilder();
+            builder.Append("AdminController.GetCategoryName :: Retrieved Single Category: ");
+            builder.Append(id);
+            _logger.Log(LoggingLevel.Info, builder.ToString());
             return item.Name;
         }
 
@@ -385,6 +548,11 @@ namespace BusinessLayer
             {
                 _dm.UpdateExistingColour(id, name);
             }
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.AddOrUpdateColour :: Updated Colour: ");
+            builder.Append(id);
+            _logger.Log(LoggingLevel.Error, builder.ToString());
         }
 
         /// <summary>
@@ -402,6 +570,11 @@ namespace BusinessLayer
             {
                 _dm.UpdateExistingCategory(id, name);
             }
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append("AdminController.AddOrUpdateCategory :: Updated Categoru: ");
+            builder.Append(id);
+            _logger.Log(LoggingLevel.Error, builder.ToString());
         }
 
 
@@ -618,5 +791,12 @@ namespace BusinessLayer
             return _dm.GetAllOrderItemsByOrderId(id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            _logger.Dispose();
+        }
     }
 }

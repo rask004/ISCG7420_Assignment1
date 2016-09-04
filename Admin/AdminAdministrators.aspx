@@ -1,29 +1,32 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.master" AutoEventWireup="true" CodeFile="AdminSuppliers.aspx.cs" Inherits="AdminSupplier" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/Admin.master" AutoEventWireup="true" CodeFile="AdminAdministrators.aspx.cs" Inherits="AdminUsers" %>
 
 <%--  
-    The Admin page for the Supplier Entity.
+    The Admin page for the SiteUsers Entity. - Admin users only
     
     Change Log:
-        18-8-16  14:30       AskewR04        Created page and layout.
+    
+    25-8-16     00:35       AskewR04        Created Admin Page for Customers.
+        
 
 --%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <title>Administration - Suppliers</title>
-    <script type="text/javascript" src="JS/common.js" >
+    <title>Administration - Users</title>
+    <script type="text/javascript" src="~/Content/common.js" >
     </script>
-    <script type="text/javascript" src="JS/Validation.js">
+    <script type="text/javascript" src="~/Content/Validation.js">
     </script>
+    
 </asp:Content>
 
-<asp:Content ID="AdminSupplierSideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
-    <div id="SupplierListingSection" class="AdminSection" 
+<asp:Content ID="AdminUsersSideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
+    <div id="UsersListingSection" class="AdminSection" 
         style="position: fixed; overflow-y: scroll; overflow-x: hidden; width: 22%; max-height:86%">
         <%-- to be filled with items from the currently used DB Table --%>
         <div class="row">
             <div id="divLeftSidebar" class="col-md-12">
                 <span class="DecoHeader" style="margin-left: 11%;">
-                    <H3 style="margin-left: 25%"><asp:Label ID="lblSideBarHeader" Text="SideBarName" runat="server" /></H3>  
+                    <H3 style="margin-left: 20%"><asp:Label ID="lblSideBarHeader" Text="SideBarName" runat="server" /></H3>  
                 </span>
             </div>
         </div>
@@ -46,13 +49,13 @@
                             </HeaderTemplate>
 
                             <ItemTemplate>
-                                <tr class="col-md-12">
+                                <tr class="container-fluid">
                                     <td class="col-md-12 SidebarItem">
                                         <asp:Button
                                             ID = "btnSideBarItem"
                                             CssClass = "col-md-12 SidebarButton" 
                                             CausesValidation="false"
-                                            Text ='<%# DataBinder.Eval(Container.DataItem, "name") %>'
+                                            Text ='<%# DataBinder.Eval(Container.DataItem, "login") %>'
                                             CommandName="loadItem" 
                                             CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'
                                             runat="server"/>
@@ -72,8 +75,9 @@
     </div>
 </asp:Content>
 
-<asp:Content ID="AdminSupplierMain" ContentPlaceHolderID="AdminContentMain" Runat="Server">
-    <div id="SupplierEditingForm" class="container AdminSection" runat="server">
+<asp:Content ID="AdministratorsMain" ContentPlaceHolderID="AdminContentMain" Runat="Server">
+    <div id="UsersEditingForm" class="container AdminSection" 
+        style="position: fixed; overflow-y: auto; overflow-x: hidden; width: 55%; max-height:86%">
         <div class="row">
             <span class="BlankRow"></span>
         </div>
@@ -83,9 +87,14 @@
                 <div class="row">
                     <div class="col-md-12">
                         <span class="ContentShiftRight">
-                            <asp:Button ID="btnAddSupplier" CausesValidation="false" OnClick="AddButton_Click" 
-                                CssClass="MainButton" Text="Add New Supplier..." runat="server"/>
+                            <asp:Button ID="btnAddAdmin" CausesValidation="false" OnClick="AddButton_Click" 
+                                CssClass="MainButton" Text="Add New Admin..." runat="server"/>
                         </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="BlankRow"></span>
                     </div>
                 </div>
                 <div class="row">
@@ -93,18 +102,51 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
+                        <span class="BlankRow"></span>
                         
                     </div>
                     <div class="col-md-4">
                         <span>
-                            <b><asp:Label CssClass="MainItemHeader" ID="lblSupplierIdHeader" runat="server" AssociatedControlID="lblSupplierId" 
+                            <b><asp:Label CssClass="MainItemHeader" ID="lblUsersIdHeader" runat="server" 
+                                AssociatedControlID="lblUsersId" 
                                                 Text="ID:" /></b>
                         </span>
                     </div>
                     <div class="col-md-4">
                         <span class="ContentShiftRight ">
-                            <b><asp:Label ID="lblSupplierId" Text="Supplier_Id" runat="server" /></b>
+                            <b><asp:Label ID="lblUsersId" Text="Placeholder_Id" runat="server" /></b>
                         </span>
+                    </div>
+                    <div class="col-md-2">
+                        
+                    </div>
+                </div>
+                <div class="row">
+                    <span class="BlankRow"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                    <div class="col-md-4">
+                        
+                    </div>
+                    <div class="col-md-4">
+                        
+                    </div>
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                    <div class="col-md-4">
+                        
+                    </div>
+                    <div class="col-md-4">
+                        
                     </div>
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
@@ -116,94 +158,51 @@
                     </div>
                     <div class="col-md-4">
                         <span>
-                            <asp:Label ID="lblSupplierNameHeader" runat="server" AssociatedControlID="txtSupplierName" 
-                                                CssClass="MainItemHeader" Text="Supplier Name:" />
-                        </span>
-                    </div>
-                    <div class="col-md-4">
-                        <span class="ContentShiftRight"><asp:TextBox ID="txtSupplierName" Enabled="false" runat="server" /></span>
-                    </div>
-                    <div class="col-md-2">
-                        <span class="BlankRow"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-4">
-                    </div>
-                    <div class="col-md-4">
-                        <span class="ContentShiftLeft"><b>
-                            <asp:RequiredFieldValidator ID="valRequiredSupplierName" runat="server" 
-                            ControlToValidate="txtSupplierName"
-                            ErrorMessage="The Supplier Name is a required field." ForeColor="red"
-                            />
-                            <asp:CustomValidator runat="server"  ID="valInvalidSupplierName"
-                            ControlToValidate="txtSupplierName"
-                            ErrorMessage="The Supplier Name must only have alphabetic characters, spaces, commas, periods or apostrophes."
-                            ClientValidationFunction="ValidateNameString"
-                            OnServerValidate="SupplierNameValidation"
-                            Display="Static"
-                            ForeColor="Red"
-                            />
-                        </b></span>
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <span class="BlankRow"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <span>
-                            <asp:Label ID="lblSupplierNumberHeader" runat="server" AssociatedControlID="txtSupplierContactNumber" 
-                                                CssClass="MainItemHeader" Text="Contact Number:" />
-                        </span>
-                    </div>
-                    <div class="col-md-4">
-                        <span class="ContentShiftRight"><asp:TextBox ID="txtSupplierContactNumber" Enabled="false" runat="server" /></span>
-                    </div>
-                    <div class="col-md-2">
-                        <span class="BlankRow"></span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-4">
-                    </div>
-                    <div class="col-md-4">
-                        <span class="ContentShiftLeft"><b>
-                            <asp:RequiredFieldValidator ID="valRequiredSupplierContactNumber" runat="server" 
-                            ControlToValidate="txtSupplierContactNumber"
-                            ErrorMessage="The Supplier Contact Number is a required field." ForeColor="red"
-                            />
-                            <asp:CustomValidator runat="server"  ID="valNumberSupplierContact"
-                            ControlToValidate="txtSupplierContactNumber"
-                            ErrorMessage="The Supplier Number must only have numbers. It must be in the form 0N[N]NNN[N]NNN, e.g. 09555444, 0755557777."
-                            ClientValidationFunction="ValidateLandlineNumber"
-                            OnServerValidate="SupplierNumberValidation"
-                            Display="Static"
-                            ForeColor="Red"
-                            />
-                        </b></span>
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <span class="BlankRow"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <span>
-                            <asp:Label ID="lblSupplierEmailHeader" runat="server" AssociatedControlID="txtSupplierEmail" 
+                            <asp:Label ID="lblUserEmailHeader" runat="server" AssociatedControlID="txtUserEmail" 
                                                 CssClass="MainItemHeader" Text="Email:" />
                         </span>
                     </div>
                     <div class="col-md-4">
-                        <span class="ContentShiftRight"><asp:TextBox ID="txtSupplierEmail" Enabled="false" runat="server" /></span>
+                        <span class="ContentShiftRight"><asp:TextBox ID="txtUserEmail" Enabled="false" 
+                            runat="server" /></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <span class="BlankRow"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <span>
+                            <asp:Label ID="lblUserLoginHeader" runat="server" AssociatedControlID="txtUserLogin" 
+                                                CssClass="MainItemHeader" Text="Login:" />
+                        </span>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="ContentShiftRight"><asp:TextBox ID="txtUserLogin" Enabled="false" runat="server" /></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="ContentShiftLeft">
+                            <asp:Button ID="btnUserRegeneratePassword" OnClick="ButtonPassword_Click"
+                                CausesValidation="false" Text="Change Password" Enabled="false" runat="server"/>
+                        </span>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="ContentShiftRight"><asp:TextBox ID="txtUserPassword" Text=""
+                            Enabled="false" runat="server" /></span>
                     </div>
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
@@ -212,23 +211,40 @@
                 <div class="row">
                     <div class="col-md-2">
                     </div>
-                    <div class="col-md-4">
-                    </div>
-                    <div class="col-md-4">
-                        <span class="ContentShiftLeft"><b>
-                            <asp:RequiredFieldValidator ID="valRequiredSupplierEmail" runat="server" 
-                            ControlToValidate="txtSupplierEmail"
-                            ErrorMessage="The Supplier Email is a required field." ForeColor="red"
+                    <div class="col-md-8">
+                        <b>
+                            <asp:RequiredFieldValidator ID="valRequiredEmail" runat="server" 
+                            ControlToValidate="txtUserEmail"
+                            ErrorMessage="The User Email is a required field." ForeColor="red"
                             />
-                            <asp:CustomValidator runat="server"  ID="valCharsAndFormatSupplierEmail"
-                            ControlToValidate="txtSupplierEmail"
-                            ErrorMessage="The Supplier Email must match the format <chars@[subdomain.]site.domain>."
+                            <asp:CustomValidator runat="server"  ID="valCharsEmail"
+                            ControlToValidate="txtUserEmail"
+                            ErrorMessage="The User must have a valid Email."
                             ClientValidationFunction="ValidateEmail"
-                            OnServerValidate="SupplierEmailValidation"
+                            OnServerValidate="UserEmailValidation"
                             Display="Static"
                             ForeColor="Red"
                             />
-                        </b></span>
+                            <asp:RequiredFieldValidator ID="valRequiredLogin" runat="server" 
+                            ControlToValidate="txtUserLogin"
+                            ErrorMessage="The User Login is a required field." ForeColor="red"
+                            />
+                            <asp:CustomValidator runat="server"  ID="valCharsLogin"
+                            ControlToValidate="txtUserLogin"
+                            ErrorMessage="The User Login must only have alphanumeric characters."
+                            ClientValidationFunction="ValidateAlphanumeric"
+                            OnServerValidate="UserLoginValidation"
+                            Display="Static"
+                            ForeColor="Red"
+                            />
+                            <asp:CustomValidator runat="server"  ID="valIfRequiredPassword"
+                            ControlToValidate="txtUserPassword"
+                            ErrorMessage="The Admin password must be at least 10 chars."
+                            OnServerValidate="UserPassValidation"
+                            Display="Static"
+                            ForeColor="Red"
+                            />
+                        </b>
                     </div>
                     <div class="col-md-2">
                     </div>
@@ -237,21 +253,22 @@
                     <span class="BlankRow"></span>
                 </div>
                 <div class="row">
-                    <span class="BlankRow"></span>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
                         <span class="ContentShiftLeft">
                             <asp:Button ID="btnCancelChanges" OnClick="CancelButton_Click" CausesValidation="false" 
                                 CssClass="MainButton" Text="Cancel" Enabled="false" runat="server"/>
                         </span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <span class="ContentShiftRight">
                             <asp:Button ID="btnSaveChanges" 
                                 OnClick="SaveButton_Click" 
                                 CssClass="MainButton" Text="Save Changes" Enabled="false" runat="server"/>
                         </span>
+                    </div>
+                    <div class="col-md-2">
                     </div>
                 </div>
                 <div class="row">
@@ -269,9 +286,10 @@
             </ContentTemplate>
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="btnSaveChanges" />
-                <asp:AsyncPostBackTrigger ControlID="btnAddSupplier"/>
+                <asp:AsyncPostBackTrigger ControlID="btnAddAdmin"/>
                 <asp:AsyncPostBackTrigger ControlID="btnCancelChanges"/>
             </Triggers>
         </asp:UpdatePanel>
     </div>
 </asp:Content>
+
