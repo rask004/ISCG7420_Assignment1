@@ -73,4 +73,9 @@ public partial class SiteMaster : MasterPage
     {
         Context.GetOwinContext().Authentication.SignOut();
     }
+
+    protected void Login_OnClick(object sender, EventArgs e)
+    {
+        
+    }
 }
