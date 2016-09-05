@@ -13,6 +13,14 @@ public partial class DbState : System.Web.UI.Page
         AdminController controller = new AdminController();
         rptCategories.DataSource = controller.GetCategories();
         rptCategories.DataBind();
+        rptColours.DataSource = controller.GetColours();
+        rptColours.DataBind();
+        rptSuppliers.DataSource = controller.GetSuppliers();
+        rptSuppliers.DataBind();
+        rptCaps.DataSource = controller.GetCaps();
+        rptCaps.DataBind();
+        rptCustomers.DataSource = controller.GetCustomers();
+        rptCustomers.DataBind();
 
     }
     
