@@ -182,9 +182,9 @@ public partial class Registration : System.Web.UI.Page
             PublicController controller = new PublicController();
 
             // add the registered user to the db.
-            /*controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
+            controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
                 txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
-                txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text); */
+                txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
             
             // email the Customer their registration details.
             // TODO: get emailing working on the web server.
