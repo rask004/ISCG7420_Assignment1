@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/Admin.master" AutoEventWireup="true" CodeFile="AdminColours.aspx.cs" Inherits="AdminColours" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.master" AutoEventWireup="true" CodeFile="AdminColours.aspx.cs" Inherits="AdminColours" %>
 
 <%--  
     The Admin page for the Colour Entity.

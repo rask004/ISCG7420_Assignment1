@@ -122,15 +122,15 @@ public class PublicController
     ///     Get a list of categories which have Caps associated.
     /// </summary>
     /// <returns>List of all Categories</returns>
-    public List<BusinessLayer.Category> GetCategoriesWithCaps()
+    public List<Category> GetCategoriesWithCaps()
     {
-        List<BusinessLayer.Cap> caps = null; //_dm.GetAllCaps();
-        List<BusinessLayer.Category> categories = new List<BusinessLayer.Category>();
-        foreach (var cap in caps)
+        List<Category> categories = _dm.GetAllCategories();
+        for (int i = categories.Count - 1; i >= 0; i--)
         {
-            if (!categories.Contains(cap.Category))
+            List<Cap> caps = _dm.GetCapsByCategoryId(categories[i].ID);
+            if (caps.Count == 0)
             {
-                categories.Add(cap.Category);
+                categories.RemoveAt(i);
             }
         }
         return categories;

@@ -148,6 +148,10 @@ namespace DataLayer
 
         private readonly string _selectAllOrderItemsWithMatchingOrderId = "select * from OrderItem where orderId=?";
 
+        private readonly string _insertOrderItem = "insert into OrderItem (orderId, customerId, colourId, quantity) values (?, ?, ?, ?);";
+
+        private readonly string _selectAllCapsByCategoryId = "select * from Cap where categoryId=?;";
+
 
         private DataManager()
         {
@@ -1552,7 +1556,88 @@ namespace DataLayer
         /// <param name="quantity"></param>
         public void InsertNewOrderItem(int orderId, int capId, int colourId, int quantity)
         {
-            throw new NotImplementedException("Insert New OrderItems is not implemented yet.");
+            OleDbCommand command = new OleDbCommand(_insertOrderItem, _connection);
+            command.Parameters.Add(new OleDbParameter("@ORDERID", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@CAPID", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@COLOURID", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@QUANTITY", OleDbType.Integer));
+            command.Parameters["@ORDERID"].Value = orderId;
+            command.Parameters["@CAPID"].Value = capId;
+            command.Parameters["@COLOURID"].Value = colourId;
+            command.Parameters["@QUANTITY"].Value = quantity;
+            RunDbCommandNoResults(command);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        public List<Cap> GetCapsByCategoryId(int categoryId)
+        {
+            Category category = GetSingleCategoryById(categoryId);
+            List<Cap> records = new List<Cap>();
+            OleDbDataReader reader = null;
+
+            Dictionary< int, Supplier> foundSuppliers = new Dictionary<int, Supplier>();
+
+            OleDbCommand command = new OleDbCommand(_selectAllCapsByCategoryId, _connection);
+            command.Parameters.Add(new OleDbParameter("@CATEGORYID", OleDbType.Integer));
+            command.Parameters["@CATEGORYID"].Value = categoryId;
+
+            try
+            {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
+                reader = (command).ExecuteReader();
+
+                if (reader != null && reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        Cap item = new Cap();
+                        item.ID = Convert.ToInt32(reader["id"]);
+                        item.Name = reader["name"].ToString();
+                        item.Price = Convert.ToSingle(reader["price"]);
+                        item.Description = reader["description"].ToString();
+                        item.ImageUrl = reader["imageUrl"].ToString();
+                        item.CategoryId = Convert.ToInt32(reader["categoryId"]);
+                        item.SupplierId = Convert.ToInt32(reader["supplierId"]);
+                        records.Add(item);
+                    }
+
+                    // These may close the connection after finding the relevant object.
+                    // As DataReader requires an open connection, finish using the DataReader before using these methods.
+                    foreach (Cap cap in records)
+                    {
+                        cap.Category = category;
+                        if (foundSuppliers.ContainsKey(cap.SupplierId))
+                        {
+                            cap.Supplier = foundSuppliers[cap.SupplierId];
+                        }
+                        else
+                        {
+                            cap.Supplier = GetSingleSupplierById(cap.SupplierId);
+                            foundSuppliers[cap.SupplierId] = cap.Supplier;
+                        }
+                    }
+                    
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+
+                _connection.Close();
+            }
+
+            return records;
         }
     }
 }
