@@ -355,7 +355,7 @@
                         <table class="col-md-12">
                             <tr>
                                 <th>
-                                    -- CAPS --
+                                    -- ORDERS --
                                 </th>
                             </tr>
                             <tr>
@@ -363,7 +363,10 @@
                                     ID
                                 </th>
                                 <th style="border:1px gray solid">
-                                    NAME
+                                    STATUS
+                                </th>
+                                <th style="border:1px gray solid">
+                                    CUSTOMERID
                                 </th>
                             </tr>
                     </HeaderTemplate>
@@ -374,23 +377,12 @@
                                 <%# DataBinder.Eval(Container.DataItem, "id") %>
                             </td>
                             <td>
-                                <%# DataBinder.Eval(Container.DataItem, "name") %>
+                                <%# DataBinder.Eval(Container.DataItem, "status") %>
                             </td>
                             <td>
-                                <%# DataBinder.Eval(Container.DataItem, "price") %>
+                                <%# DataBinder.Eval(Container.DataItem, "customerId") %>
                             </td>
-                            <td>
-                                <%# DataBinder.Eval(Container.DataItem, "description") %>
-                            </td>
-                            <td>
-                                <%# DataBinder.Eval(Container.DataItem, "imageUrl") %>
-                            </td>
-                            <td>
-                                <%# DataBinder.Eval(Container.DataItem, "supplierId") %>
-                            </td>
-                            <td>
-                                <%# DataBinder.Eval(Container.DataItem, "categoryId") %>
-                            </td>
+                            
                         </tr>
                     </ItemTemplate>
 
@@ -416,15 +408,21 @@
                         <table class="col-md-12">
                             <tr>
                                 <th>
-                                    -- CAPS --
+                                    -- ORDERITEM --
                                 </th>
                             </tr>
                             <tr>
                                 <th style="border:1px gray solid">
-                                    ID
+                                    ORDERID
                                 </th>
                                 <th style="border:1px gray solid">
-                                    NAME
+                                    CAPID
+                                </th>
+                                <th style="border:1px gray solid">
+                                    COLOURID
+                                </th>
+                                <th style="border:1px gray solid">
+                                    QUANTITY
                                 </th>
                             </tr>
                     </HeaderTemplate>
@@ -432,25 +430,16 @@
                     <ItemTemplate>
                         <tr>
                             <td>
-                                <%# DataBinder.Eval(Container.DataItem, "id") %>
+                                <%# DataBinder.Eval(Container.DataItem, "orderid") %>
                             </td>
                             <td>
-                                <%# DataBinder.Eval(Container.DataItem, "name") %>
+                                <%# DataBinder.Eval(Container.DataItem, "capid") %>
                             </td>
                             <td>
-                                <%# DataBinder.Eval(Container.DataItem, "price") %>
+                                <%# DataBinder.Eval(Container.DataItem, "colourid") %>
                             </td>
                             <td>
-                                <%# DataBinder.Eval(Container.DataItem, "description") %>
-                            </td>
-                            <td>
-                                <%# DataBinder.Eval(Container.DataItem, "imageUrl") %>
-                            </td>
-                            <td>
-                                <%# DataBinder.Eval(Container.DataItem, "supplierId") %>
-                            </td>
-                            <td>
-                                <%# DataBinder.Eval(Container.DataItem, "categoryId") %>
+                                <%# DataBinder.Eval(Container.DataItem, "quantity") %>
                             </td>
                         </tr>
                     </ItemTemplate>
@@ -470,4 +459,5 @@
     </div>
     
 </body>
+</html>
 

@@ -136,14 +136,8 @@ public class PublicController
         return categories;
     }
 
-
-
-
-
     /// <summary>
-    ///     Register a new Customer.
-    /// 
-    ///     Assumed the new Customer Details have already been validated.
+    ///     Retrieve a cap, given it's id.
     /// 
     /// </summary>
     /// <param name="CapId"></param>
@@ -151,6 +145,32 @@ public class PublicController
     public Cap GetCapDetails(int CapId)
     {
         return null; //_dm.GetSingleInstance<Cap>(CapId);
+    }
+
+    /// <summary>
+    ///     Get a single cap ImageUrl, from the first cap found with this category id.
+    /// </summary>
+    /// <param name="categoryId"></param>
+    /// <returns>a string (imageUrl), or null</returns>
+    public string GetFirstCapImageByCategoryId(int categoryId)
+    {
+        List<Cap> caps = _dm.GetCapsByCategoryId(categoryId);
+        if (caps.Any())
+        {
+            return caps[0].ImageUrl;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="categoryId"></param>
+    /// <returns></returns>
+    public List<Cap> GetAllCapsByCategoryId(int categoryId)
+    {
+        return _dm.GetCapsByCategoryId(categoryId);
     }
 
     
