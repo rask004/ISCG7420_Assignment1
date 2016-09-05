@@ -22,7 +22,7 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <%--Bootstrap CSS code--%>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" path="~/Content/css" />
 </head>
 <body>
     

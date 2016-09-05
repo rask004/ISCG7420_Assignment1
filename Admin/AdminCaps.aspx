@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/Admin.master" AutoEventWireup="true" CodeFile="AdminCaps.aspx.cs" Inherits="AdminCaps" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.master" AutoEventWireup="true" CodeFile="AdminCaps.aspx.cs" Inherits="AdminCaps" %>
 
 <%--  
     The Admin page for the Product Entity.

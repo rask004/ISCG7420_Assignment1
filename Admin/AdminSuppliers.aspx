@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/Admin.master" AutoEventWireup="true" CodeFile="AdminSuppliers.aspx.cs" Inherits="AdminSupplier" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.master" AutoEventWireup="true" CodeFile="AdminSuppliers.aspx.cs" Inherits="AdminSupplier" %>
 
 <%--  
     The Admin page for the Supplier Entity.
