@@ -5,10 +5,15 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Customer_Profile : System.Web.UI.Page
+public partial class Customer_Details : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
 
+    }
+
+    protected void lnkEditProfile_OnClick(object sender, EventArgs e)
+    {
+        throw new NotImplementedException();
     }
 }

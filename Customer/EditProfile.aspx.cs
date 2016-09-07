@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using Common;
 using SecurityLayer;
 
-public partial class Registration : System.Web.UI.Page
+public partial class Customer_Profile : System.Web.UI.Page
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
         lblErrorMessages.Text = String.Empty;
@@ -14,7 +23,6 @@ public partial class Registration : System.Web.UI.Page
         {
             txtEmail.MaxLength = GeneralConstants.EmailMaxLength;
             txtLogin.MaxLength = GeneralConstants.LoginMaxLength;
-            txtPassword.MaxLength = GeneralConstants.PasswordMaxLength;
             txtHomeNumber.MaxLength = GeneralConstants.HomeNumberMaxLength;
             txtWorkNumber.MaxLength = GeneralConstants.WorkNumberMaxLength;
             txtMobileNumber.MaxLength = GeneralConstants.MobileNumberMaxLength;
@@ -26,7 +34,6 @@ public partial class Registration : System.Web.UI.Page
 
             txtEmail.Width = new Unit(txtEmail.MaxLength, UnitType.Em);
             txtLogin.Width = new Unit(txtLogin.MaxLength, UnitType.Em);
-            txtPassword.Width = new Unit(txtPassword.MaxLength, UnitType.Em);
             txtHomeNumber.Width = new Unit(txtHomeNumber.MaxLength, UnitType.Em);
             txtWorkNumber.Width = new Unit(txtWorkNumber.MaxLength, UnitType.Em);
             txtMobileNumber.Width = new Unit(txtMobileNumber.MaxLength, UnitType.Em);
@@ -35,8 +42,11 @@ public partial class Registration : System.Web.UI.Page
             txtStreetAddress.Width = new Unit(txtStreetAddress.MaxLength, UnitType.Em);
             txtSuburb.Width = new Unit(txtSuburb.MaxLength, UnitType.Em);
             txtCity.Width = new Unit(txtCity.MaxLength, UnitType.Em);
+
+            // TODO: fill the text and label fields with the customer details.
         }
     }
+
 
     /// <summary>
     ///     Validate the first or last name, and post warnings if not valid
@@ -50,7 +60,7 @@ public partial class Registration : System.Web.UI.Page
         if (!args.IsValid)
         {
             if (!lblErrorMessages.Text.Contains("First and Last Name should only have letters."))
-            lblErrorMessages.Text += "First and Last Name should only have letters. ";
+                lblErrorMessages.Text += "First and Last Name should only have letters. ";
         }
     }
 
@@ -75,6 +85,7 @@ public partial class Registration : System.Web.UI.Page
         {
             args.IsValid = false;
             lblErrorMessages.Text += "This Email is already in use. ";
+            return;
         }
 
     }
@@ -100,6 +111,7 @@ public partial class Registration : System.Web.UI.Page
         {
             args.IsValid = false;
             lblErrorMessages.Text += "This Login is already in use. ";
+            return;
         }
     }
 
@@ -145,7 +157,8 @@ public partial class Registration : System.Web.UI.Page
 
         if (!args.IsValid)
         {
-            lblErrorMessages.Text += "Home and work numbers should be in a valid local landline format. Examples include 09555444, 0733337777. ";
+            lblErrorMessages.Text +=
+                "Home and work numbers should be in a valid local landline format. Examples include 09555444, 0733337777. ";
         }
     }
 
@@ -160,7 +173,8 @@ public partial class Registration : System.Web.UI.Page
 
         if (!args.IsValid)
         {
-            lblErrorMessages.Text += "Mobile Numbers should be in a valid mobile number format, in international or local form. ";
+            lblErrorMessages.Text +=
+                "Mobile Numbers should be in a valid mobile number format, in international or local form. ";
         }
     }
 
@@ -175,7 +189,8 @@ public partial class Registration : System.Web.UI.Page
 
         if (!args.IsValid)
         {
-            lblErrorMessages.Text += "Street address is not valid. Valid examples are 123a Simpson St, or 5545 Carolina Ave.";
+            lblErrorMessages.Text +=
+                "Street address is not valid. Valid examples are 123a Simpson St, or 5545 Carolina Ave.";
         }
     }
 
@@ -201,7 +216,7 @@ public partial class Registration : System.Web.UI.Page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void Register_Click(object sender, EventArgs e)
+    protected void Update_Click(object sender, EventArgs e)
     {
         if (!Page.IsValid)
         {
@@ -214,21 +229,14 @@ public partial class Registration : System.Web.UI.Page
         {
             PublicController controller = new PublicController();
 
-            // add the registered user to the db.
-            controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
-                txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
-                txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
-            
-            // email the Customer their registration details.
+            // update the registered user in the db.
+            //controller.UpdateCustomer(id, txtFirstName.Text, txtLastName.Text, txtLogin.Text,
+            //    txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
+            //    txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
+
+            // email the Customer their new registration details.
             // TODO: get emailing working on the web server.
 
-            StringBuilder builder = new StringBuilder("~/Customer/Login.aspx");
-            builder.Append("?").Append(GeneralConstants.QueryStringGeneralMessageKey);
-            builder.Append("=").Append(GeneralConstants.QueryStringGeneralMessageSuccessfulRegistration);
-
-            Response.RedirectPermanent(builder.ToString());
         }
-
-        
     }
 }
