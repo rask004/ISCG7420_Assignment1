@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="Master.SiteMaster" %>
 
 <%--  
     The master page for the Public pages of the Quality Caps Website.
@@ -22,7 +22,7 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <%--Bootstrap CSS code--%>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" path="~/Content/css" />
 </head>
 <body>
     <form id="frmReg" name="frmReg" runat="server" method="post">
@@ -53,7 +53,9 @@
                         <span style="float:right">
                             <ul class="nav navbar-nav">
                                 <li><a style="color: white" runat="server" href="~/Registration">Registration</a></li>
+
                                 <li><a style="color: white" runat="server" href="~/Contact">Contact Us</a></li>
+
                                 <li><a style="color: white" runat="server" href="~/Login">Login</a></li>
                             </ul>
                         </span>
@@ -63,24 +65,18 @@
             </div>
         </div>
         
-        <div class="container-fluid" style="position: fixed; height:100%; width: 100%;">
+        <div class="container-fluid" style="position: fixed; top: 9%; height:93%; width: 100%; border: dashed yellow 1px;">
             <%--Content area--%>
             <div class="row">
-                <span class="BlankRow"></span>
-            </div>
-            <div class="row">
-                <span class="BlankRow"></span>
-            </div>
-            <div class="row"">
-                <div id="divLeftSidebar" class="col-md-3 col-sm-2">
+                <div id="divLeftSidebar" class="col-md-3 col-sm-2" style="border: dashed orange 1px;">
                      <asp:ContentPlaceHolder ID="PageContentLeft" runat="server">
                      </asp:ContentPlaceHolder>
                 </div>
-                <div id="divCentreSpace" class="col-md-6 col-sm-8">
+                <div id="divCentreSpace" class="col-md-6 col-sm-8" style="border: dashed orange 1px;">
                      <asp:ContentPlaceHolder ID="PageContentCentre" runat="server">
                      </asp:ContentPlaceHolder>
                 </div>
-                <div id="divRightsidebar" class="col-md-3 col-sm-2">
+                <div id="divRightsidebar" class="col-md-3 col-sm-2" style="border: dashed orange 1px;">
                      <asp:ContentPlaceHolder ID="PageContentRight" runat="server">
                      </asp:ContentPlaceHolder>
                 </div>

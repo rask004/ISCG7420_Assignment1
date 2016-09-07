@@ -78,6 +78,8 @@ namespace Common
         public static readonly string QueryStringGeneralMessageKey = "message";
 
         public static readonly string QueryStringGeneralMessageSuccessfulRegistration = "e5vt8n57";
+
+        public static readonly string SessionCartItems = "cartItems";
     }
 
     /// <summary>

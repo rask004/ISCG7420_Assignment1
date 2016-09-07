@@ -1,13 +1,13 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Registration.aspx.cs" Inherits="Registration" %>
+﻿<%@ Page Title="Quality Caps - Edit Profile" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="EditProfile.aspx.cs" Inherits="Customer_Profile" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    Quality Caps - Customer Registration
+    <%= Title %>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
     <div class="container PageSectionCentre">
         <div class="row">
             <div class="DecoHeader" style="margin-left:12%">
-                <H3 style="margin-left:41%">Registration</H3>
+                <H3 style="margin-left:40%">Edit Profile</H3>
             </div>
         </div>
         <div class="row"><span class="BlankRow"></span></div>
@@ -121,44 +121,13 @@
             </div>
             <div class="col-md-4">
                 <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtLogin" runat="server" />
+                    <asp:TextBox id="txtLogin" Enabled="False" runat="server" />
                 </span>
             </div>
             <div class="col-md-2">
                         
             </div>
         </div>
-        <div class="row"><span class="BlankRow"></span></div>
-        <div class="row">
-            <div class="col-md-2">
-                        
-            </div>
-            <div class="col-md-3">
-                <span class="ContentShiftLeft">
-                    <label>Password:</label>
-                </span>
-            </div>
-            <div class="col-md-1">
-                <asp:RequiredFieldValidator runat="server" 
-                    ControlToValidate="txtPassword"
-                    ErrorMessage="*" ForeColor="red"
-                    />
-                <asp:CustomValidator runat="server"
-                            ControlToValidate="txtPassword"
-                            OnServerValidate="PasswordValidation"
-                            />
-            </div>
-            <div class="col-md-4">
-                <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtPassword" runat="server" />
-                </span>
-            </div>
-            <div class="col-md-2">
-                        
-            </div>
-        </div>
-        
-        
         <div class="row"><span class="BlankRow"></span></div>
         <div class="row">
             <div class="col-md-2">
@@ -359,7 +328,7 @@
                         <span class="ContentShiftRight DecoSubHeader">
                             <H5 style="margin-left: 33.3%"><b>
                                 <input ID="btnSubmitRegistration" name="submitRegistration" 
-                                    type="submit" value="Register"  OnServerClick="Register_Click" runat="server"/>
+                                    type="submit" value="Update"  OnServerClick="Update_Click" runat="server"/>
                             </b></H5>
                         </span>
                     </div>
