@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin.master" AutoEventWireup="true" CodeFile="AdminCustomerUsers.aspx.cs" Inherits="AdminUsers" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="AdminCustomerUsers.aspx.cs" Inherits="AdminUsers" %>
 
 <%--  
     The Admin page for the SiteUsers Entity - Customers.

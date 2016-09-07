@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="Master.SiteMaster" %>
 
 <%--  
     The master page for the Public pages of the Quality Caps Website.
@@ -22,7 +22,7 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <%--Bootstrap CSS code--%>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" path="~/Content/css" />
 </head>
 <body>
     <form id="frmReg" name="frmReg" runat="server" method="post">
@@ -71,7 +71,7 @@
             <div class="row">
                 <span class="BlankRow"></span>
             </div>
-            <div class="row"">
+            <div class="row">
                 <div id="divLeftSidebar" class="col-md-3 col-sm-2">
                      <asp:ContentPlaceHolder ID="PageContentLeft" runat="server">
                      </asp:ContentPlaceHolder>
