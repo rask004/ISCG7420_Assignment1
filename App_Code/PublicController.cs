@@ -173,5 +173,15 @@ public class PublicController
         return _dm.GetCapsByCategoryId(categoryId);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="customerId"></param>
+    /// <returns></returns>
+    public Customer GetCustomerById(int customerId)
+    {
+        return _dm.GetSingleCustomerById(customerId);
+    }
+
     
 }

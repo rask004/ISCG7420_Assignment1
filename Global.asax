@@ -30,6 +30,7 @@
         Session[Security.SessionIdentifierLogin] = null;
         Session[Security.SessionIdentifierSecurityToken] = null;
         Session[GeneralConstants.SessionCartItems] = new List<OrderItem>();
+        Session[GeneralConstants.SessionCustomerIdentifier] = -1;
     }
 
     void Session_End(object sender, EventArgs e)
@@ -40,6 +41,7 @@
         {
             (Session[GeneralConstants.SessionCartItems] as List<OrderItem>).Clear();
         }
+        Session[GeneralConstants.SessionCustomerIdentifier] = -1;
     }
 
 </script>
