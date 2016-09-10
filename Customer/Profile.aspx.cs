@@ -41,7 +41,7 @@ public partial class Customer_Details : System.Web.UI.Page
                 lblCustomerSuburb.Text = customer.Suburb;
                 lblCustomerCity.Text = customer.City;
 
-                // update the Orders table.
+                // TODO: update the Orders table.
             }
         }
         catch (FormatException ex)

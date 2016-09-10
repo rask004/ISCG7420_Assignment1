@@ -231,16 +231,25 @@ public partial class Customer_Profile : System.Web.UI.Page
         }
         else
         {
-            PublicController controller = new PublicController();
+            try
+            {
+                int id = Convert.ToInt32(Session[GeneralConstants.SessionCustomerIdentifier]);
 
-            // update the registered user in the db.
-            //controller.UpdateCustomer(id, txtFirstName.Text, txtLastName.Text, txtLogin.Text,
-            //    txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
-            //    txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
+                PublicController controller = new PublicController();
 
-            // email the Customer their new registration details.
-            // TODO: get emailing working on the web server.
+                // update the registered user in the db.
+                controller.UpdateRegisteredCustomer(id, txtFirstName.Text, txtLastName.Text, txtLogin.Text,
+                    txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
+                    txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
 
+                // email the Customer their new registration details.
+                // TODO: get emailing working on the web server.
+            }
+            catch (FormatException ex)
+            {
+                Response.Write("ERROR: Customer Identifier could not be converted. Was expecting an integer.");
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, ex.Message + "\n\n" + ex.InnerException.Message);
+            }
         }
     }
 }
