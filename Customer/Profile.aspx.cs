@@ -12,6 +12,8 @@ public partial class Customer_Details : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         try
         {
             int customerId = Convert.ToInt32(Session[GeneralConstants.SessionCustomerIdentifier]);

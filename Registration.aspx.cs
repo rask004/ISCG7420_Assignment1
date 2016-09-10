@@ -2,12 +2,16 @@
 using System.Text;
 using System.Web.UI.WebControls;
 using Common;
+using CommonLogging;
 using SecurityLayer;
+using BusinessLayer;
 
 public partial class Registration : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         lblErrorMessages.Text = String.Empty;
 
         if (!IsPostBack)

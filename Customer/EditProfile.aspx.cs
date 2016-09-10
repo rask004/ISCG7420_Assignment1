@@ -5,7 +5,9 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using BusinessLayer;
 using Common;
+using CommonLogging;
 using SecurityLayer;
 
 public partial class Customer_Profile : System.Web.UI.Page
@@ -17,6 +19,8 @@ public partial class Customer_Profile : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         lblErrorMessages.Text = String.Empty;
 
         if (!IsPostBack)

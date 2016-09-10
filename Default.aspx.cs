@@ -7,6 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using BusinessLayer;
 using Common;
+using CommonLogging;
 
 /// <summary>
 /// 
@@ -43,6 +44,8 @@ public partial class _Default : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         if (!IsPostBack)
         {
             Load_Categories();

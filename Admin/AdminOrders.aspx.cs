@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Common;
 using BusinessLayer;
+using CommonLogging;
 using DataLayer;
 using Microsoft.Ajax.Utilities;
 using SecurityLayer;
@@ -37,6 +38,8 @@ public partial class AdminOrders : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         if (!Page.IsPostBack)
         {
             Reload_Sidebar();

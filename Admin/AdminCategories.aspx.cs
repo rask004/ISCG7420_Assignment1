@@ -6,6 +6,7 @@ using System.Web.UI.WebControls;
 using Common;
 using WebGrease.Css.Extensions;
 using BusinessLayer;
+using CommonLogging;
 using SecurityLayer;
 
 /// <summary>
@@ -40,6 +41,8 @@ public partial class AdminCategories : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         if (!Page.IsPostBack)
         {
             txtCategoryName.MaxLength = GeneralConstants.CategoryNameMaxLength;

@@ -13,6 +13,7 @@ using System.Web.UI.WebControls;
 using Common;
 using WebGrease.Css.Extensions;
 using BusinessLayer;
+using CommonLogging;
 using SecurityLayer;
 
 /// <summary>
@@ -60,6 +61,8 @@ public partial class AdminCaps : System.Web.UI.Page
     /// </summary>
     private void PrepareListOfUploadedImages()
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         DirectoryInfo uploadedDirectoryInfo = new DirectoryInfo(Server.MapPath(GeneralConstants.ImagesUploadFolder));
         ddlImgCapList.Items.Clear();
 
