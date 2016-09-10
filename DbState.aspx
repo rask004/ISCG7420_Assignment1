@@ -349,7 +349,7 @@
         <div class="row" style="border: black 2px solid; margin:2%">
             <div class="col-md-12">
                 <asp:Repeater 
-                    id="Repeater2" 
+                    id="rptOrders" 
                     runat="server">
                     <HeaderTemplate>
                         <table class="col-md-12">
@@ -380,7 +380,7 @@
                                 <%# DataBinder.Eval(Container.DataItem, "status") %>
                             </td>
                             <td>
-                                <%# DataBinder.Eval(Container.DataItem, "customerId") %>
+                                <%# DataBinder.Eval(Container.DataItem, "userid") %>
                             </td>
                             
                         </tr>
@@ -402,7 +402,7 @@
         <div class="row" style="border: black 2px solid; margin:2%">
             <div class="col-md-12">
                 <asp:Repeater 
-                    id="Repeater3" 
+                    id="rptOrderItems" 
                     runat="server">
                     <HeaderTemplate>
                         <table class="col-md-12">

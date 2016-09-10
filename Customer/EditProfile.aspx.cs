@@ -19,7 +19,8 @@ public partial class Customer_Profile : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
         lblErrorMessages.Text = String.Empty;
 
@@ -47,7 +48,31 @@ public partial class Customer_Profile : System.Web.UI.Page
             txtSuburb.Width = new Unit(txtSuburb.MaxLength, UnitType.Em);
             txtCity.Width = new Unit(txtCity.MaxLength, UnitType.Em);
 
-            // TODO: fill the text and label fields with the customer details.
+            try
+            {
+                int id = Convert.ToInt32(Session[GeneralConstants.SessionCustomerIdentifier]);
+
+                PublicController controller = new PublicController();
+                Customer customer = controller.GetCustomerById(id);
+
+                txtEmail.Text = customer.Email;
+                txtLogin.Text = customer.Login;
+                txtFirstName.Text = customer.FirstName;
+                txtLastName.Text = customer.LastName;
+                txtWorkNumber.Text = customer.WorkNumber;
+                txtHomeNumber.Text = customer.HomeNumber;
+                txtMobileNumber.Text = customer.MobileNumber;
+                txtStreetAddress.Text = customer.StreetAddress;
+                txtSuburb.Text = customer.Suburb;
+                txtCity.Text = customer.City;
+
+            }
+            catch (FormatException ex)
+            {
+                Response.Write("ERROR: Customer Identifier could not be converted. Was expecting an integer.");
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+                    ex.Message + "\n\n" + ex.InnerException.Message);
+            }
         }
     }
 

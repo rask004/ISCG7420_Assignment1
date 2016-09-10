@@ -22,6 +22,21 @@ public partial class DbState : System.Web.UI.Page
         rptCustomers.DataSource = controller.GetCustomers();
         rptCustomers.DataBind();
 
+        List<CustomerOrder> orders = controller.GetOrders();
+        rptOrders.DataSource = orders;
+        rptOrders.DataBind();
+
+        List<OrderItem> orderItems = new List<OrderItem>();
+        foreach (var customerOrder in orders)
+        {
+            foreach (var orderItem in controller.GetItemsForOrderWithId(customerOrder.ID))
+            {
+                orderItems.Add(orderItem);
+            }
+        }
+        rptOrderItems.DataSource = orderItems;
+        rptOrderItems.DataBind();
+
     }
     
 }
