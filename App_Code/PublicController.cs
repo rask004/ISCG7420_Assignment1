@@ -38,7 +38,7 @@ namespace BusinessLayer
             StringBuilder builder = new StringBuilder();
             builder.Append("PublicController.PublicController :: PublicController Created.");
             _logger = (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger);
-            _logger.Log(LoggingLevel.Info, builder.ToString());
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, builder.ToString());
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace BusinessLayer
             string hash = Security.GetPasswordHash(password);
             _dm.AddNewCustomer(email, login, hash, firstName, lastName, homeNumber, workNumber, mobileNumber,
                 streetAddress, suburb, city);
-            _logger.Log(LoggingLevel.Info,"Customer Registered. Login:" + login + ", Email:" + email);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info,"Customer Registered. Login:" + login + ", Email:" + email);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace BusinessLayer
 
             _dm.UpdateExistingCustomer(id, email, login, firstName, lastName, homeNumber, workNumber, mobileNumber,
                 streetAddress, suburb, city);
-            _logger.Log(LoggingLevel.Info, "Customer Updated. ID:" + id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Customer Updated. ID:" + id);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace BusinessLayer
         public void UpdatePasswordForCustomer(int id, string passwordhash)
         {
             _dm.UpdateExistingCustomerPassword(id, passwordhash);
-            _logger.Log(LoggingLevel.Info, "Customer Password Updated. ID:" + id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Customer Password Updated. ID:" + id);
 
         }
 
@@ -149,7 +149,7 @@ namespace BusinessLayer
                 }
             }
 
-            _logger.Log(LoggingLevel.Info, "Retrieved all Categories having caps.");
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved all Categories having caps.");
 
             return categories;
         }
@@ -163,7 +163,7 @@ namespace BusinessLayer
         public Cap GetCapDetails(int CapId)
         {
             Cap cap = _dm.GetSingleCapById(CapId);
-            _logger.Log(LoggingLevel.Info, "Retrieved single Cap. ID: " + cap.ID);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved single Cap. ID: " + cap.ID);
             return cap;
         }
 
@@ -177,12 +177,12 @@ namespace BusinessLayer
             List<Cap> caps = _dm.GetCapsByCategoryId(categoryId);
             if (caps.Any())
             {
-                _logger.Log(LoggingLevel.Info, "Image URL Retrieved from Cap in Category. source Category ID:" + categoryId);
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Image URL Retrieved from Cap in Category. source Category ID:" + categoryId);
                 return caps[0].ImageUrl;
             }
 
 
-            _logger.Log(LoggingLevel.Info, "Failed to retrieve Image URL from Cap in Category. source Category ID:" + categoryId);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Failed to retrieve Image URL from Cap in Category. source Category ID:" + categoryId);
             return null;
         }
 
@@ -194,7 +194,7 @@ namespace BusinessLayer
         public List<Cap> GetAllCapsByCategoryId(int categoryId)
         {
             List<Cap> caps = _dm.GetCapsByCategoryId(categoryId);
-            _logger.Log(LoggingLevel.Info, "Retrieved all Caps sharing Category. Category ID:" + categoryId);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved all Caps sharing Category. Category ID:" + categoryId);
             return caps;
         }
 
@@ -206,7 +206,7 @@ namespace BusinessLayer
         public Customer GetCustomerById(int customerId)
         {
             Customer customer = _dm.GetSingleCustomerById(customerId);
-            _logger.Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customerId);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customerId);
             return customer;
         }
 
@@ -229,7 +229,7 @@ namespace BusinessLayer
         public string GetCategoryName(int id)
         {
             Category category = _dm.GetSingleCategoryById(id);
-            _logger.Log(LoggingLevel.Info, "Retrieved Category. ID:" + id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Category. ID:" + id);
             return category.Name;
         }
 
@@ -240,7 +240,7 @@ namespace BusinessLayer
         public List<Colour> GetAllcolours()
         {
             List<Colour> colours = _dm.GetAllColours();
-            _logger.Log(LoggingLevel.Info, "Retrieved List of all Colours");
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved List of all Colours");
             return colours;
         }
 
@@ -252,7 +252,7 @@ namespace BusinessLayer
         public Cap GetCapById(int id)
         {
             Cap cap = _dm.GetSingleCapById(id);
-            _logger.Log(LoggingLevel.Info, "Retrieved Cap. ID:" + id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Cap. ID:" + id);
             return cap;
         }
 
@@ -264,7 +264,7 @@ namespace BusinessLayer
         public Colour GetColourById(int id)
         {
             Colour cap = _dm.GetSingleColourById(id);
-            _logger.Log(LoggingLevel.Info, "Retrieved Colour. ID:" + id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Colour. ID:" + id);
             return cap;
         }
     }

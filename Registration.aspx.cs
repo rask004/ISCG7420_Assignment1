@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Mail;
 using System.Text;
 using System.Web.UI.WebControls;
 using Common;
@@ -222,11 +223,31 @@ public partial class Registration : System.Web.UI.Page
             controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
                 txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
                 txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
-            
+
+            (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "New Customer Registration, Login = " + txtLogin.Text);
+
             // email the Customer their registration details.
             // TODO: get emailing working on the web server.
+            // TODO: get the first admin email as registration reply to email.
+            MailAddress toAddress = new MailAddress(txtEmail.Text);
+            MailAddress fromAddress = new MailAddress(GeneralConstants.AdminReplyToEmailDefault);
+            MailMessage message = new MailMessage(fromAddress, toAddress);
+            message.Subject = "Quality Caps, " + GeneralConstants.UserNewRegistrationNotice;
+            message.Body = String.Format(GeneralConstants.UserNewRegistrationBody, txtLogin.Text, txtPassword.Text);
+            SmtpClient mailClient = new SmtpClient();
 
-            StringBuilder builder = new StringBuilder("~/Customer/Login.aspx");
+            try
+            {
+                mailClient.Host = "mail.unitec.ac.nz";
+                mailClient.Send(message);
+            }
+            catch (SmtpException smtpEx)
+            {
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "Failed to send Email to new registered customer, email=" + txtEmail.Text + "; error message: " + smtpEx.Message);
+                Response.Write("Failed to send Email to new registered customer, email=" + txtEmail.Text + "; error message: " + smtpEx.Message);
+            }
+
+            StringBuilder builder = new StringBuilder("~/Login.aspx");
             builder.Append("?").Append(GeneralConstants.QueryStringGeneralMessageKey);
             builder.Append("=").Append(GeneralConstants.QueryStringGeneralMessageSuccessfulRegistration);
 

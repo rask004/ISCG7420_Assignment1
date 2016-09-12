@@ -31,6 +31,11 @@ namespace Common
 
         public static readonly string UserNewPasswordEmailSubject = "New Password Notice";
 
+        public static readonly string UserNewRegistrationNotice = "New Registration Notice";
+
+        public static readonly string UserNewRegistrationBody =
+            "Greetings new user,\n\nYour registration details are as below:\n\nLogin:\t\t{0}\nPassword:\t{1}\n\n\nCheers, \n\nThe Quality Caps Team\n";
+
         public static readonly string AdminReplyToEmailDefault = "AskewR04@myunitec.ac.nz";
 
         public static readonly int SidebarItemTextMaxLength = 19;
