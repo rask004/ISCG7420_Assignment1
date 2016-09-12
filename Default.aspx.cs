@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 using BusinessLayer;
 using Common;
 using CommonLogging;
+using BusinessLayer;
 
 /// <summary>
 /// 
@@ -25,18 +26,6 @@ public partial class _Default : System.Web.UI.Page
         dlstCategoriesWithProducts.DataBind();
     }
 
-    private void LoadProducts(int categoryId)
-    {
-        if (categoryId < 1)
-        {
-
-        }
-        else
-        {
-            
-        }
-    }
-
     /// <summary>
     /// 
     /// </summary>
@@ -49,11 +38,6 @@ public partial class _Default : System.Web.UI.Page
         if (!IsPostBack)
         {
             Load_Categories();
-
-            if (dlstCategoriesWithProducts.Items.Count == 0)
-            {
-                
-            }
         }
     }
 
@@ -68,15 +52,29 @@ public partial class _Default : System.Web.UI.Page
         {
             ImageButton img = (e.Item.FindControl("imgCategoryPicture") as ImageButton);
             int id = Convert.ToInt32((e.Item.FindControl("lblCategoryId") as Label).Text);
-            string categoryName = (e.Item.FindControl("lblCategoryName") as Label).Text;
             PublicController controller = new PublicController();
             img.ImageUrl = controller.GetFirstCapImageByCategoryId(id);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="e"></param>
+    protected void dlstCategoriesWithProducts_OnItemCommand(object source, DataListCommandEventArgs e)
+    {
+        if (e.CommandName == "loadCapsByCategory")
+        {
+            PublicController controller = new PublicController();
+            int categoryId = Convert.ToInt32(e.CommandArgument);
+            string categoryName = controller.GetCategoryName(categoryId);
+            List<Cap> caps = controller.GetAllCapsByCategoryId(categoryId);
 
             lblCentreHeader.Text = categoryName;
 
-            List<Cap> caps = controller.GetAllCapsByCategoryId(id);
-            dlstAvailableProducts.DataSource = caps;
-            dlstAvailableProducts.DataBind();
+            lstvAvailableProducts.DataSource = caps;
+            lstvAvailableProducts.DataBind();
         }
     }
 
@@ -85,12 +83,36 @@ public partial class _Default : System.Web.UI.Page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void dlstAvailableProducts_OnItemDataBound(object sender, DataListItemEventArgs e)
+    protected void lstvAvailableProducts_OnItemDataBound(object sender, ListViewItemEventArgs e)
     {
-        if (e.Item.ItemType == ListItemType.Item)
+        if (e.Item.ItemType == ListViewItemType.DataItem)
         {
-            int id = Convert.ToInt32((e.Item.FindControl("lblCapId") as Label).Text);
+            // think I need to do something here, but not sure what.
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void lstvAvailableProducts_OnItemCommand(object sender, ListViewCommandEventArgs e)
+    {
+        if (e.CommandName == "loadCapDetails")
+        {
             PublicController controller = new PublicController();
+            int capId = Convert.ToInt32(e.CommandArgument);
+            Cap cap = controller.GetCapDetails(capId);
+
+            lblCurrentCapId.Text = cap.ID.ToString();
+            lblCurrentCapName.Text = cap.Name;
+            lblCurrentCapPrice.Text = cap.Price.ToString("C", CultureInfo.CurrentCulture);
+
+            imgCurrentCapPicture.ImageUrl = cap.ImageUrl;
+            lblCurrentCapDescription.Text = cap.Description;
+
+            tblSingleItemDetail.Visible = true;
+            lstvAvailableProducts.Visible = false;
         }
     }
 
@@ -145,4 +167,26 @@ public partial class _Default : System.Web.UI.Page
             }
         }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void btnCancel_OnClick(object sender, EventArgs e)
+    {
+        tblSingleItemDetail.Visible = false;
+        lstvAvailableProducts.Visible = true;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void btnAddCapToBasket_OnClick(object sender, EventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
 }

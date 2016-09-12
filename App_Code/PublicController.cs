@@ -162,7 +162,9 @@ namespace BusinessLayer
         /// <returns></returns>
         public Cap GetCapDetails(int CapId)
         {
-            return null; //_dm.GetSingleInstance<Cap>(CapId);
+            Cap cap = _dm.GetSingleCapById(CapId);
+            _logger.Log(LoggingLevel.Info, "Retrieved single Cap. ID: " + cap.ID);
+            return cap;
         }
 
         /// <summary>
@@ -191,8 +193,9 @@ namespace BusinessLayer
         /// <returns></returns>
         public List<Cap> GetAllCapsByCategoryId(int categoryId)
         {
+            List<Cap> caps = _dm.GetCapsByCategoryId(categoryId);
             _logger.Log(LoggingLevel.Info, "Retrieved all Caps sharing Category. Category ID:" + categoryId);
-            return _dm.GetCapsByCategoryId(categoryId);
+            return caps;
         }
 
         /// <summary>
@@ -202,10 +205,32 @@ namespace BusinessLayer
         /// <returns></returns>
         public Customer GetCustomerById(int customerId)
         {
+            Customer customer = _dm.GetSingleCustomerById(customerId);
             _logger.Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customerId);
-            return _dm.GetSingleCustomerById(customerId);
+            return customer;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public Customer GetCustomerByLogin(string login)
+        {
+            Customer customer = _dm.GetSingleCustomerByLogin(login);
+            _logger.Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customer.ID);
+            return customer;
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public string GetCategoryName(int id)
+        {
+            Category category = _dm.GetSingleCategoryById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Category. ID:" + id);
+            return category.Name;
+        }
     }
 }

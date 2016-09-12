@@ -110,14 +110,6 @@
                 </span>
             </div>
             <div class="col-md-1">
-                <asp:RequiredFieldValidator runat="server" 
-                    ControlToValidate="txtLogin"
-                    ErrorMessage="*" ForeColor="red"
-                    />
-                <asp:CustomValidator runat="server"
-                            ControlToValidate="txtLogin"
-                            OnServerValidate="LoginValidation"
-                            />
             </div>
             <div class="col-md-4">
                 <span class="ContentShiftRight ">

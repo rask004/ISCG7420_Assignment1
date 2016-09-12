@@ -47,14 +47,20 @@ public partial class Customer_Profile : System.Web.UI.Page
             txtStreetAddress.Width = new Unit(txtStreetAddress.MaxLength, UnitType.Em);
             txtSuburb.Width = new Unit(txtSuburb.MaxLength, UnitType.Em);
             txtCity.Width = new Unit(txtCity.MaxLength, UnitType.Em);
+            
+            string login = Session[Security.SessionIdentifierLogin].ToString();
 
-            try
+            PublicController controller = new PublicController();
+            Customer customer = controller.GetCustomerByLogin(login);
+
+            if (customer == null)
             {
-                int id = Convert.ToInt32(Session[GeneralConstants.SessionCustomerIdentifier]);
-
-                PublicController controller = new PublicController();
-                Customer customer = controller.GetCustomerById(id);
-
+                string message = "ERROR: Was expecting a valid customer. Login used to retrieve customer: " + login;
+                Response.Write(message);
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
+            }
+            else
+            {
                 txtEmail.Text = customer.Email;
                 txtLogin.Text = customer.Login;
                 txtFirstName.Text = customer.FirstName;
@@ -65,17 +71,9 @@ public partial class Customer_Profile : System.Web.UI.Page
                 txtStreetAddress.Text = customer.StreetAddress;
                 txtSuburb.Text = customer.Suburb;
                 txtCity.Text = customer.City;
-
-            }
-            catch (FormatException ex)
-            {
-                Response.Write("ERROR: Customer Identifier could not be converted. Was expecting an integer.");
-                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
-                    ex.Message + "\n\n" + ex.InnerException.Message);
             }
         }
     }
-
 
     /// <summary>
     ///     Validate the first or last name, and post warnings if not valid
@@ -256,25 +254,28 @@ public partial class Customer_Profile : System.Web.UI.Page
         }
         else
         {
-            try
+            PublicController controller = new PublicController();
+            Customer customer = controller.GetCustomerByLogin(txtLogin.Text);
+
+            if (customer != null)
             {
-                int id = Convert.ToInt32(Session[GeneralConstants.SessionCustomerIdentifier]);
-
-                PublicController controller = new PublicController();
-
                 // update the registered user in the db.
-                controller.UpdateRegisteredCustomer(id, txtFirstName.Text, txtLastName.Text, txtLogin.Text,
+                controller.UpdateRegisteredCustomer(customer.ID, txtFirstName.Text, txtLastName.Text, txtLogin.Text,
                     txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
                     txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
 
                 // email the Customer their new registration details.
                 // TODO: get emailing working on the web server.
+
             }
-            catch (FormatException ex)
+            else
             {
-                Response.Write("ERROR: Customer Identifier could not be converted. Was expecting an integer.");
-                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, ex.Message + "\n\n" + ex.InnerException.Message);
+                string message = "ERROR: Customer not recognized. Login used: " + txtLogin.Text;
+                lblErrorMessages.Text = message;
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
             }
+
+            
         }
     }
 }
