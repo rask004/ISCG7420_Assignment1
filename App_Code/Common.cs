@@ -71,6 +71,8 @@ namespace Common
 
         public static readonly string RandomPasswordChars = "abcdefghijklmnoABCDEFGHIJKLMNO123456789";
 
+        public static readonly string Numerals = "0123456789";
+
         public static readonly string LogFileDefaultLocation = "~/Logs/Site.Log";
 
         public static readonly string LoggerApplicationStateKey = "GlobalLogger";

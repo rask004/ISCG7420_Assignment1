@@ -21,9 +21,68 @@ public partial class _Default : System.Web.UI.Page
     private void Load_Categories()
     {
         PublicController controller = new PublicController();
-        List<Category> categories =  controller.GetCategoriesWithCaps();
+        List<Category> categories = controller.GetCategoriesWithCaps();
         dlstCategoriesWithProducts.DataSource = categories;
         dlstCategoriesWithProducts.DataBind();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void LoadInitialProducts()
+    {
+        PublicController controller = new PublicController();
+        List<Category> categories = controller.GetCategoriesWithCaps();
+        if (categories.Count > 0)
+        {
+            int categoryId = categories[0].ID;
+            string categoryName = categories[0].Name;
+            List<Cap> caps = controller.GetAllCapsByCategoryId(categoryId);
+
+            Load_Caps(caps);
+            lblCentreHeader.Text = categoryName;
+        }
+        
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="caps"></param>
+    private void Load_Caps(List<Cap> caps)
+    {
+        lstvAvailableProducts.DataSource = caps;
+        lstvAvailableProducts.DataBind();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void Bind_Colours()
+    {
+        PublicController controller = new PublicController();
+        List<Colour> colours = controller.GetAllcolours();
+        ddlCapColours.DataSource = colours;
+        ddlCapColours.DataBind();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void Bind_CartItems()
+    {
+        List<OrderItem> cartItems;
+        if (Session[GeneralConstants.SessionCartItems] != null)
+        {
+            cartItems = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+        }
+        else
+        {
+            cartItems = new List<OrderItem>();
+        }
+
+        lstvShoppingItems.DataSource = cartItems;
+        lstvShoppingItems.DataBind();
     }
 
     /// <summary>
@@ -35,9 +94,18 @@ public partial class _Default : System.Web.UI.Page
     {
         (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
+
         if (!IsPostBack)
         {
             Load_Categories();
+
+            Bind_Colours();
+
+            Bind_CartItems();
+
+            LoadInitialProducts();
+
+            UpdateCartTotals();
         }
     }
 
@@ -51,9 +119,24 @@ public partial class _Default : System.Web.UI.Page
         if (e.Item.ItemType == ListItemType.Item)
         {
             ImageButton img = (e.Item.FindControl("imgCategoryPicture") as ImageButton);
-            int id = Convert.ToInt32((e.Item.FindControl("lblCategoryId") as Label).Text);
-            PublicController controller = new PublicController();
-            img.ImageUrl = controller.GetFirstCapImageByCategoryId(id);
+            try
+            {
+                int id = Convert.ToInt32((e.Item.FindControl("lblCategoryId") as Label).Text);
+                PublicController controller = new PublicController();
+                if (img != null)
+                {
+                    img.ImageUrl = controller.GetFirstCapImageByCategoryId(id);
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                // TODO: log error referencing lblCategoryId
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "NullReferenceException, Could not reference a control. Method:" + ex.TargetSite + "; message:" + ex.Message);
+                if (img != null)
+                {
+                    img.ImageUrl = GeneralConstants.CapImageDefaultFileName;
+                }
+            }
         }
     }
 
@@ -73,8 +156,7 @@ public partial class _Default : System.Web.UI.Page
 
             lblCentreHeader.Text = categoryName;
 
-            lstvAvailableProducts.DataSource = caps;
-            lstvAvailableProducts.DataBind();
+            Load_Caps(caps);
         }
     }
 
@@ -111,6 +193,9 @@ public partial class _Default : System.Web.UI.Page
             imgCurrentCapPicture.ImageUrl = cap.ImageUrl;
             lblCurrentCapDescription.Text = cap.Description;
 
+            nptQuantity.Value = "1";
+            ddlCapColours.SelectedIndex = 0;
+
             tblSingleItemDetail.Visible = true;
             lstvAvailableProducts.Visible = false;
         }
@@ -135,6 +220,7 @@ public partial class _Default : System.Web.UI.Page
     {
         List<OrderItem> cartItems = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
         cartItems.Clear();
+        Bind_CartItems();
         UpdateCartTotals();
     }
     
@@ -156,8 +242,8 @@ public partial class _Default : System.Web.UI.Page
                 double gst = subtotal*GeneralConstants.MoneyGstRate;
 
                 lblSubtotal.Text = subtotal.ToString("C", CultureInfo.CurrentCulture);
-                lblSubtotal.Text = gst.ToString("C", CultureInfo.CurrentCulture);
-                lblSubtotal.Text = (subtotal + gst).ToString("C", CultureInfo.CurrentCulture);
+                lblGst.Text = gst.ToString("C", CultureInfo.CurrentCulture);
+                lblTotalCost.Text = (subtotal + gst).ToString("C", CultureInfo.CurrentCulture);
             }
             else
             {
@@ -186,7 +272,36 @@ public partial class _Default : System.Web.UI.Page
     /// <param name="e"></param>
     protected void btnAddCapToBasket_OnClick(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
-    }
+        OrderItem newShoppingCartItem = new OrderItem();
+        newShoppingCartItem.CapId = Convert.ToInt32(lblCurrentCapId.Text);
+        newShoppingCartItem.ColourId = Convert.ToInt32(ddlCapColours.SelectedValue);
 
+        PublicController controller = new PublicController();
+        newShoppingCartItem.Cap = controller.GetCapById(newShoppingCartItem.CapId);
+        newShoppingCartItem.Colour = controller.GetColourById(newShoppingCartItem.ColourId);
+        newShoppingCartItem.Quantity = Convert.ToInt32(nptQuantity.Value);
+
+        List<OrderItem> cartItems = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>);
+        bool itemAlreadyExists = false;
+        for (int i = 0; i < cartItems.Count; i++)
+        {
+            if (newShoppingCartItem.CapId == cartItems[i].CapId &&
+                newShoppingCartItem.ColourId == cartItems[i].ColourId)
+            {
+                // Already have cart items with this colour, so just add to the quantity.
+                cartItems[i].Quantity += newShoppingCartItem.Quantity;
+                itemAlreadyExists = true;
+                break;
+            }
+        }
+
+        if (!itemAlreadyExists)
+        {
+            (Session[GeneralConstants.SessionCartItems] as List<OrderItem>).Add(newShoppingCartItem);
+        }
+
+        Bind_CartItems();
+
+        UpdateCartTotals();
+    }
 }

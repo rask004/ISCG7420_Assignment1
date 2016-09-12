@@ -232,5 +232,40 @@ namespace BusinessLayer
             _logger.Log(LoggingLevel.Info, "Retrieved Category. ID:" + id);
             return category.Name;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<Colour> GetAllcolours()
+        {
+            List<Colour> colours = _dm.GetAllColours();
+            _logger.Log(LoggingLevel.Info, "Retrieved List of all Colours");
+            return colours;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Cap GetCapById(int id)
+        {
+            Cap cap = _dm.GetSingleCapById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Cap. ID:" + id);
+            return cap;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Colour GetColourById(int id)
+        {
+            Colour cap = _dm.GetSingleColourById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Colour. ID:" + id);
+            return cap;
+        }
     }
 }

@@ -45,4 +45,10 @@
         }
     }
 
+    // TODO: remove this when finished development
+    void Application_End(object sender, EventArgs e)
+    {
+        Session.Abandon();
+    }
+
 </script>

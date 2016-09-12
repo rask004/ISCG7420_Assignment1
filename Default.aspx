@@ -95,7 +95,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <span class="DecoHeader" style="margin-left: 11%;">
-                            <H3 style="margin-left: 38%"><asp:Label ID="lblCentreHeader" Text="ProductsName" runat="server" /></H3>  
+                            <H3 style="margin-left: 38%"><asp:Label ID="lblCentreHeader" Text="Caps" runat="server" /></H3>  
                         </span>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
                                 </EmptyDataTemplate>
                 
                             </asp:ListView>
-
+                            
                             <asp:Table ID="tblSingleItemDetail" CellPadding="5" CellSpacing="5" Visible="False"
                                 runat="server">
                                 <asp:TableRow>
@@ -167,7 +167,12 @@
                                         <label>ID:</label>
                                     </asp:TableCell>
                                     <asp:TableCell>
-                                        <asp:Label ID="lblCurrentCapId" runat="server"/>
+                                        <div class="col-md-1">
+                                            
+                                        </div>
+                                        <div class="col-md-11">
+                                            <asp:Label ID="lblCurrentCapId" runat="server"/>
+                                        </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
                                 <asp:TableRow>
@@ -175,7 +180,12 @@
                                         <asp:Label ID="lblCurrentCapName" runat="server"/>
                                     </asp:TableCell>
                                     <asp:TableCell>
-                                        <asp:Label ID="lblCurrentCapPrice" runat="server"/>
+                                        <div class="col-md-1">
+                                            
+                                        </div>
+                                        <div class="col-md-11">
+                                            <asp:Label ID="lblCurrentCapPrice" runat="server"/>
+                                        </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
                                 <asp:TableRow>
@@ -183,7 +193,15 @@
                                         <label>Colour:</label>
                                     </asp:TableCell>
                                     <asp:TableCell>
-                                        <asp:DropDownList ID="ddlCapColours" Enabled="False" runat="server"/>
+                                        <div class="col-md-1">
+                                            
+                                        </div>
+                                        <div class="col-md-11">
+                                            <asp:DropDownList ID="ddlCapColours" Enabled="True" 
+                                                DataTextField="name"
+                                                DataValueField ="id"
+                                                runat="server"/>
+                                        </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
                                 <asp:TableRow>
@@ -191,7 +209,13 @@
                                         <label>Quantity:</label>
                                     </asp:TableCell>
                                     <asp:TableCell>
-                                        <asp:TextBox ID="txtCapQuantity" Text="1" runat="server"/>
+                                        <div class="col-md-1">
+                                            
+                                        </div>
+                                        <div class="col-md-11">
+                                            <input type="number" id="nptQuantity" min="1" max="99" name="nptQuantity" value="1"
+                                                runat="server"/>
+                                        </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
                                 <asp:TableRow>
@@ -199,7 +223,12 @@
                                         <asp:Image ID="imgCurrentCapPicture" runat="server"/>
                                     </asp:TableCell>
                                     <asp:TableCell>
-                                        <asp:Label ID="lblCurrentCapDescription" runat="server"/>
+                                        <div class="col-md-1">
+                                            
+                                        </div>
+                                        <div class="col-md-11">
+                                            <asp:Label ID="lblCurrentCapDescription" runat="server"/>
+                                        </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
                                 <asp:TableRow>
@@ -212,7 +241,7 @@
                                         <asp:Button ID="btnCancel" Text="Cancel" OnClick="btnCancel_OnClick" runat="server"/>
                                     </asp:TableCell>
                                     <asp:TableCell>
-                                        <asp:Button ID="btnAddCapToBasket" Text="Add To Basket" OnClick="btnAddCapToBasket_OnClick" Enabled="False"  runat="server"/>
+                                        <asp:Button ID="btnAddCapToBasket" Text="Add To Basket" OnClick="btnAddCapToBasket_OnClick" Enabled="True"  runat="server"/>
                                     </asp:TableCell>
                                 </asp:TableRow>
                         
@@ -228,153 +257,167 @@
     <div class="row"></div>
 </asp:Content>
 <asp:Content ID="ShoppingBasket" ContentPlaceHolderID="PageContentRight" Runat="Server">
-    <div id="ShoppingBasketSection" class="container PageSection">
-        <div class="row">
-            <div class="col-md-12">
-                <span class="DecoHeader" style="margin-left: 11%;">
-                    <H3 style="margin-left: 28%"><asp:Label ID="lblRightHeader" Text="Shopping Cart" runat="server" /></H3>  
-                </span>
-            </div>
-        </div>
-        <div class="row"></div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="container-fluid" style="margin: 4%; border: grey 1px solid;">
-                    <asp:ListView ID="lstvShoppingItems" Visible="True"
-                        runat="server">
+    <asp:UpdatePanel ID="ShoppingCartPanel" UpdateMode="Always" runat="server">
+        <ContentTemplate>
+            <div id="ShoppingBasketSection" class="container PageSection">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="DecoHeader" style="margin-left: 11%;">
+                            <H3 style="margin-left: 28%"><asp:Label ID="lblRightHeader" Text="Shopping Cart" runat="server" /></H3>  
+                        </span>
+                    </div>
+                </div>
+                <div class="row"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="container" style="margin: 4%; border: grey 1px solid;">
+                            <asp:ListView ID="lstvShoppingItems" Visible="True"
+                                runat="server">
                         
-                        <ItemTemplate>
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-4 ContentShiftLeft"><H4>
-                                        <asp:Label runat="server"
-                                                   Text='ID: <%# Convert.ToInt32(DataBinder.Eval(Container.DataItem, "productid")).ToString() %>'/>
-                                    </H4></div>
-                                    <div class="col-md-8"><H4>
-                                        <asp:Label runat="server"
-                                                Text='<%# DataBinder.Eval(Container.DataItem, "Colour.name") %>'/>
-                                    </H4></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8 ContentShiftLeft"><H4>
-                                        <asp:Label runat="server"
-                                                Text='<%# DataBinder.Eval(Container.DataItem, "Cap.name") %>'/>
-                                    </H4></div>
-                                    <div class="col-md-4 ContentShiftLeft"><H4>
-                                        <asp:Label runat="server"
-                                                Text='X <%# DataBinder.Eval(Container.DataItem, "quantity") %>'/>
-                                    </H4></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        
+                                <ItemTemplate>
+                                    <div class="row">
+                                        <div class="col-md-4"><label>ID:</label></div>
+                                        <div class="col-md-7 ContentShiftLeft">
+                                            <asp:Label runat="server"
+                                                        Text='<%# Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")).ToString() %>'/>
+                                        </div>
+                                        <div class="col-md-1"></div>
                                     </div>
-                                    <div class="col-md-4"><H4>
-                                        <asp:Label runat="server" 
-                                            Text='$ <%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "price")).ToString("C", CultureInfo.CurrentCulture) %>'/>
-                                    </H4></div>
-                                </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><label>Name:</label></div>
+                                        <div class="col-md-7">
+                                            <asp:Label runat="server"
+                                                    Text='<%# DataBinder.Eval(Container.DataItem, "Cap.name") %>'/>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><label>Colour:</label></div>
+                                        <div class="col-md-7">
+                                            <asp:Label runat="server"
+                                                    Text='<%# DataBinder.Eval(Container.DataItem, "Colour.name") %>'/>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><label>Price:</label></div>
+                                        <div class="col-md-7">
+                                            <asp:Label runat="server" 
+                                                Text='<%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.price")).ToString("C", CultureInfo.CurrentCulture) %>'/>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><label>Quantity:</label></div>
+                                        <div class="col-md-7">
+                                            <asp:Label runat="server"
+                                                    Text= '<%# DataBinder.Eval(Container.DataItem, "quantity") %>'/>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"></div>
+                                    </div>
+                                </ItemTemplate>
+                        
+                                <EmptyDataTemplate>
+                                        <div class="row">
+                                            <div class="col-md-2"></div>
+                                            <div class="col-md-10">
+                                                <span class="ContentShiftLeft">
+                                                    <H4>Your Shopping Cart is empty.</H4>
+                                                </span>
+                                            </div>
+                                        </div>
+                                </EmptyDataTemplate>
+                            </asp:ListView>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5"><H4>
+                                <label class="ContentShiftLeft">SubTotal</label>
+                            </H4></div>
+                            <div class="col-md-5"><H4>
+                                $ <asp:Label CssClass="ContentShiftRight" ID="lblSubtotal" Text="0.00" runat="server"/>
+                            </H4></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+                        
                             </div>
-                        </ItemTemplate>
+                            <div class="col-md-5">
                         
-                        <EmptyDataTemplate>
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        
-                                    </div>
-                                    <div class="col-md-8">
-                                        <H4><b>Your Shopping Cart is empty.</b></H4>
-                                    </div>
-                        </EmptyDataTemplate>
-                    </asp:ListView>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5"><H4>
+                                <label class="ContentShiftLeft">GST</label>
+                            </H4></div>
+                            <div class="col-md-5"><H4>
+                                $ <asp:Label CssClass="ContentShiftRight" ID="lblGst" Text="0.00" runat="server"/>
+                            </H4></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+                        
+                            </div>
+                            <div class="col-md-5">
+                        
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5"><H4>
+                                <label class="ContentShiftLeft">TOTAL</label>
+                            </H4></div>
+                            <div class="col-md-5"><H4>
+                                $ <asp:Label CssClass="ContentShiftRight" ID="lblTotalCost" Text="0.00" runat="server"/>
+                            </H4></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+                        
+                            </div>
+                            <div class="col-md-5">
+                        
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+                        
+                            </div>
+                            <div class="col-md-5">
+                        
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row" style="border-top: black 2px solid; margin: 4%;">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5"><H4>
+                                <asp:Button ID="btnCartClear" CssClass="ContentShiftLeft" runat="server" Text="Clear"
+                                    OnClick="btnCartClear_OnClick" />
+                            </H4></div>
+                            <div class="col-md-5"><H4>
+                                <asp:Button ID="btnProceedToCheckout" CssClass="ContentShiftRight" runat="server" Text="Checkout"
+                                    OnClick="btnProceedToCheckout_OnClick" Enabled="False"/>
+                            </H4></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5"><H4>
-                        <label class="ContentShiftLeft">SubTotal</label>
-                    </H4></div>
-                    <div class="col-md-5"><H4>
-                        $ <asp:Label CssClass="ContentShiftRight" ID="lblSubtotal" Text="0.00" runat="server"/>
-                    </H4></div>
-                    <div class="col-md-1"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5">
-                        
-                    </div>
-                    <div class="col-md-5">
-                        
-                    </div>
-                    <div class="col-md-1"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5"><H4>
-                        <label class="ContentShiftLeft">GST</label>
-                    </H4></div>
-                    <div class="col-md-5"><H4>
-                        $ <asp:Label CssClass="ContentShiftRight" ID="lblGst" Text="0.00" runat="server"/>
-                    </H4></div>
-                    <div class="col-md-1"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5">
-                        
-                    </div>
-                    <div class="col-md-5">
-                        
-                    </div>
-                    <div class="col-md-1"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5"><H4>
-                        <label class="ContentShiftLeft">TOTAL</label>
-                    </H4></div>
-                    <div class="col-md-5"><H4>
-                        $ <asp:Label CssClass="ContentShiftRight" ID="lblTotalCost" Text="0.00" runat="server"/>
-                    </H4></div>
-                    <div class="col-md-1"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5">
-                        
-                    </div>
-                    <div class="col-md-5">
-                        
-                    </div>
-                    <div class="col-md-1"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5">
-                        
-                    </div>
-                    <div class="col-md-5">
-                        
-                    </div>
-                    <div class="col-md-1"></div>
-                </div>
-                <div class="row" style="border-top: black 2px solid; margin: 4%;">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-5"><H4>
-                        <asp:Button ID="btnCartClear" CssClass="ContentShiftLeft" runat="server" Text="Clear"
-                            OnClick="btnCartClear_OnClick" />
-                    </H4></div>
-                    <div class="col-md-5"><H4>
-                        <asp:Button ID="btnProceedToCheckout" CssClass="ContentShiftRight" runat="server" Text="Checkout"
-                            OnClick="btnProceedToCheckout_OnClick" Enabled="False"/>
-                    </H4></div>
-                    <div class="col-md-1"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
 </asp:Content>
 
