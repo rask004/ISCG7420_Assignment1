@@ -130,7 +130,6 @@ public partial class _Default : System.Web.UI.Page
             }
             catch (NullReferenceException ex)
             {
-                // TODO: log error referencing lblCategoryId
                 (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "NullReferenceException, Could not reference a control. Method:" + ex.TargetSite + "; message:" + ex.Message);
                 if (img != null)
                 {

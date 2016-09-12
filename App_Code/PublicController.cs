@@ -8,6 +8,8 @@ using CommonLogging;
 using DataLayer;
 using SecurityLayer;
 
+//TODO: fix issue with HttpContext.Current.Application and Logger.
+
 namespace BusinessLayer
 {
     /// <summary>
@@ -218,7 +220,7 @@ namespace BusinessLayer
         public Customer GetCustomerByLogin(string login)
         {
             Customer customer = _dm.GetSingleCustomerByLogin(login);
-            _logger.Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customer.ID);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customer.ID);
             return customer;
         }
 
