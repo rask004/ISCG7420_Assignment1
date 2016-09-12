@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Web;
 using Common;
@@ -14,7 +12,7 @@ namespace BusinessLayer
     /// <summary>
     /// Business Layer controller for Adnin pages.
     /// </summary>
-    public class AdminController :IDisposable
+    public class AdminController
     {
         private readonly DataManager _dm;
 
@@ -572,7 +570,7 @@ namespace BusinessLayer
             }
 
             StringBuilder builder = new StringBuilder();
-            builder.Append("AdminController.AddOrUpdateCategory :: Updated Categoru: ");
+            builder.Append("AdminController.AddOrUpdateCategory :: Updated Category: ");
             builder.Append(id);
             _logger.Log(LoggingLevel.Error, builder.ToString());
         }
@@ -584,7 +582,9 @@ namespace BusinessLayer
         /// <returns></returns>
         public List<Supplier> GetSuppliers()
         {
-            return _dm.GetAllSuppliers();
+            List<Supplier> suppliers = _dm.GetAllSuppliers();
+            _logger.Log(LoggingLevel.Info, "Retrieved all Suppliers.");
+            return suppliers;
         }
 
         /// <summary>
@@ -595,6 +595,7 @@ namespace BusinessLayer
         public string GetSupplierName(int id)
         {
             Supplier item = _dm.GetSingleSupplierById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Supplier Name, ID:" + id);
             return item.Name;
         }
 
@@ -606,6 +607,7 @@ namespace BusinessLayer
         public string GetSupplierContactNumber(int id)
         {
             Supplier item = _dm.GetSingleSupplierById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Supplier Contact, ID:" + id);
             return item.ContactNumber;
         }
 
@@ -617,6 +619,7 @@ namespace BusinessLayer
         public string GetSupplierEmail(int id)
         {
             Supplier item = _dm.GetSingleSupplierById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Supplier Email, ID:" + id);
             return item.Email;
         }
 
@@ -638,6 +641,8 @@ namespace BusinessLayer
             {
                 _dm.UpdateExistingSupplier(id, name, contactNumber, email);
             }
+
+            _logger.Log(LoggingLevel.Info, "Updated Supplier, ID:" + id + " Name:" + name);
         }
 
 
@@ -647,7 +652,9 @@ namespace BusinessLayer
         /// <returns></returns>
         public List<Cap> GetCaps()
         {
-            return _dm.GetAllCaps();
+            List<Cap> caps = _dm.GetAllCaps();
+            _logger.Log(LoggingLevel.Info, "Retrieved All Caps.");
+            return caps;
         }
 
         /// <summary>
@@ -658,6 +665,7 @@ namespace BusinessLayer
         public string GetCapName(int id)
         {
             Cap item = _dm.GetSingleCapById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Cap Name, ID:" + id);
             return item.Name;
         }
 
@@ -669,6 +677,7 @@ namespace BusinessLayer
         public Double GetCapPrice(int id)
         {
             Cap item = _dm.GetSingleCapById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Cap Price, ID:" + id);
             return item.Price;
         }
 
@@ -680,6 +689,7 @@ namespace BusinessLayer
         public string GetCapDescription(int id)
         {
             Cap item = _dm.GetSingleCapById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Cap Description, ID:" + id);
             return item.Description;
         }
 
@@ -691,6 +701,7 @@ namespace BusinessLayer
         public string GetCapImageUrl(int id)
         {
             Cap item = _dm.GetSingleCapById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Cap ImageUrl, ID:" + id);
             return item.ImageUrl;
         }
 
@@ -702,6 +713,7 @@ namespace BusinessLayer
         public Category GetCapCategory(int id)
         {
             Cap item = _dm.GetSingleCapById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Cap Category, Cap ID:" + id);
             return _dm.GetSingleCategoryById(item.CategoryId);
         }
 
@@ -713,6 +725,7 @@ namespace BusinessLayer
         public Supplier GetCapSupplier(int id)
         {
             Cap item = _dm.GetSingleCapById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Cap Supplier, Cap ID:" + id);
             return _dm.GetSingleSupplierById(item.SupplierId);
         }
 
@@ -737,6 +750,8 @@ namespace BusinessLayer
             {
                 _dm.UpdateExistingCap(id, name, price, description, imageUrl, categoryId, supplierId);
             }
+
+            _logger.Log(LoggingLevel.Info, "Updated Cap, ID:" + id + " Name:" + name);
         }
 
         /// <summary>
@@ -745,7 +760,9 @@ namespace BusinessLayer
         /// <returns></returns>
         public List<CustomerOrder> GetOrders()
         {
-            return _dm.GetAllOrders();
+            List<CustomerOrder> items = _dm.GetAllOrders();
+            _logger.Log(LoggingLevel.Info, "Retrieved All Orders.");
+            return items;
         }
 
 
@@ -757,6 +774,7 @@ namespace BusinessLayer
         public Customer GetCustomerByOrderId(int orderId)
         {
             CustomerOrder order = _dm.GetSingleOrderById(orderId);
+            _logger.Log(LoggingLevel.Info, "Retrieved Order Customer, Order ID:" + orderId);
             return _dm.GetSingleCustomerById(order.UserId);
         }
 
@@ -768,6 +786,7 @@ namespace BusinessLayer
         public string GetOrderStatus(int orderId)
         {
             CustomerOrder order = _dm.GetSingleOrderById(orderId);
+            _logger.Log(LoggingLevel.Info, "Retrieved Order Status, ID:" + orderId);
             return order.Status;
         }
 
@@ -780,6 +799,7 @@ namespace BusinessLayer
         public void UpdateOrderStatus(int id, string status)
         {
             _dm.UpdateOrderStatus(id, status);
+            _logger.Log(LoggingLevel.Info, "Updated Order Status, ID:" + id);
         }
 
         /// <summary>
@@ -788,15 +808,9 @@ namespace BusinessLayer
         /// <param name="id"></param>
         public List<OrderItem> GetItemsForOrderWithId(int id)
         {
-            return _dm.GetAllOrderItemsByOrderId(id);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Dispose()
-        {
-            _logger.Dispose();
+            List<OrderItem> orderitems = _dm.GetAllOrderItemsByOrderId(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved All OrderItems, ID:" + id);
+            return orderitems;
         }
     }
 }

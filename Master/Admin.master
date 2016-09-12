@@ -49,7 +49,7 @@
                     <a class="navbar-left" runat="server" href="~/Admin/AdminHome"><img ID="imgLogo" runat="server" Height="80" alt="Logo" src="~/Images/Logo.png"/></a>
                 </div>
                 <%--links--%>
-                <div class="navbar-collapse collapse col-md-9" style="float:right">
+                <div class="navbar-collapse collapse col-md-9" style="float:left">
                     <div class="container">
                         <span style="float:left">
                             <ul class="nav navbar-nav">

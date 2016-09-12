@@ -6,6 +6,7 @@
 <%@ Import Namespace="BusinessLayer" %>
 <%@ Import Namespace="Common" %>
 <%@ Import Namespace="CommonLogging" %>
+<%@ Import Namespace="DataLayer" %>
 <%@ Import Namespace="SecurityLayer" %>
 
 <script runat="server">
@@ -27,9 +28,11 @@
 
     void Session_Start(object sender, EventArgs e)
     {
-        Session[Security.SessionIdentifierLogin] = null;
-        Session[Security.SessionIdentifierSecurityToken] = null;
+        //Session[Security.SessionIdentifierLogin] = null;
+        //Session[Security.SessionIdentifierSecurityToken] = null;
         Session[GeneralConstants.SessionCartItems] = new List<OrderItem>();
+        Session[Security.SessionIdentifierLogin] = "Customer002";
+        Session[Security.SessionIdentifierSecurityToken] = null;
     }
 
     void Session_End(object sender, EventArgs e)
@@ -40,6 +43,12 @@
         {
             (Session[GeneralConstants.SessionCartItems] as List<OrderItem>).Clear();
         }
+    }
+
+    // TODO: remove this when finished development
+    void Application_End(object sender, EventArgs e)
+    {
+        Session.Abandon();
     }
 
 </script>

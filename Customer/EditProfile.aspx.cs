@@ -5,7 +5,9 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using BusinessLayer;
 using Common;
+using CommonLogging;
 using SecurityLayer;
 
 public partial class Customer_Profile : System.Web.UI.Page
@@ -17,6 +19,9 @@ public partial class Customer_Profile : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         lblErrorMessages.Text = String.Empty;
 
         if (!IsPostBack)
@@ -42,11 +47,33 @@ public partial class Customer_Profile : System.Web.UI.Page
             txtStreetAddress.Width = new Unit(txtStreetAddress.MaxLength, UnitType.Em);
             txtSuburb.Width = new Unit(txtSuburb.MaxLength, UnitType.Em);
             txtCity.Width = new Unit(txtCity.MaxLength, UnitType.Em);
+            
+            string login = Session[Security.SessionIdentifierLogin].ToString();
 
-            // TODO: fill the text and label fields with the customer details.
+            PublicController controller = new PublicController();
+            Customer customer = controller.GetCustomerByLogin(login);
+
+            if (customer == null)
+            {
+                string message = "ERROR: Was expecting a valid customer. Login used to retrieve customer: " + login;
+                Response.Write(message);
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
+            }
+            else
+            {
+                txtEmail.Text = customer.Email;
+                txtLogin.Text = customer.Login;
+                txtFirstName.Text = customer.FirstName;
+                txtLastName.Text = customer.LastName;
+                txtWorkNumber.Text = customer.WorkNumber;
+                txtHomeNumber.Text = customer.HomeNumber;
+                txtMobileNumber.Text = customer.MobileNumber;
+                txtStreetAddress.Text = customer.StreetAddress;
+                txtSuburb.Text = customer.Suburb;
+                txtCity.Text = customer.City;
+            }
         }
     }
-
 
     /// <summary>
     ///     Validate the first or last name, and post warnings if not valid
@@ -228,15 +255,27 @@ public partial class Customer_Profile : System.Web.UI.Page
         else
         {
             PublicController controller = new PublicController();
+            Customer customer = controller.GetCustomerByLogin(txtLogin.Text);
 
-            // update the registered user in the db.
-            //controller.UpdateCustomer(id, txtFirstName.Text, txtLastName.Text, txtLogin.Text,
-            //    txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
-            //    txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
+            if (customer != null)
+            {
+                // update the registered user in the db.
+                controller.UpdateRegisteredCustomer(customer.ID, txtFirstName.Text, txtLastName.Text, txtLogin.Text,
+                    txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
+                    txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
 
-            // email the Customer their new registration details.
-            // TODO: get emailing working on the web server.
+                // email the Customer their new registration details.
+                // TODO: get emailing working on the web server.
 
+            }
+            else
+            {
+                string message = "ERROR: Customer not recognized. Login used: " + txtLogin.Text;
+                lblErrorMessages.Text = message;
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
+            }
+
+            
         }
     }
 }
