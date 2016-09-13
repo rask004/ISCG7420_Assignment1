@@ -25,8 +25,6 @@ namespace BusinessLayer
     {
         private readonly DataManager _dm;
 
-        private readonly Logger _logger;
-
         /// <summary>
         ///     Constructor
         ///     Create ShoppingController and store reference to DataManager.
@@ -37,8 +35,7 @@ namespace BusinessLayer
 
             StringBuilder builder = new StringBuilder();
             builder.Append("PublicController.PublicController :: PublicController Created.");
-            _logger = (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger);
-            _logger.Log(LoggingLevel.Info, builder.ToString());
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, builder.ToString());
         }
 
         /// <summary>
@@ -62,7 +59,7 @@ namespace BusinessLayer
             string hash = Security.GetPasswordHash(password);
             _dm.AddNewCustomer(email, login, hash, firstName, lastName, homeNumber, workNumber, mobileNumber,
                 streetAddress, suburb, city);
-            _logger.Log(LoggingLevel.Info,"Customer Registered. Login:" + login + ", Email:" + email);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info,"Customer Registered. Login:" + login + ", Email:" + email);
         }
 
         /// <summary>
@@ -86,7 +83,7 @@ namespace BusinessLayer
 
             _dm.UpdateExistingCustomer(id, email, login, firstName, lastName, homeNumber, workNumber, mobileNumber,
                 streetAddress, suburb, city);
-            _logger.Log(LoggingLevel.Info, "Customer Updated. ID:" + id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Customer Updated. ID:" + id);
         }
 
         /// <summary>
@@ -97,7 +94,7 @@ namespace BusinessLayer
         public void UpdatePasswordForCustomer(int id, string passwordhash)
         {
             _dm.UpdateExistingCustomerPassword(id, passwordhash);
-            _logger.Log(LoggingLevel.Info, "Customer Password Updated. ID:" + id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Customer Password Updated. ID:" + id);
 
         }
 
@@ -149,7 +146,7 @@ namespace BusinessLayer
                 }
             }
 
-            _logger.Log(LoggingLevel.Info, "Retrieved all Categories having caps.");
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved all Categories having caps.");
 
             return categories;
         }
@@ -163,7 +160,7 @@ namespace BusinessLayer
         public Cap GetCapDetails(int CapId)
         {
             Cap cap = _dm.GetSingleCapById(CapId);
-            _logger.Log(LoggingLevel.Info, "Retrieved single Cap. ID: " + cap.ID);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved single Cap. ID: " + cap.ID);
             return cap;
         }
 
@@ -177,12 +174,12 @@ namespace BusinessLayer
             List<Cap> caps = _dm.GetCapsByCategoryId(categoryId);
             if (caps.Any())
             {
-                _logger.Log(LoggingLevel.Info, "Image URL Retrieved from Cap in Category. source Category ID:" + categoryId);
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Image URL Retrieved from Cap in Category. source Category ID:" + categoryId);
                 return caps[0].ImageUrl;
             }
 
 
-            _logger.Log(LoggingLevel.Info, "Failed to retrieve Image URL from Cap in Category. source Category ID:" + categoryId);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Failed to retrieve Image URL from Cap in Category. source Category ID:" + categoryId);
             return null;
         }
 
@@ -194,7 +191,7 @@ namespace BusinessLayer
         public List<Cap> GetAllCapsByCategoryId(int categoryId)
         {
             List<Cap> caps = _dm.GetCapsByCategoryId(categoryId);
-            _logger.Log(LoggingLevel.Info, "Retrieved all Caps sharing Category. Category ID:" + categoryId);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved all Caps sharing Category. Category ID:" + categoryId);
             return caps;
         }
 
@@ -206,7 +203,7 @@ namespace BusinessLayer
         public Customer GetCustomerById(int customerId)
         {
             Customer customer = _dm.GetSingleCustomerById(customerId);
-            _logger.Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customerId);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customerId);
             return customer;
         }
 
@@ -218,7 +215,7 @@ namespace BusinessLayer
         public Customer GetCustomerByLogin(string login)
         {
             Customer customer = _dm.GetSingleCustomerByLogin(login);
-            _logger.Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customer.ID);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customer.ID);
             return customer;
         }
 
@@ -229,7 +226,7 @@ namespace BusinessLayer
         public string GetCategoryName(int id)
         {
             Category category = _dm.GetSingleCategoryById(id);
-            _logger.Log(LoggingLevel.Info, "Retrieved Category. ID:" + id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Category. ID:" + id);
             return category.Name;
         }
 
@@ -240,7 +237,7 @@ namespace BusinessLayer
         public List<Colour> GetAllcolours()
         {
             List<Colour> colours = _dm.GetAllColours();
-            _logger.Log(LoggingLevel.Info, "Retrieved List of all Colours");
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved List of all Colours");
             return colours;
         }
 
@@ -252,7 +249,7 @@ namespace BusinessLayer
         public Cap GetCapById(int id)
         {
             Cap cap = _dm.GetSingleCapById(id);
-            _logger.Log(LoggingLevel.Info, "Retrieved Cap. ID:" + id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Cap. ID:" + id);
             return cap;
         }
 
@@ -263,9 +260,82 @@ namespace BusinessLayer
         /// <returns></returns>
         public Colour GetColourById(int id)
         {
-            Colour cap = _dm.GetSingleColourById(id);
-            _logger.Log(LoggingLevel.Info, "Retrieved Colour. ID:" + id);
-            return cap;
+            Colour colour = _dm.GetSingleColourById(id);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Colour. ID:" + id);
+            return colour;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public List<CustomerOrder> GetAllOrdersByCustomer(string login)
+        {
+            Customer customer = _dm.GetSingleCustomerByLogin(login);
+            if (customer != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Retrieved Customer. ID:" + customer.ID);
+                List<CustomerOrder> orders = _dm.GetAllOrders();
+                for (int i = orders.Count - 1; i >= 0; i--)
+                {
+                    if (orders[i].Customer.ID != customer.ID)
+                    {
+                        orders.RemoveAt(i);
+                    }
+                }
+
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info,
+                    "Retrieved Customer Orders for customer, ID:" + customer.ID + ", Count:" + orders.Count);
+                return orders;
+            }
+            else
+            {
+                // No such customer exists, therefore there are no orders tied to that customer.
+                return new List<CustomerOrder>();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public List<OrderSummary> GetAllOrderSummariesByCustomer(string login)
+        {
+            List<OrderSummary> summaries = new List<OrderSummary>();
+
+            List<OrderItem> orderItems;
+            List<CustomerOrder> orders = _dm.GetAllOrders();
+            foreach (var customerOrder in orders)
+            {
+                // ignore orders not for this customer.
+                if (!customerOrder.Customer.Login.Equals(login))
+                {
+                    continue;
+                }
+
+                int totalQuantity = 0;
+                double totalCost = 0;
+                orderItems = _dm.GetAllOrderItemsByOrderId(customerOrder.ID);
+                foreach (var orderItem in orderItems)
+                {
+                    totalQuantity += orderItem.Quantity;
+                    totalCost += orderItem.Cap.Price*orderItem.Quantity;
+                }
+
+                summaries.Add(new OrderSummary
+                {
+                    CustomerOrder = customerOrder,
+                    OrderId = customerOrder.ID,
+                    TotalPrice = totalCost,
+                    TotalQuantity = totalQuantity
+                });
+            }
+
+            return summaries;
         }
     }
 }

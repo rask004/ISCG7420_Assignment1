@@ -790,6 +790,36 @@ namespace BusinessLayer
             return order.Status;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<OrderSummary> GetOrderSummaries()
+        {
+            List<CustomerOrder> orders = _dm.GetAllOrders();
+            List<OrderSummary> summaries = new List<OrderSummary>();
+
+            foreach (var customerOrder in orders)
+            {
+                int qty = 0;
+                double cost = 0;
+                List<OrderItem> orderItems = _dm.GetAllOrderItemsByOrderId(customerOrder.ID);
+
+                foreach (var orderItem in orderItems)
+                {
+                    qty += orderItem.Quantity;
+                    cost += orderItem.Cap.Price * orderItem.Quantity;
+                }
+
+                summaries.Add( new OrderSummary {OrderId = customerOrder.ID, CustomerOrder = customerOrder, TotalPrice = cost, TotalQuantity = qty});
+
+            }
+
+            _logger.Log(LoggingLevel.Info, "Retrieved All Order Summaries.");
+
+            return summaries;
+        }
+
 
         /// <summary>
         ///     

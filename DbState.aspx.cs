@@ -26,6 +26,10 @@ public partial class DbState : System.Web.UI.Page
         rptOrders.DataSource = orders;
         rptOrders.DataBind();
 
+        List<OrderSummary> summaries = controller.GetOrderSummaries();
+        rptOrderSummaries.DataSource = summaries;
+        rptOrderSummaries.DataBind();
+
         List<OrderItem> orderItems = new List<OrderItem>();
         foreach (var customerOrder in orders)
         {
@@ -37,6 +41,38 @@ public partial class DbState : System.Web.UI.Page
         rptOrderItems.DataSource = orderItems;
         rptOrderItems.DataBind();
 
+
+        TableCell keyCell;
+        TableCell valueCell;
+        foreach (string key in Session)
+        {
+            keyCell = new TableCell {Text = key};
+            Object o = Session[key];
+            if (o == null)
+            {
+                valueCell = new TableCell { Text = "NULL" };
+            }
+            else
+            {
+                valueCell = new TableCell { Text = Session[key].ToString() };
+            }
+            tblSession.Rows.Add(new TableRow {Cells = {keyCell, valueCell}});
+        }
+
+        foreach (string key in Application)
+        {
+            keyCell = new TableCell { Text = key };
+            Object o = Application[key];
+            if (o == null)
+            {
+                valueCell = new TableCell { Text = "NULL" };
+            }
+            else
+            {
+                valueCell = new TableCell { Text = Application[key].ToString() };
+            }
+            tblApplication.Rows.Add(new TableRow { Cells = { keyCell, valueCell } });
+        }
     }
     
 }

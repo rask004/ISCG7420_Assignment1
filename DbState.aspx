@@ -451,9 +451,90 @@
                 </asp:Repeater>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="margin:2%">
             <div class="col-md-12">
                 
+            </div>
+        </div>
+        <div class="row" style="border: black 2px solid; margin:2%">
+            <div class="col-md-12">
+                <asp:Repeater 
+                    id="rptOrderSummaries" 
+                    runat="server">
+                    <HeaderTemplate>
+                        <table class="col-md-12">
+                            <tr>
+                                <th>
+                                    -- ORDERSUMMARY --
+                                </th>
+                            </tr>
+                            <tr>
+                                <th style="border:1px gray solid">
+                                    ORDERID
+                                </th>
+                                <th style="border:1px gray solid">
+                                    TOTALQUANTITY
+                                </th>
+                                <th style="border:1px gray solid">
+                                    TOTALPRICE
+                                </th>
+                            </tr>
+                    </HeaderTemplate>
+
+                    <ItemTemplate>
+                        <tr>
+                            <td>
+                                <%# DataBinder.Eval(Container.DataItem, "orderid") %>
+                            </td>
+                            <td>
+                                <%# DataBinder.Eval(Container.DataItem, "TotalQuantity") %>
+                            </td>
+                            <td>
+                                <%# DataBinder.Eval(Container.DataItem, "TotalPrice") %>
+                            </td>
+                        </tr>
+                    </ItemTemplate>
+
+                    <FooterTemplate>
+                        </table>
+                    </FooterTemplate>
+
+                </asp:Repeater>
+            </div>
+        </div>
+        <div class="row" style="margin:2%">
+            <div class="col-md-12">
+                
+            </div>
+        </div>
+        <div class="row" style="margin:2%">
+            <div class="col-md-12">
+                <asp:table runat="server" ID="tblSession" CellSpacing="5" CellPadding="5">
+                    <asp:TableRow>
+                        <asp:TableHeaderCell>
+                            Session Key
+                        </asp:TableHeaderCell>
+                        <asp:TableHeaderCell>
+                            Session Value
+                        </asp:TableHeaderCell>
+
+                    </asp:TableRow>
+                </asp:table>
+            </div>
+        </div>
+        <div class="row" style="margin:2%">
+            <div class="col-md-12">
+                <asp:table runat="server" ID="tblApplication" CellSpacing="5" CellPadding="5">
+                    <asp:TableRow>
+                        <asp:TableHeaderCell>
+                            Application State Key
+                        </asp:TableHeaderCell>
+                        <asp:TableHeaderCell>
+                            Application State Value
+                        </asp:TableHeaderCell>
+
+                    </asp:TableRow>
+                </asp:table>
             </div>
         </div>
     </div>

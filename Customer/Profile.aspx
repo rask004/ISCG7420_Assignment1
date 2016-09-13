@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="Quality Caps - Customer Profile" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Profile.aspx.cs" Inherits="Customer_Details" %>
+<%@ Import Namespace="Common" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
     <%= Title %>
@@ -19,14 +20,18 @@
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-3">
-                <span class="ContentShiftRight">
-                    <H4>
+                <H5>
+                    <span class="ContentShiftRight">
                         <label>Customer:</label>
-                    </H4>
-                </span>
+                    </span>
+                </H5>
             </div>
             <div class="col-md-5">
-                <asp:Label runat="server" ID="lblCustomerName" Text=""></asp:Label>
+                <H5>
+                    <span class="ContentShiftLeft">
+                        <asp:Label runat="server" ID="lblCustomerName" Text=""></asp:Label>
+                    </span>
+                </H5>
             </div>
             
             <div class="col-md-2"></div>
@@ -34,14 +39,18 @@
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-3">
-                <span class="ContentShiftRight">
-                    <H4>
+                <H5>
+                    <span class="ContentShiftRight">
                         <label>Email:</label>
-                    </H4>
-                </span>
+                    </span>
+                </H5>
             </div>
             <div class="col-md-5">
-                <asp:Label runat="server" ID="lblCustomerEmail" Text=""></asp:Label>
+                <H5>
+                    <span class="ContentShiftLeft">
+                        <asp:Label runat="server" ID="lblCustomerEmail" Text=""></asp:Label>
+                    </span>
+                </H5>
             </div>
             
             <div class="col-md-2"></div>
@@ -49,14 +58,18 @@
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-3">
-                <span class="ContentShiftRight">
-                    <H4>
+                <H5>
+                    <span class="ContentShiftRight">
                         <label>Home Number:</label>
-                    </H4>
-                </span>
+                    </span>
+                </H5>
             </div>
             <div class="col-md-5">
-                <asp:Label runat="server" ID="lblCustomerHomeNumber" Text=""></asp:Label>
+                <H5>
+                    <span class="ContentShiftLeft">
+                        <asp:Label runat="server" ID="lblCustomerHomeNumber" Text=""></asp:Label>
+                    </span>
+                </H5>
             </div>
             
             <div class="col-md-2"></div>
@@ -64,14 +77,18 @@
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-3">
-                <span class="ContentShiftRight">
-                    <H4>
+                <H5>
+                    <span class="ContentShiftRight">
                         <label>Work Number:</label>    
-                    </H4>
-                </span>
+                    </span>
+                </H5>
             </div>
             <div class="col-md-5">
-                <asp:Label runat="server" ID="lblCustomerWorkNumber" Text=""></asp:Label>
+                <H5>
+                    <span class="ContentShiftLeft">
+                        <asp:Label runat="server" ID="lblCustomerWorkNumber" Text=""></asp:Label>
+                    </span>
+                </H5>
             </div>
             
             <div class="col-md-2"></div>
@@ -79,14 +96,18 @@
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-3">
-                <span class="ContentShiftRight">
-                    <H4>
+                <H5>
+                    <span class="ContentShiftRight">
                         <label>Mobile Number:</label>
-                    </H4>
-                </span>
+                    </span>
+                </H5>
             </div>
             <div class="col-md-5">
-                <asp:Label runat="server" ID="lblCustomerMobileNumber" Text=""></asp:Label>
+                <H5>
+                    <span class="ContentShiftLeft">
+                        <asp:Label runat="server" ID="lblCustomerMobileNumber" Text=""></asp:Label>
+                    </span>
+                </H5>
             </div>
             
             <div class="col-md-2"></div>
@@ -94,14 +115,18 @@
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-3">
-                <span class="ContentShiftRight">
-                    <H4>
+                <H5>
+                    <span class="ContentShiftRight">
                         <label>Address:</label>
-                    </H4>
-                </span>
+                    </span>
+                </H5>
             </div>
             <div class="col-md-5">
-                <asp:Label runat="server" ID="lblCustomerStreetAddress" Text=""></asp:Label>
+                <H5>
+                    <span class="ContentShiftLeft">
+                        <asp:Label runat="server" ID="lblCustomerStreetAddress" Text=""></asp:Label>
+                    </span>
+                </H5>
             </div>
             <div class="col-md-2"></div>
         </div>
@@ -110,10 +135,18 @@
             <div class="col-md-3">
             </div>
             <div class="col-md-3">
-                <asp:Label runat="server" ID="lblCustomerSuburb" Text=""></asp:Label>
+                <H5>
+                    <span class="ContentShiftLeft">
+                        <asp:Label runat="server" ID="lblCustomerSuburb" Text=""></asp:Label>
+                    </span>
+                </H5>
             </div>
             <div class="col-md-2">
-                <asp:Label runat="server" ID="lblCustomerCity" Text=""></asp:Label>
+                <H5>
+                    <span class="ContentShiftLeft">
+                        <asp:Label runat="server" ID="lblCustomerCity" Text=""></asp:Label>
+                    </span>
+                </H5>
             </div>
             <div class="col-md-2"></div>
         </div>
@@ -136,9 +169,27 @@
             <div class="col-md-1"></div>
             <div class="col-md-10">
                 <div class="container-fluid" style="border: solid 1px black; padding: 1%;">
-                    <asp:GridView ID="grdvOrderItems" AllowSorting="False" CellPadding="0" 
+
+                    <asp:GridView Width="100%" ID="grdvCustomerOrders" AllowSorting="False" CellPadding="5" 
                         CellSpacing="5" AutoGenerateDeleteButton="False" AutoGenerateEditButton="False"
-                        AutoGenerateSelectButton="False" runat="server">
+                        AutoGenerateSelectButton="False" AutoGenerateColumns="False"
+                        runat="server">
+                        
+                        <Columns>
+                            <asp:BoundField DataField="OrderId" HeaderText="Order ID" ReadOnly="True" SortExpression="id"
+                                />
+                            <asp:BoundField DataField="CustomerOrder.Status" HeaderText="Status" ReadOnly="True" SortExpression="status"
+                                />
+                            <asp:BoundField DataField="TotalQuantity" HeaderText="Total Quantity" ReadOnly="True"
+                                />
+                            <asp:BoundField DataField="TotalPrice" HeaderText="Total Price" ReadOnly="True"
+                                />
+
+                        </Columns>
+                        
+                        <EmptyDataTemplate>
+                            <H4><span><label>You have no Orders on record.</label></span></H4>
+                        </EmptyDataTemplate>
                         
                     </asp:GridView>
                 </div>

@@ -41,7 +41,10 @@ public partial class Customer_Details : System.Web.UI.Page
             lblCustomerSuburb.Text = customer.Suburb;
             lblCustomerCity.Text = customer.City;
 
-            // TODO: update the Orders table.
+            // update the Orders table.
+            List<OrderSummary> summaryOfOrders = controller.GetAllOrderSummariesByCustomer(customer.Login);
+            grdvCustomerOrders.DataSource = summaryOfOrders;
+            grdvCustomerOrders.DataBind();
         }
     }
 }
