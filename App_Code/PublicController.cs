@@ -317,6 +317,7 @@ namespace BusinessLayer
                     continue;
                 }
 
+                // get totals for quantity and cost,
                 int totalQuantity = 0;
                 double totalCost = 0;
                 orderItems = _dm.GetAllOrderItemsByOrderId(customerOrder.ID);
@@ -335,6 +336,9 @@ namespace BusinessLayer
                 });
             }
 
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info,
+                    "Retrieved Order Summaries for customer, login:" + login + ", Count:" + summaries.Count);
             return summaries;
         }
     }

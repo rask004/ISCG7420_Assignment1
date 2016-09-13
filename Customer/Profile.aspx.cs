@@ -11,6 +11,25 @@ using SecurityLayer;
 
 public partial class Customer_Details : System.Web.UI.Page
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected void ReBind_CustomerOrders()
+    {
+        PublicController controller = new PublicController();
+        string login = Session[Security.SessionIdentifierLogin].ToString();
+        List<OrderSummary> summaryOfOrders = controller.GetAllOrderSummariesByCustomer(login);
+        grdvCustomerOrders.DataSource = summaryOfOrders;
+        grdvCustomerOrders.DataBind();
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Bound Data Source: " + grdvCustomerOrders.ToString());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
         (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
@@ -29,6 +48,9 @@ public partial class Customer_Details : System.Web.UI.Page
             lblCustomerStreetAddress.Text = String.Empty;
             lblCustomerSuburb.Text = String.Empty;
             lblCustomerCity.Text = String.Empty;
+
+            grdvCustomerOrders.DataSource = null;
+            grdvCustomerOrders.DataBind();
         }
         else
         {
@@ -41,10 +63,18 @@ public partial class Customer_Details : System.Web.UI.Page
             lblCustomerSuburb.Text = customer.Suburb;
             lblCustomerCity.Text = customer.City;
 
-            // update the Orders table.
-            List<OrderSummary> summaryOfOrders = controller.GetAllOrderSummariesByCustomer(customer.Login);
-            grdvCustomerOrders.DataSource = summaryOfOrders;
-            grdvCustomerOrders.DataBind();
+            ReBind_CustomerOrders();
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void grdvCustomerOrders_OnPageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        grdvCustomerOrders.PageIndex = e.NewPageIndex;
+        ReBind_CustomerOrders();
     }
 }
