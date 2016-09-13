@@ -41,6 +41,15 @@ public partial class AdminImages : System.Web.UI.Page
     /// <summary>
     /// 
     /// </summary>
+    protected void Rebind()
+    {
+        dtlUploadedImages.DataSource = GetListOfUploadedImages();
+        dtlUploadedImages.DataBind();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
@@ -49,8 +58,7 @@ public partial class AdminImages : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            dtlUploadedImages.DataSource = GetListOfUploadedImages();
-            dtlUploadedImages.DataBind();
+            Rebind();
         }        
     }
 
@@ -95,8 +103,7 @@ public partial class AdminImages : System.Web.UI.Page
 
         fupImageUploader.SaveAs(Server.MapPath(GeneralConstants.ImagesUploadFolder + "/" + fupImageUploader.FileName ));
 
-        dtlUploadedImages.DataSource = GetListOfUploadedImages();
-        dtlUploadedImages.DataBind();
+        Rebind();
     }
 
     /// <summary>
@@ -108,19 +115,18 @@ public partial class AdminImages : System.Web.UI.Page
     {
         if (e.Item.ItemType == ListItemType.Item)
         {
-            Button btn = (e.Item.FindControl("btnDeleteImage") as Button);
-            Image img = (e.Item.FindControl("imgCurrentImage") as Image);
+            // don't do anything here
+        }
+    }
 
-            EventHandler btnDeleteImageOnClick = new EventHandler(
-                delegate(object btnSender, EventArgs args)
-                {
-                    
-                    FileInfo fi = new FileInfo(Server.MapPath(img.ImageUrl));
-                    fi.Delete();
-                }
-            );
 
-            btn.Click += btnDeleteImageOnClick;
+    protected void dtlUploadedImages_OnItemCommand(object source, DataListCommandEventArgs e)
+    {
+        if (e.CommandName == "deleteImage")
+        {
+            FileInfo fi = new FileInfo(Server.MapPath(e.CommandArgument.ToString()));
+            fi.Delete();
+            Rebind();
         }
     }
 }
