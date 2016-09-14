@@ -200,7 +200,8 @@
                                             <asp:DropDownList ID="ddlCapColours" Enabled="True" 
                                                 DataTextField="name"
                                                 DataValueField ="id"
-                                                runat="server"/>
+                                                runat="server"
+                                                />
                                         </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
