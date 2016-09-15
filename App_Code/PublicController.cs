@@ -234,7 +234,7 @@ namespace BusinessLayer
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<Colour> GetAllcolours()
+        public List<Colour> GetAllColours()
         {
             List<Colour> colours = _dm.GetAllColours();
             (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved List of all Colours");
@@ -340,6 +340,24 @@ namespace BusinessLayer
                     LoggingLevel.Info,
                     "Retrieved Order Summaries for customer, login:" + login + ", Count:" + summaries.Count);
             return summaries;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetAvailableAdminEmail()
+        {
+            List<Administrator> admins = _dm.GetAllAdministrators();
+            if (admins.Count == 0)
+            {
+                return String.Empty;
+            }
+            else
+            {
+                return admins[0].Email;
+            }
+
         }
     }
 }

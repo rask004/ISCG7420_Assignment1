@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using BusinessLayer;
 using Common;
 using CommonLogging;
+
+// TODO: Add update and delete buttons to Items, in Checkout Cart List
 
 public partial class Customer_Checkout : System.Web.UI.Page
 {
@@ -44,7 +43,7 @@ public partial class Customer_Checkout : System.Web.UI.Page
     protected void lstvCheckoutItems_OnItemDataBound(object sender, ListViewItemEventArgs e)
     {
         PublicController controller = new PublicController();
-        List<Colour> colours = controller.GetAllcolours();
+        List<Colour> colours = controller.GetAllColours();
         
         DropDownList ddlColoursList = e.Item.FindControl("ddlCapColoursCheckout") as DropDownList;
         ddlColoursList.DataSource = colours;
@@ -75,11 +74,19 @@ public partial class Customer_Checkout : System.Web.UI.Page
         ReBind();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     protected void UpdateSessionCart()
     {
         List<OrderItem> items = lstvCheckoutItems.DataSource as List<OrderItem>;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void Cancel_OnClick(object sender, EventArgs e)
     {
         UpdateSessionCart();

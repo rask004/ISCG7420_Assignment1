@@ -10,11 +10,32 @@ using Common;
 using CommonLogging;
 using BusinessLayer;
 
+//TODO: complete pagination for Available Products DataLists.
+
 /// <summary>
 /// 
 /// </summary>
 public partial class _Default : System.Web.UI.Page
 {
+    /// <summary>
+    ///     Property to aid pagination of the Available Products Section.
+    /// </summary>
+    public int AvailableProductsCurrentPageIndex
+    {
+        get
+        {
+            if (ViewState["pg"] == null)
+                return 0;
+            else
+                return Convert.ToInt16(ViewState["pg"]);
+        }
+        set
+        {
+            ViewState["pg"] = value;
+        }
+    }
+
+
     /// <summary>
     /// 
     /// </summary>
@@ -22,8 +43,26 @@ public partial class _Default : System.Web.UI.Page
     {
         PublicController controller = new PublicController();
         List<Category> categories = controller.GetCategoriesWithCaps();
-        dlstCategoriesWithProducts.DataSource = categories;
-        dlstCategoriesWithProducts.DataBind();
+        lstvCategoriesWithProducts.DataSource = categories;
+        lstvCategoriesWithProducts.DataBind();
+    }
+
+    /// <summary>
+    ///     Show the Grid of Available Products
+    /// </summary>
+    private void ShowProductsGrid()
+    {
+        tblSingleItemDetail.Visible = false;
+        dlstAvailableProducts.Visible = true;
+    }
+
+    /// <summary>
+    ///     Show the Details section for the currently viewed product.
+    /// </summary>
+    private void ShowProductDetailsTable()
+    {
+        tblSingleItemDetail.Visible = true;
+        dlstAvailableProducts.Visible = false;
     }
 
     /// <summary>
@@ -51,8 +90,8 @@ public partial class _Default : System.Web.UI.Page
     /// <param name="caps"></param>
     private void Load_Caps(List<Cap> caps)
     {
-        lstvAvailableProducts.DataSource = caps;
-        lstvAvailableProducts.DataBind();
+        dlstAvailableProducts.DataSource = caps;
+        dlstAvailableProducts.DataBind();
     }
 
     /// <summary>
@@ -61,7 +100,7 @@ public partial class _Default : System.Web.UI.Page
     private void Bind_Colours()
     {
         PublicController controller = new PublicController();
-        List<Colour> colours = controller.GetAllcolours();
+        List<Colour> colours = controller.GetAllColours();
         ddlCapColours.DataSource = colours;
         ddlCapColours.DataBind();
     }
@@ -105,6 +144,8 @@ public partial class _Default : System.Web.UI.Page
 
             LoadInitialProducts();
 
+            ShowProductsGrid();
+
             UpdateCartTotals();
         }
     }
@@ -114,30 +155,27 @@ public partial class _Default : System.Web.UI.Page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void dlstCategoriesWithProducts_OnItemDataBound(object sender, DataListItemEventArgs e)
+    protected void lstvCategoriesWithProductsOnItemDataBound(object sender, ListViewItemEventArgs e)
     {
-        if (e.Item.ItemType == ListItemType.Item)
+        ImageButton img = (e.Item.FindControl("imgCategoryPicture") as ImageButton);
+        try
         {
-            ImageButton img = (e.Item.FindControl("imgCategoryPicture") as ImageButton);
-            try
+            int id = Convert.ToInt32((e.Item.FindControl("lblCategoryId") as Label).Text);
+            PublicController controller = new PublicController();
+            if (img != null)
             {
-                int id = Convert.ToInt32((e.Item.FindControl("lblCategoryId") as Label).Text);
-                PublicController controller = new PublicController();
-                if (img != null)
-                {
-                    img.ImageUrl = controller.GetFirstCapImageByCategoryId(id);
-                }
-            }
-            catch (NullReferenceException ex)
-            {
-                // TODO: log error referencing lblCategoryId
-                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "NullReferenceException, Could not reference a control. Method:" + ex.TargetSite + "; message:" + ex.Message);
-                if (img != null)
-                {
-                    img.ImageUrl = GeneralConstants.CapImageDefaultFileName;
-                }
+                img.ImageUrl = controller.GetFirstCapImageByCategoryId(id);
             }
         }
+        catch (NullReferenceException ex)
+        {
+            (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "NullReferenceException, Could not reference a control. Method:" + ex.TargetSite + "; message:" + ex.Message);
+            if (img != null)
+            {
+                img.ImageUrl = GeneralConstants.CapImageDefaultFileName;
+            }
+        }
+        
     }
 
     /// <summary>
@@ -145,7 +183,7 @@ public partial class _Default : System.Web.UI.Page
     /// </summary>
     /// <param name="source"></param>
     /// <param name="e"></param>
-    protected void dlstCategoriesWithProducts_OnItemCommand(object source, DataListCommandEventArgs e)
+    protected void lstvCategoriesWithProducts_OnItemCommand(object source, ListViewCommandEventArgs e)
     {
         if (e.CommandName == "loadCapsByCategory")
         {
@@ -157,6 +195,8 @@ public partial class _Default : System.Web.UI.Page
             lblCentreHeader.Text = categoryName;
 
             Load_Caps(caps);
+
+            ShowProductsGrid();
         }
     }
 
@@ -165,39 +205,11 @@ public partial class _Default : System.Web.UI.Page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void lstvAvailableProducts_OnItemDataBound(object sender, ListViewItemEventArgs e)
+    protected void dlstAvailableProducts_OnItemDataBound(object sender, DataListItemEventArgs e)
     {
-        if (e.Item.ItemType == ListViewItemType.DataItem)
+        if (e.Item.ItemType == ListItemType.Item)
         {
             // think I need to do something here, but not sure what.
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void lstvAvailableProducts_OnItemCommand(object sender, ListViewCommandEventArgs e)
-    {
-        if (e.CommandName == "loadCapDetails")
-        {
-            PublicController controller = new PublicController();
-            int capId = Convert.ToInt32(e.CommandArgument);
-            Cap cap = controller.GetCapDetails(capId);
-
-            lblCurrentCapId.Text = cap.ID.ToString();
-            lblCurrentCapName.Text = cap.Name;
-            lblCurrentCapPrice.Text = cap.Price.ToString("C", CultureInfo.CurrentCulture);
-
-            imgCurrentCapPicture.ImageUrl = cap.ImageUrl;
-            lblCurrentCapDescription.Text = cap.Description;
-
-            nptQuantity.Value = "1";
-            ddlCapColours.SelectedIndex = 0;
-
-            tblSingleItemDetail.Visible = true;
-            lstvAvailableProducts.Visible = false;
         }
     }
 
@@ -261,8 +273,7 @@ public partial class _Default : System.Web.UI.Page
     /// <param name="e"></param>
     protected void btnCancel_OnClick(object sender, EventArgs e)
     {
-        tblSingleItemDetail.Visible = false;
-        lstvAvailableProducts.Visible = true;
+        ShowProductsGrid();
     }
 
     /// <summary>
@@ -303,5 +314,49 @@ public partial class _Default : System.Web.UI.Page
         Bind_CartItems();
 
         UpdateCartTotals();
+    }
+
+    protected void dlstAvailableProducts_OnItemCommand(object source, DataListCommandEventArgs e)
+    {
+        if (e.CommandName == "loadCapDetails")
+        {
+            PublicController controller = new PublicController();
+            int capId = Convert.ToInt32(e.CommandArgument);
+            Cap cap = controller.GetCapDetails(capId);
+
+            lblCurrentCapId.Text = cap.ID.ToString();
+            lblCurrentCapName.Text = cap.Name;
+            lblCurrentCapPrice.Text = cap.Price.ToString("C", CultureInfo.CurrentCulture);
+
+            imgCurrentCapPicture.ImageUrl = cap.ImageUrl;
+            lblCurrentCapDescription.Text = cap.Description;
+
+            nptQuantity.Value = "1";
+            ddlCapColours.SelectedIndex = 0;
+
+            ShowProductDetailsTable();
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void lstvShoppingItems_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
+    {
+        (lstvShoppingItems.FindControl("dpgItemPager") as DataPager).SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+        Bind_CartItems();
+        UpdateCartTotals();
+    }
+
+    protected void lstvShoppingItems_OnItemCommand(object sender, ListViewCommandEventArgs e)
+    {
+        if (e.CommandName == "deleteCartItem")
+        {
+            (Session[GeneralConstants.SessionCartItems] as List<OrderItem>).RemoveAt(e.Item.DataItemIndex);
+            Bind_CartItems();
+            UpdateCartTotals();
+        }
     }
 }

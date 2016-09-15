@@ -18,18 +18,30 @@
                 <ContentTemplate>
                     <div class="col-md-12">
                         <div class="container-fluid">
-                            <asp:DataList ID="dlstCategoriesWithProducts" CellPadding="5" CellSpacing="5" OnItemDataBound="dlstCategoriesWithProducts_OnItemDataBound"
-                                RepeatDirection="Vertical" RepeatColumns="1" RepeatLayout="Flow"
-                                OnItemCommand="dlstCategoriesWithProducts_OnItemCommand"
+                            <asp:ListView ID="lstvCategoriesWithProducts" OnItemDataBound="lstvCategoriesWithProductsOnItemDataBound"
+                                OnItemCommand="lstvCategoriesWithProducts_OnItemCommand"
                                 runat="server">
-                        
-                                <HeaderTemplate>
-                                    <div class="row" style="margin-bottom:2%">
-                                        <div class="col-md-2"></div>
-                                        <div class="col-md-8"></div>
-                                        <div class="col-md-2"></div>
+                                
+                                <LayoutTemplate>
+                                    <asp:PlaceHolder runat="server" ID="itemPlaceholder">
+                                        
+                                    </asp:PlaceHolder>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4">
+                                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lstvCategoriesWithProducts" PageSize="3">
+                                                <Fields>
+                                                    <asp:NextPreviousPagerField ButtonType="Link" ShowFirstPageButton="false" ShowPreviousPageButton="true"
+                                                        ShowNextPageButton="false" />
+                                                    <asp:NumericPagerField ButtonType="Link" />
+                                                    <asp:NextPreviousPagerField ButtonType="Link" ShowNextPageButton="true" ShowLastPageButton="false" ShowPreviousPageButton = "false" />
+                                                </Fields>
+                                            </asp:DataPager>
+                                        </div>
+                                        <div class="col-md-4"></div>
                                     </div>
-                                </HeaderTemplate>
+                                </LayoutTemplate>
                 
                                 <ItemTemplate>
                                     <div class="container-fluid">
@@ -60,26 +72,23 @@
                                         </div>
                                     </div>
                                 </ItemTemplate>
-            
-                                <SeparatorTemplate>
-                                    <div class="row" style="margin-top:2%">
-                                        <div class="col-md-2"></div>
-                                        <div class="col-md-8"></div>
-                                        <div class="col-md-2"></div>
-                                    </div>
-                                </SeparatorTemplate>
-                        
-                                <FooterTemplate>
-                                    <div class="row" style="margin-top:2%">
-                                        <div class="col-md-2"></div>
-                                        <div class="col-md-8">
-                                            <asp:Label Visible='<%#bool.Parse((dlstCategoriesWithProducts.Items.Count==0).ToString())%>' runat="server" ID="lblNoRecord" Text="No Record Found!"></asp:Label>
+                                
+                                <ItemSeparatorTemplate>
+                                    <br/>
+                                </ItemSeparatorTemplate>
+
+                                <EmptyDataTemplate>
+                                        <div class="row">
+                                            <div class="col-md-2"></div>
+                                            <div class="col-md-10">
+                                                <span class="ContentShiftLeft">
+                                                    <H4>There are no categories with available products.</H4>
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div class="col-md-2"></div>
-                                    </div>
-                                </FooterTemplate>
+                                </EmptyDataTemplate>
                 
-                            </asp:DataList>
+                            </asp:ListView>
                         </div>
                 
                     </div>
@@ -102,9 +111,11 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="container-fluid">
-                            <asp:ListView ID="lstvAvailableProducts" Visible="True"
-                                runat="server" OnItemDataBound="lstvAvailableProducts_OnItemDataBound"
-                                OnItemCommand="lstvAvailableProducts_OnItemCommand">
+                            <asp:DataList ID="dlstAvailableProducts" Visible="True" RepeatDirection="Vertical"
+                                RepeatColumns="3" RepeatLayout="Table" CellSpacing="5" CellPadding="5"
+                                runat="server" OnItemDataBound="dlstAvailableProducts_OnItemDataBound"
+                                GridLines="Both" 
+                                OnItemCommand="dlstAvailableProducts_OnItemCommand">
                 
                                 <ItemTemplate>
                                     <div class="container-fluid">
@@ -116,7 +127,7 @@
                                                     ImageUrl='<%# DataBinder.Eval(Container.DataItem, "imageUrl") %>'
                                                     CommandName="loadCapDetails" 
                                                     CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'
-                                                    Width="44%"
+                                                    Width="100%"
                                                     runat="server"/></H4></span>
                                             </div>
                                             <div class="col-md-6"></div>
@@ -146,19 +157,8 @@
                                         </div>
                                     </div>
                                 </ItemTemplate>
-                        
-                                <EmptyDataTemplate>
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                        
-                                            </div>
-                                            <div class="col-md-8">
-                                                <H4><b>There are no Caps to display.</b></H4>
-                                            </div>
-                                </EmptyDataTemplate>
                 
-                            </asp:ListView>
+                            </asp:DataList>
                             
                             <asp:Table ID="tblSingleItemDetail" CellPadding="5" CellSpacing="5" Visible="False"
                                 runat="server">
@@ -273,54 +273,54 @@
                     <div class="col-md-12">
                         <div class="container" style="margin: 4%; border: grey 1px solid;">
                             <asp:ListView ID="lstvShoppingItems" Visible="True"
+                                OnPagePropertiesChanging="lstvShoppingItems_OnPagePropertiesChanging"
+                                OnItemCommand="lstvShoppingItems_OnItemCommand"
                                 runat="server">
-                        
-                                <ItemTemplate>
-                                    <div class="row">
-                                        <div class="col-md-4"><label>ID:</label></div>
-                                        <div class="col-md-7 ContentShiftLeft">
-                                            <asp:Label runat="server"
-                                                        Text='<%# Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")).ToString() %>'/>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4"><label>Name:</label></div>
-                                        <div class="col-md-7">
-                                            <asp:Label runat="server"
-                                                    Text='<%# DataBinder.Eval(Container.DataItem, "Cap.name") %>'/>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4"><label>Colour:</label></div>
-                                        <div class="col-md-7">
-                                            <asp:Label runat="server"
-                                                    Text='<%# DataBinder.Eval(Container.DataItem, "Colour.name") %>'/>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4"><label>Price:</label></div>
-                                        <div class="col-md-7">
-                                            <asp:Label runat="server" 
-                                                Text='<%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.price")).ToString("C", CultureInfo.CurrentCulture) %>'/>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4"><label>Quantity:</label></div>
-                                        <div class="col-md-7">
-                                            <asp:Label runat="server"
-                                                    Text= '<%# DataBinder.Eval(Container.DataItem, "quantity") %>'/>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
+                                
+                                <LayoutTemplate>
+                                    <asp:PlaceHolder runat="server" ID="itemPlaceholder">
+                                        
+                                    </asp:PlaceHolder>
+                                    <br />
                                     <div class="row">
                                         <div class="col-md-4"></div>
+                                        <div class="col-md-4">
+                                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lstvShoppingItems" PageSize="5">
+                                                <Fields>
+                                                    <asp:NextPreviousPagerField ButtonType="Link" ShowFirstPageButton="false" ShowPreviousPageButton="true"
+                                                        ShowNextPageButton="false" />
+                                                    <asp:NumericPagerField ButtonType="Link" />
+                                                    <asp:NextPreviousPagerField ButtonType="Link" ShowNextPageButton="true" ShowLastPageButton="false" ShowPreviousPageButton = "false" />
+                                                </Fields>
+                                            </asp:DataPager>
+                                        </div>
+                                        <div class="col-md-4"></div>
+                                    </div>
+                                </LayoutTemplate>
+                        
+                                <ItemTemplate>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-3"><label>ID: <%# Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")).ToString() %></label></div>
+                                        <div class="col-md-6"><label><%# DataBinder.Eval(Container.DataItem, "Cap.name") %></label></div>
+                                        <div class="col-md-2">
+                                            <asp:Button runat="server" ID="btnDeleteCartItem" Text="X" ForeColor="Red"
+                                                CommandName="deleteCartItem" 
+                                                CommandArgument='<%# new int[] {Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")), Convert.ToInt32(DataBinder.Eval(Container.DataItem, "colourId"))}  %>'
+                                                />
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-3"><label><%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.price")).ToString("C", CultureInfo.CurrentCulture) %></label></div>
+                                        <div class="col-md-5"><label><%# DataBinder.Eval(Container.DataItem, "Colour.name") %></label></div>
+                                        <div class="col-md-2"><label><%# DataBinder.Eval(Container.DataItem, "quantity") %></label></div>
+                                        <div class="col-md-1"></div>
                                     </div>
                                 </ItemTemplate>
-                        
+
                                 <EmptyDataTemplate>
                                         <div class="row">
                                             <div class="col-md-2"></div>
@@ -331,6 +331,7 @@
                                             </div>
                                         </div>
                                 </EmptyDataTemplate>
+                                
                             </asp:ListView>
                         </div>
                         <div class="row">

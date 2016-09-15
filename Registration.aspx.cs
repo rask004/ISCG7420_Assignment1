@@ -218,15 +218,37 @@ public partial class Registration : System.Web.UI.Page
         {
             PublicController controller = new PublicController();
 
+            /*
+                // email the Customer their new registration details.
+                // TODO: get emailing working to notify registered user of details.
+                try
+                {
+                    string ReplyToEmail = controller.GetAvailableAdminEmail();
+                    if (ReplyToEmail.Equals(String.Empty))
+                    {
+                        ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
+                    }
+                    GeneralFunctions.SendEmail(txtEmail.Text,
+                        GeneralConstants.EmailRegisteredCustomerSubject,
+                        String.Format(
+                            GeneralConstants.EmailRegisteredCustomerBody, txtFirstName.Text, txtLastName.Text, 
+                            txtLogin.Text, txtPassword.Text, txtHomeNumber.Text, txtWorkNumber.Text, txtMobileNumber.Text,
+                            txtStreetAddress.Text, txtSuburb.Text, txtCity.Text
+                        ),
+                        ReplyToEmail);
+                }
+                catch (SmtpException smtpEx)
+                {
+                    (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
+                }
+                */
+
             // add the registered user to the db.
             controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
                 txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
                 txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
-            
-            // email the Customer their registration details.
-            // TODO: get emailing working on the web server.
 
-            StringBuilder builder = new StringBuilder("~/Customer/Login.aspx");
+            StringBuilder builder = new StringBuilder("~/Login.aspx");
             builder.Append("?").Append(GeneralConstants.QueryStringGeneralMessageKey);
             builder.Append("=").Append(GeneralConstants.QueryStringGeneralMessageSuccessfulRegistration);
 
