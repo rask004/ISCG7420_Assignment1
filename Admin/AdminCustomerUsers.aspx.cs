@@ -368,12 +368,12 @@ public partial class AdminUsers : System.Web.UI.Page
                                            lblUsersId.Text + ", " + txtUserFirstName.Text + " " + txtUserLastName.Text;
                 btnDisableCustomer.Enabled = false;
             }
-            catch (FormatException ex)
+            catch (FormatException)
             {
                 lblMessageJumboTron.Text = "Error attempting to disable Customer: " +
                                            lblUsersId.Text + ", " + txtUserFirstName.Text + " " + txtUserLastName.Text;
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 lblMessageJumboTron.Text = "Error, there is no Customer with this ID: " +
                                            lblUsersId.Text;

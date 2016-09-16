@@ -9,10 +9,11 @@ using System.Web.UI.WebControls;
 using BusinessLayer;
 using SecurityLayer;
 
+
 /// <summary>
 /// 
 /// </summary>
-public partial class Customer_Login : System.Web.UI.Page
+public partial class Account_AdministrationLogin : System.Web.UI.Page
 {
     /// <summary>
     /// 
@@ -21,12 +22,7 @@ public partial class Customer_Login : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Request.QueryString.AllKeys.Contains(GeneralConstants.QueryStringGeneralMessageKey)
-            && Request.QueryString[GeneralConstants.QueryStringGeneralMessageKey]
-                .Equals(GeneralConstants.QueryStringGeneralMessageSuccessfulRegistration))
-        {
-            lblLoginMessages.InnerText = "Registration Successful. Please check your email for your registration notice.";
-        }
+
     }
 
     /// <summary>
@@ -36,28 +32,27 @@ public partial class Customer_Login : System.Web.UI.Page
     /// <param name="e"></param>
     protected void lgnTestingSection_OnAuthenticate(object sender, AuthenticateEventArgs e)
     {
-        PublicController controller = new PublicController();
+        AdminController controller = new AdminController();
 
         if (controller.LoginIsValid(lgnTestingSection.UserName.Trim(), lgnTestingSection.Password))
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, lgnTestingSection.UserName.Trim()));
-            claims.Add(new Claim(ClaimTypes.Role, "Customer"));
+            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
             claims.Add(new Claim(ClaimTypes.IsPersistent, lgnTestingSection.RememberMeText));
             var id = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
             var ctx = Request.GetOwinContext();
             var authenticationManager = ctx.Authentication;
             authenticationManager.SignIn(id);
 
-            Customer customer = controller.GetCustomerByLogin(lgnTestingSection.UserName.Trim());
-            Session[Security.SessionIdentifierLogin] = customer.Login;
-            Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
-                customer.Password);
+            Administrator admin = controller.GetAdministratorByLogin(lgnTestingSection.UserName.Trim());
+            Session[Security.SessionIdentifierLogin] = admin.Login;
+            Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(admin.Login,
+                admin.Password);
         }
         else
         {
             Session.Abandon();
         }
-
     }
 }

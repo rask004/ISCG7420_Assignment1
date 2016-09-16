@@ -79,20 +79,10 @@ namespace Master
                     ";" + Security.SessionIdentifierSecurityToken + "=" +
                     Session[Security.SessionIdentifierSecurityToken].ToString();
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 MasterAdminSessionCheck.Text = "Could not find Session login and auth info, or User is not logged in.";
             }
-        }
-
-        protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
-        {
-            Context.GetOwinContext().Authentication.SignOut();
-        }
-
-        protected void Logout_OnClick(object sender, EventArgs e)
-        {
-        
         }
     }
 }

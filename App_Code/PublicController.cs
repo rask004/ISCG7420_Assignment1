@@ -343,6 +343,34 @@ namespace BusinessLayer
         }
 
         /// <summary>
+        ///     Given a login and password request, check these are valid.
+        ///     Login must be for an existing customer.
+        ///     Password when hashed must match the stored cryptographic hash for this customer.
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        public bool LoginIsValid(string login, string password)
+        {
+            // customer with this login must exist in the system.
+            Customer customer = _dm.GetSingleCustomerByLogin(login);
+            if (customer == null)
+            {
+                return false;
+            }
+
+            // the supplied password must match the stored hash.
+            var suppliedHash = Security.GetPasswordHash(password);
+
+            if (customer.Password.Equals(suppliedHash))
+            {
+                // matching login and password
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>

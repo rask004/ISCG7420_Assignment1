@@ -10,6 +10,11 @@
 
 <script runat="server">
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     void Application_Start(object sender, EventArgs e)
     {
         RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -25,10 +30,31 @@
         Application.Add(GeneralConstants.LoggerApplicationStateKey, logger);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    void Application_Error(object sender, EventArgs e)
+    {
+        Exception ex = Server.GetLastError();
+
+        if (ex.Source.Contains("SQL Server") || ex.Message.Contains("Error Locating Server/Instance Specified"))
+        {
+            Server.ClearError();
+            Response.Clear();
+            Response.RedirectPermanent("~/Error/ErrorDatabaseconnection.aspx");
+        }
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     void Session_Start(object sender, EventArgs e)
     {
-        //Session[Security.SessionIdentifierLogin] = null;
-        //Session[Security.SessionIdentifierSecurityToken] = null;
         Session[GeneralConstants.SessionCartItems] = new List<OrderItem>();
         Session[Security.SessionIdentifierLogin] = null;
         Session[Security.SessionIdentifierSecurityToken] = null;
@@ -43,8 +69,6 @@
             Session[Security.SessionIdentifierLogin] = customers[0].Login;
             Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customers[0].Login, customers[0].Password);
         }
-
-        // TODO: Remove this at Release
         OrderItem o = new OrderItem {Cap = caps[0], Colour = colours[0]};
         o.CapId = o.Cap.ID;
         o.ColourId = o.Colour.ID;
@@ -58,6 +82,11 @@
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     void Session_End(object sender, EventArgs e)
     {
         Session[Security.SessionIdentifierLogin] = null;
@@ -66,12 +95,6 @@
         {
             (Session[GeneralConstants.SessionCartItems] as List<OrderItem>).Clear();
         }
-    }
-
-    // TODO: remove this when finished development
-    void Application_End(object sender, EventArgs e)
-    {
-        Session.Abandon();
     }
 
 </script>

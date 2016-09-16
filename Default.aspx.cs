@@ -9,7 +9,6 @@ using System.Web.UI.WebControls;
 using BusinessLayer;
 using Common;
 using CommonLogging;
-using BusinessLayer;
 
 //TODO: complete pagination for Available Products DataLists.
 
