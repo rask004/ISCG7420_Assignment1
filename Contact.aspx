@@ -8,13 +8,8 @@
         9-8-16  11:45       AskewR04        Updated this page after updating Master page.
 
 --%>
-<asp:Content ID="ContactTitle" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    Quality Caps - Contact Information
-</asp:Content>
 <asp:Content ID="ContactBody" ContentPlaceHolderID="PageContentCentre" Runat="Server">
-    <%-- Had lots of problems with bootstrap grid, found this approach worked best --%>
     <div class="container PageSectionCentre">
-        <%-- Gives a pleasantly spaced layout. Tables was trialled but it wasn't working right. --%>
         <div class="row">
             <div class="DecoHeader" style="margin-left:12%">
                 <H3 style="margin-left:43%">Contact Us</H3>

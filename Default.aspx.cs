@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -220,7 +221,8 @@ public partial class _Default : System.Web.UI.Page
     /// <param name="e"></param>
     protected void btnProceedToCheckout_OnClick(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
+        StringBuilder builder = new StringBuilder("~/Customer/Checkout.aspx");
+        Response.RedirectPermanent(builder.ToString());
     }
 
     /// <summary>
@@ -316,6 +318,11 @@ public partial class _Default : System.Web.UI.Page
         UpdateCartTotals();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="e"></param>
     protected void dlstAvailableProducts_OnItemCommand(object source, DataListCommandEventArgs e)
     {
         if (e.CommandName == "loadCapDetails")
@@ -350,6 +357,11 @@ public partial class _Default : System.Web.UI.Page
         UpdateCartTotals();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void lstvShoppingItems_OnItemCommand(object sender, ListViewCommandEventArgs e)
     {
         if (e.CommandName == "deleteCartItem")

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using BusinessLayer;
 using Common;
 using CommonLogging;
 
-// TODO: Add update and delete buttons to Items, in Checkout Cart List
+// TODO: Complete Totals, in client section of possible.
 
 public partial class Customer_Checkout : System.Web.UI.Page
 {
@@ -22,6 +24,8 @@ public partial class Customer_Checkout : System.Web.UI.Page
         if (!IsPostBack)
         {
             ReBind();
+
+
         }
     }
 
@@ -77,9 +81,12 @@ public partial class Customer_Checkout : System.Web.UI.Page
     /// <summary>
     /// 
     /// </summary>
-    protected void UpdateSessionCart()
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void Cancel_OnClick(object sender, EventArgs e)
     {
-        List<OrderItem> items = lstvCheckoutItems.DataSource as List<OrderItem>;
+        StringBuilder builder = new StringBuilder("~/Default.aspx");
+        Response.RedirectPermanent(builder.ToString());
     }
 
     /// <summary>
@@ -87,8 +94,66 @@ public partial class Customer_Checkout : System.Web.UI.Page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void Cancel_OnClick(object sender, EventArgs e)
+    protected void lstvCheckoutItems_OnItemCommand(object sender, ListViewCommandEventArgs e)
     {
-        UpdateSessionCart();
+        bool cartContentsChanged = false;
+        if (e.CommandName == "editItem")
+        {
+            var btnModify = e.Item.FindControl("btnModifyItem") as Button;
+            btnModify.CommandName = "updateItem";
+            btnModify.Text = "Save";
+
+            var input = e.Item.FindControl("nptQuantity") as HtmlInputControl;
+            var colourList = e.Item.FindControl("ddlCapColoursCheckout") as DropDownList;
+            
+            input.Disabled = false;
+            colourList.Enabled = true;
+        }
+        else if (e.CommandName == "updateItem")
+        {
+            var btnModify = e.Item.FindControl("btnModifyItem") as Button;
+            btnModify.CommandName = "editItem";
+            btnModify.Text = "Edit";
+
+            OrderItem o = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>)[e.Item.DataItemIndex];
+            var input = e.Item.FindControl("nptQuantity") as HtmlInputControl;
+            var colourList = e.Item.FindControl("ddlCapColoursCheckout") as DropDownList;
+
+            o.Quantity = Convert.ToInt32(input.Value);
+            PublicController controller = new PublicController();
+            o.Colour = controller.GetColourById(Convert.ToInt32(colourList.SelectedValue));
+            o.ColourId = o.Colour.ID;
+
+            input.Disabled = true;
+            colourList.Enabled = false;
+
+            cartContentsChanged = true;
+        }
+        else if (e.CommandName == "deleteItem")
+        {
+            (Session[GeneralConstants.SessionCartItems] as List<OrderItem>).RemoveAt(e.Item.DataItemIndex);
+            cartContentsChanged = true;
+        }
+        else if (e.CommandName == "undoItem")
+        {
+            OrderItem o = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>)[e.Item.DataItemIndex];
+            var input = e.Item.FindControl("nptQuantity") as HtmlInputControl;
+            var colourList = e.Item.FindControl("ddlCapColoursCheckout") as DropDownList;
+
+            input.Value = o.Quantity.ToString();
+            colourList.SelectedIndex = colourList.Items.IndexOf(colourList.Items.FindByValue(o.ColourId.ToString()));
+
+            input.Disabled = true;
+            colourList.Enabled = false;
+
+            var btnModify = e.Item.FindControl("btnModifyItem") as Button;
+            btnModify.CommandName = "editItem";
+            btnModify.Text = "Edit";
+        }
+
+        if (cartContentsChanged)
+        {
+            ReBind();
+        }
     }
 }

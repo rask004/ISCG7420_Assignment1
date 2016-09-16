@@ -12,14 +12,15 @@
 
 <html>
 <head runat="server">
-    <title><asp:ContentPlaceHolder ID="TitlePlaceholder" runat="server">
-            Quality Caps Website
-     </asp:ContentPlaceHolder>
+    <title>
+            <%= Page.Title %>
     </title>
-    <script type="text/javascript" src="Content/common.js">
-    </script>
-    <script type="text/javascript" src="Content/Validation.js">
-    </script>
+    <asp:ContentPlaceHolder ID="AdditionalScripts" runat="server">
+        <script type="text/javascript" src="Content/common.js">
+        </script>
+        <script type="text/javascript" src="Content/Validation.js">
+        </script>
+    </asp:ContentPlaceHolder>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <%--Bootstrap CSS code--%>
     <webopt:BundleReference runat="server" path="~/Content/css" />

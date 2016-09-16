@@ -1,8 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Customer_Login" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    Quality Caps - Customer Login
-</asp:Content>
+<%--  
+    The Customer Login page for the Quality Caps Website.
+    
+    Change Log:
+
+--%>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
     <div class="container PageSectionCentre">
         <div class="row">

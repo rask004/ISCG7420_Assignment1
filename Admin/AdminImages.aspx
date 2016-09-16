@@ -1,14 +1,15 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="AdminImages.aspx.cs" Inherits="AdminImages" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <title>Administration - Categories</title>
-    <script type="text/javascript" src="../Content/common.js" >
-    </script>
-    <script type="text/javascript" src="../Content/Validation.js">
-    </script>
-</asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
-</asp:Content>
+<%--  
+    The Admin page for uploading images - Admin users only
+    
+    Change Log:
+    
+    2-9-16     00:35       AskewR04        Created Admin Page for Image Files.
+        
+
+--%>
+
 <asp:Content ID="Content3" ContentPlaceHolderID="AdminContentMain" Runat="Server">
     <div id="CategoryEditingForm" class="container AdminSection" runat="server"
         style="position: fixed; overflow-y: scroll; overflow-x: hidden; width: 66%; min-height: 55%; max-height:86%">

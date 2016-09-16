@@ -1,7 +1,16 @@
 ﻿<%@ Page Title="Quality Caps - Edit Profile" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="EditProfile.aspx.cs" Inherits="Customer_Profile" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <%= Title %>
+<%--  
+    The page for the Quality Caps Website.
+    
+    Change Log:
+
+--%>
+<asp:Content ID="Content1" ContentPlaceHolderID="AdditionalScripts" Runat="Server">
+    <script type="text/javascript" src="../Content/common.js">
+    </script>
+    <script type="text/javascript" src="../Content/Validation.js">
+    </script>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
     <div class="container PageSectionCentre">

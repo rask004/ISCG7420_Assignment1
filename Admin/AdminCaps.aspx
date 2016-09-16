@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="AdminCaps.aspx.cs" Inherits="AdminCaps" %>
+﻿<%@ Page Title="Admin - Caps" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="AdminCaps.aspx.cs" Inherits="AdminCaps" %>
 
 <%--  
     The Admin page for the Product Entity.
@@ -7,14 +7,6 @@
         22-8-16  12:30       AskewR04        Created page and layout.
 
 --%>
-
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <title>Administration - Product</title>
-    <script type="text/javascript" src="~/Content/common.js" >
-    </script>
-    <script type="text/javascript" src="~/Content/Validation.js">
-    </script>
-</asp:Content>
 
 <asp:Content ID="AdminProductSideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
     <div id="ProductListingSection" class="AdminSection" 

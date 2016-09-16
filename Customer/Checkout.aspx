@@ -1,8 +1,17 @@
 ﻿<%@ Page Title="Quality Caps - Checkout" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Checkout.aspx.cs" Inherits="Customer_Checkout" %>
 <%@ Import Namespace="System.Globalization" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <%= Title %>
+<%--  
+    The page for the Quality Caps Website.
+    
+    Change Log:
+
+--%>
+<asp:Content ID="Content1" ContentPlaceHolderID="AdditionalScripts" Runat="Server">
+    <script type="text/javascript" src="../Content/common.js">
+    </script>
+    <script type="text/javascript" src="../Content/Validation.js">
+    </script>
     <script type="text/javascript">
         function updateTotal() {
             $(document).ready(function() {
@@ -36,6 +45,7 @@
                         <div class="col-md-12">
                             <asp:ListView ID="lstvCheckoutItems"
                                 OnItemDataBound="lstvCheckoutItems_OnItemDataBound"
+                                OnItemCommand="lstvCheckoutItems_OnItemCommand"
                                 OnPagePropertiesChanging="lstvCheckoutItems_OnPagePropertiesChanging"
                                  runat="server">
                                 
@@ -74,9 +84,19 @@
                                                     <label><%# (DataBinder.Eval(Container.DataItem, "Cap.Name")) %></label>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    Button
+                                                    <asp:Button runat="server" Text="Edit" ID="btnModifyItem"
+                                                        CommandName="editItem"
+                                                        CommandArgument=<%# new int[] {Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")), Convert.ToInt32(DataBinder.Eval(Container.DataItem, "colourId"))} %>/>
                                                 </div>
-                                                <div class="col-md-3">
+                                                <div class="col-md-2">
+                                                    <asp:Button runat="server" Text="Undo"
+                                                        CommandName="undoItem"
+                                                        CommandArgument=<%# new int[] {Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")), Convert.ToInt32(DataBinder.Eval(Container.DataItem, "colourId"))} %>/>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <asp:Button runat="server" Text="X" ForeColor="Red"
+                                                        CommandName="deleteItem"
+                                                        CommandArgument=<%# new int[] {Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")), Convert.ToInt32(DataBinder.Eval(Container.DataItem, "colourId"))} %>/>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -86,7 +106,7 @@
                                                 <div class="col-md-3">
                                                     <asp:DropDownList ID="ddlCapColoursCheckout"
                                                         DataTextField="name"
-                                                        DataValueField ="id"
+                                                        DataValueField ="id" Enabled="False"
                                                         runat="server"/>
                                                 </div>
                                                 <div class="col-md-6">
@@ -98,7 +118,7 @@
                                                     <label>Quantity:</label>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="number" id="nptQuantity" min="1" max="99" name="nptQuantity" value='<%# DataBinder.Eval(Container.DataItem, "Quantity") %>'
+                                                    <input type="number" disabled id="nptQuantity" min="1" max="99" name="nptQuantity" value='<%# DataBinder.Eval(Container.DataItem, "Quantity") %>'
                                                         runat="server" onchange="updateTotal();" />
                                                 </div>
                                                 <div class="col-md-1">
@@ -136,23 +156,21 @@
                                 <br/>
                                 <div class="row">
                                     <div class="col-md-1"></div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-7">
                                         <label>SubTotal:</label>
                                     </div>
-                                    <div class="col-md-1"><label>$</label></div>
-                                    <div class="col-md-4">
-                                        <label id="lblSubTotal"></label>
+                                    <div class="col-md-3">
+                                        <label id="lblSubTotal">$</label>
                                     </div>
                                     <div class="col-md-1"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-1"></div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-7">
                                         <label>GST:</label>
                                     </div>
-                                    <div class="col-md-1"><label>$</label></div>
-                                    <div class="col-md-4">
-                                        <label id="lblSubTotalGst"></label>
+                                    <div class="col-md-3">
+                                        <label id="lblSubTotalGst">$</label>
                                     </div>
                                     <div class="col-md-1"></div>
                                 </div>
@@ -164,12 +182,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-1"></div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-7">
                                         <label>Total:</label>
                                     </div>
-                                    <div class="col-md-1"><label>$</label></div>
-                                    <div class="col-md-4">
-                                        <label id="lblFullTotal"></label>
+                                    <div class="col-md-3">
+                                        <label id="lblFullTotal">$</label>
                                     </div>
                                     <div class="col-md-1"></div>
                                 </div>

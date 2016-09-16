@@ -1,9 +1,19 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page Title="Quality Caps LTD" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
 <%@ Import Namespace="System.Globalization" %>
 
-<asp:Content ID="DefaultPageTitle" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    Quality Caps Website
-</asp:Content>
+<%--  
+    The Main page for the Quality Caps Website.
+    Page used for customer shopping.
+    
+    Change Log:
+    
+    5-9-16      19:00   AskewR04    Created Page and Layout
+    8-9-16      20:00   AskewR04    Updated page with data controls.
+    14-9-16     20:00   AskewR04    Updated page, interaction with mock session, showing categories and products, product details.
+    15-9-16     20:00   AskewR04    Updated page, functional Shopping Cart, pagination (except for Products Datalist.)
+
+--%>
+
 <asp:Content ID="CategoryListing" ContentPlaceHolderID="PageContentLeft" Runat="Server">
     <div id="CategoriesSection" class="container PageSection">
         <div class="row">

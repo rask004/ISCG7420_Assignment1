@@ -12,8 +12,8 @@
 
 <html>
 <head runat="server">
-    <asp:ContentPlaceHolder ID="TitlePlaceholder" runat="server">
-        <title>Quality Caps Website</title>
+    <title> <%= Page.Title %> </title>
+    <asp:ContentPlaceHolder ID="AdditionalScripts" runat="server">
         <script type="text/javascript" src="../Content/common.js">
         </script>
         <script type="text/javascript" src="../Content/Validation.js">

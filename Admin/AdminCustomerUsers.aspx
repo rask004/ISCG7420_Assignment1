@@ -10,14 +10,6 @@
 
 --%>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <title>Administration - Customers</title>
-    <script type="text/javascript" src="~/Content/common.js" >
-    </script>
-    <script type="text/javascript" src="~/Content/Validation.js">
-    </script>
-</asp:Content>
-
 <asp:Content ID="AdminUsersSideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
     <div id="UsersListingSection" class="AdminSection" 
         style="position: fixed; overflow-y: scroll; overflow-x: hidden; width: 22%; max-height:86%">
