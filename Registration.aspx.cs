@@ -252,7 +252,7 @@ public partial class Registration : System.Web.UI.Page
             builder.Append("?").Append(GeneralConstants.QueryStringGeneralMessageKey);
             builder.Append("=").Append(GeneralConstants.QueryStringGeneralMessageSuccessfulRegistration);
 
-            Response.RedirectPermanent(builder.ToString());
+            Response.Redirect(builder.ToString());
         }
 
         

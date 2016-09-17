@@ -148,7 +148,7 @@ namespace DataLayer
 
         private readonly string _selectAllOrderItemsWithMatchingOrderId = "select * from OrderItem where orderId=?";
 
-        private readonly string _insertOrderItem = "insert into OrderItem (orderId, customerId, colourId, quantity) values (?, ?, ?, ?);";
+        private readonly string _insertOrderItem = "insert into OrderItem (orderId, capId, colourId, quantity) values (?, ?, ?, ?);";
 
         private readonly string _selectAllCapsByCategoryId = "select * from Cap where categoryId=?;";
 

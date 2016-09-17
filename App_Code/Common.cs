@@ -91,6 +91,8 @@ namespace Common
 
         public static readonly string QueryStringGeneralMessageSuccessfulProfileUpdate = "456o8wbn7564";
 
+        public static readonly string QueryStringGeneralMessageSuccessfulPlacedNewOrder = "346w98w4wva00d";
+
         public static readonly string SessionCartItems = "cartItems";
     }
 

@@ -1,7 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="TESTING_OWIN_Default" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
     <div class="row">
         <div class="col-md-12">

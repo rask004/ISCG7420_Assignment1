@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using BusinessLayer;
 using Common;
 using CommonLogging;
-
-// TODO: Complete Totals, in client section of possible.
+using SecurityLayer;
 
 public partial class Customer_Checkout : System.Web.UI.Page
 {
@@ -25,7 +25,7 @@ public partial class Customer_Checkout : System.Web.UI.Page
         {
             ReBind();
 
-
+            RecalculateTotals();
         }
     }
 
@@ -37,6 +37,23 @@ public partial class Customer_Checkout : System.Web.UI.Page
         List<OrderItem> items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
         lstvCheckoutItems.DataSource = items;
         lstvCheckoutItems.DataBind();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected void RecalculateTotals()
+    {
+        OrderSummary summary = new OrderSummary();
+        List<OrderItem> items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+        foreach (var orderItem in items)
+        {
+            summary.SubTotalPrice += orderItem.Cap.Price * orderItem.Quantity;
+        }
+
+        lblSubTotal.InnerText = summary.SubTotalPrice.ToString("C", CultureInfo.CurrentCulture);
+        lblSubTotalGst.InnerText = (summary.SubTotalGst).ToString("C", CultureInfo.CurrentCulture);
+        lblFullTotal.InnerText = (summary.TotalPrice).ToString("C", CultureInfo.CurrentCulture);
     }
 
     /// <summary>
@@ -86,7 +103,7 @@ public partial class Customer_Checkout : System.Web.UI.Page
     protected void Cancel_OnClick(object sender, EventArgs e)
     {
         StringBuilder builder = new StringBuilder("~/Default.aspx");
-        Response.RedirectPermanent(builder.ToString());
+        Response.Redirect(builder.ToString());
     }
 
     /// <summary>
@@ -154,6 +171,29 @@ public partial class Customer_Checkout : System.Web.UI.Page
         if (cartContentsChanged)
         {
             ReBind();
+
+            RecalculateTotals();
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void CompleteOrder_OnClick(object sender, EventArgs e)
+    {
+        PublicController controller = new PublicController();
+        string login = Session[Security.SessionIdentifierLogin].ToString();
+        List<OrderItem> items = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>);
+        controller.PlaceOrderForCustomer(login, items);
+        items.Clear();
+        StringBuilder builder = new StringBuilder();
+        builder.Append("~/Customer/Profile.aspx");
+        builder.Append("?");
+        builder.Append(GeneralConstants.QueryStringGeneralMessageKey);
+        builder.Append("=");
+        builder.Append(GeneralConstants.QueryStringGeneralMessageSuccessfulPlacedNewOrder);
+        Response.Redirect(builder.ToString());
     }
 }

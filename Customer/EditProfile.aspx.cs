@@ -277,7 +277,7 @@ public partial class Customer_Profile : System.Web.UI.Page
                 */
 
                 StringBuilder builder = new StringBuilder("~/Customer/Profile.aspx");
-                Response.RedirectPermanent(builder.ToString());
+                Response.Redirect(builder.ToString());
             }
             else
             {

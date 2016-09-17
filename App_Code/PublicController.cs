@@ -331,7 +331,7 @@ namespace BusinessLayer
                 {
                     CustomerOrder = customerOrder,
                     OrderId = customerOrder.ID,
-                    TotalPrice = totalCost,
+                    SubTotalPrice = totalCost,
                     TotalQuantity = totalQuantity
                 });
             }
@@ -386,6 +386,59 @@ namespace BusinessLayer
                 return admins[0].Email;
             }
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="items"></param>
+        public void PlaceOrderForCustomer(string login, List<OrderItem> items)
+        {
+            Customer customer = _dm.GetSingleCustomerByLogin(login);
+            if (customer == null)
+            {
+                // throw exception - incorrect customer Identifier
+                throw new NullReferenceException("ERROR: A requested customer does not exist. Customer Login: " + login);
+            }
+            else
+            {
+                // need to find id of new order, which is auto-increment generated.
+                // find all existing orders before inserting a new order.
+                List<CustomerOrder> oldOrders = GetAllOrdersByCustomer(customer.Login);
+                _dm.InsertNewOrder("waiting", customer.ID);
+                // now AFTER inserting new order, request all existing orders again - including the new order.
+                // this assumes only one new order was inserted during the times between order requests.
+                List<CustomerOrder> newOrders = GetAllOrdersByCustomer(customer.Login);
+                // now remove all orders in the first list from the second - should leave only the order(s) just inserted.
+                // more efficient to use a double reverse loop, eliminating from both with each match.
+                for (var i = newOrders.Count - 1; i >= 0; i--)
+                {
+                    for (var j = oldOrders.Count - 1; j >= 0; j--)
+                    {
+                        if (oldOrders[j].ID == newOrders[i].ID)
+                        {
+                            oldOrders.RemoveAt(j);
+                            newOrders.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
+
+                try
+                {
+                    CustomerOrder newOrder = newOrders[0];
+                    foreach (var orderItem in items)
+                    {
+                        _dm.InsertNewOrderItem(newOrder.ID, orderItem.CapId, orderItem.ColourId, orderItem.Quantity);
+                    }
+                }
+                catch (ArgumentOutOfRangeException rangeEx)
+                {
+                    // throw exception - could not find newly inserted order.
+                    throw new ArgumentOutOfRangeException("ERROR: could not find newly inserted Order.", rangeEx);
+                }
+            }
         }
     }
 }

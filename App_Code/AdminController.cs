@@ -811,7 +811,7 @@ namespace BusinessLayer
                     cost += orderItem.Cap.Price * orderItem.Quantity;
                 }
 
-                summaries.Add( new OrderSummary {OrderId = customerOrder.ID, CustomerOrder = customerOrder, TotalPrice = cost, TotalQuantity = qty});
+                summaries.Add( new OrderSummary {OrderId = customerOrder.ID, CustomerOrder = customerOrder, SubTotalPrice = cost, TotalQuantity = qty});
 
             }
 

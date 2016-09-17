@@ -221,7 +221,7 @@ public partial class _Default : System.Web.UI.Page
     protected void btnProceedToCheckout_OnClick(object sender, EventArgs e)
     {
         StringBuilder builder = new StringBuilder("~/Customer/Checkout.aspx");
-        Response.RedirectPermanent(builder.ToString());
+        Response.Redirect(builder.ToString());
     }
 
     /// <summary>

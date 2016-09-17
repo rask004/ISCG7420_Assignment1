@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Error.master" AutoEventWireup="true" CodeFile="ErrorDatabaseConnection.aspx.cs" Inherits="Error_ErrorDatabaseConnection" %>
+﻿<%@ Page Title="Quality Caps - Error" Language="C#" MasterPageFile="~/Master/Error.master" AutoEventWireup="true" CodeFile="ErrorDatabaseConnection.aspx.cs" Inherits="Error_ErrorDatabaseConnection" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ErrorTitle" Runat="Server">
     ERROR: Cannot connect to the Database

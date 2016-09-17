@@ -43,7 +43,7 @@
         {
             Server.ClearError();
             Response.Clear();
-            Response.RedirectPermanent("~/Error/ErrorDatabaseconnection.aspx");
+            Response.Redirect("~/Error/ErrorDatabaseConnection.aspx");
         }
 
     }
