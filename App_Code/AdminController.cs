@@ -604,11 +604,35 @@ namespace BusinessLayer
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string GetSupplierContactNumber(int id)
+        public string GetSupplierHomeNumber(int id)
         {
             Supplier item = _dm.GetSingleSupplierById(id);
             _logger.Log(LoggingLevel.Info, "Retrieved Supplier Contact, ID:" + id);
-            return item.ContactNumber;
+            return item.HomeNumber;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetSupplierWorkNumber(int id)
+        {
+            Supplier item = _dm.GetSingleSupplierById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Supplier Contact, ID:" + id);
+            return item.WorkNumber;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetSupplierMobileNumber(int id)
+        {
+            Supplier item = _dm.GetSingleSupplierById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Supplier Contact, ID:" + id);
+            return item.MobileNumber;
         }
 
         /// <summary>
@@ -629,17 +653,19 @@ namespace BusinessLayer
         /// </summary>
         /// <param name="id">id of the supplier. May be for a new supplier.</param>
         /// <param name="name">name of the supplier.</param>
-        /// <param name="contactNumber"></param>
+        /// <param name="homeNumber"></param>
+        /// <param name="workNumber"></param>
+        /// <param name="mobileNumber"></param>
         /// <param name="email"></param>
-        public void AddOrUpdateSupplier(int id, string name, string contactNumber, string email)
+        public void AddOrUpdateSupplier(int id, string name, string homeNumber, string workNumber, string mobileNumber, string email)
         {
             if (id < 0)
             {
-                _dm.AddNewSupplier(name, contactNumber, email);
+                _dm.AddNewSupplier(name, homeNumber, workNumber, mobileNumber, email);
             }
             else
             {
-                _dm.UpdateExistingSupplier(id, name, contactNumber, email);
+                _dm.UpdateExistingSupplier(id, name, homeNumber, workNumber, mobileNumber, email);
             }
 
             _logger.Log(LoggingLevel.Info, "Updated Supplier, ID:" + id + " Name:" + name);
@@ -788,6 +814,18 @@ namespace BusinessLayer
             CustomerOrder order = _dm.GetSingleOrderById(orderId);
             _logger.Log(LoggingLevel.Info, "Retrieved Order Status, ID:" + orderId);
             return order.Status;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public DateTime GetOrderDate(int orderId)
+        {
+            CustomerOrder order = _dm.GetSingleOrderById(orderId);
+            _logger.Log(LoggingLevel.Info, "Retrieved Order Status, ID:" + orderId);
+            return order.DatePlaced;
         }
 
         /// <summary>

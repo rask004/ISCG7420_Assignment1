@@ -16,5 +16,7 @@ namespace BusinessLayer
         public string Status { get; set; }
 
         public virtual Customer Customer { get; set; }
+
+        public DateTime DatePlaced { get; set; }
     }
 }

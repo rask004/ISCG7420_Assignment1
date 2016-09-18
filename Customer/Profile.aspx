@@ -194,6 +194,9 @@
                         <Columns>
                             <asp:BoundField DataField="OrderId" HeaderText="Order ID" ReadOnly="True" SortExpression="id"
                                 />
+                            <asp:BoundField DataField="CustomerOrder.DatePlaced" DataFormatString="{0:d}"
+                                HeaderText="Date" ReadOnly="True" SortExpression="DatePlaced"
+                                />
                             <asp:BoundField DataField="CustomerOrder.Status" HeaderText="Status" ReadOnly="True" SortExpression="status"
                                 />
                             <asp:BoundField DataField="TotalQuantity" HeaderText="Total Quantity" ReadOnly="True"

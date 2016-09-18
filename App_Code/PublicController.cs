@@ -406,7 +406,7 @@ namespace BusinessLayer
                 // need to find id of new order, which is auto-increment generated.
                 // find all existing orders before inserting a new order.
                 List<CustomerOrder> oldOrders = GetAllOrdersByCustomer(customer.Login);
-                _dm.InsertNewOrder("waiting", customer.ID);
+                _dm.InsertNewOrder("Waiting", customer.ID);
                 // now AFTER inserting new order, request all existing orders again - including the new order.
                 // this assumes only one new order was inserted during the times between order requests.
                 List<CustomerOrder> newOrders = GetAllOrdersByCustomer(customer.Login);

@@ -30,11 +30,12 @@ namespace DataLayer
 
         private readonly string _buildOrderTable = "if OBJECT_ID(N'dbo.CustomerOrder', N'U') is NULL BEGIN " +
                                                    "create table dbo.CustomerOrder(id int IDENTITY(1, 1)   primary key, userId  int    not null Foreign Key References dbo.SiteUser(id), " +
-                                                   "status  nvarchar(7) not null DEFAULT 'waiting'); END ";
+                                                   "status  nvarchar(7) not null DEFAULT 'waiting', datePlaced datetime not null DEFAULT GETDATE()); END ";
 
         private readonly string _buildSupplierTable = "if OBJECT_ID(N'dbo.Supplier', N'U') is NULL BEGIN " +
                                                       "create table dbo.Supplier(id int IDENTITY(1, 1)   primary key, name    nvarchar(32)    not null, " +
-                                                      "contactNumber   nvarchar(11)    not null, emailAddress    nvarchar(64)    not null); END ";
+                                                      "homeNumber   nvarchar(11)    null, worknumber   nvarchar(11)    null, " +
+                                                      "mobileNumber nvarchar(13)    null, emailAddress    nvarchar(64)    not null); END ";
 
         private readonly string _buildCategoryTable = "if OBJECT_ID(N'dbo.Category', N'U') is NULL BEGIN " +
                                                       "create table dbo.Category(id int IDENTITY(1, 1)   primary key, name    nvarchar(40)    not null); END ";
@@ -61,12 +62,18 @@ namespace DataLayer
                                                           "END ";
 
         private readonly string _insertDefaultColours = "if (select count(id) from dbo.Colour) = 0 BEGIN " +
-                                                        "insert into colour (name)values('Black'), ('White'), ('Blue'), ('Green'), ('Red'), ('Pink'), ('Yellow'), ('Orange'), ('Grey'); " +
+                                                        "insert into colour (name) values('Black'), ('White'), ('Blue'), ('Green'), ('Red'), ('Pink'), ('Yellow'), ('Orange'), ('Grey'); " +
                                                         "END ";
 
         private readonly string _insertDefaultCategories = "if (select count(id) from dbo.Category) = 0 BEGIN " +
-                                                           "insert into category (name)values('Business Caps'), ('Women''s Caps'), ('Men''s Caps'), ('Children''s Caps'); " +
+                                                           "insert into category (name) values('Business Caps'), ('Women''s Caps'), ('Men''s Caps'), ('Children''s Caps'); " +
                                                            "END ";
+
+        private readonly string _insertDefaultSuppliers = "if (select count(id) from dbo.Supplier) = 0 BEGIN " +
+                                                           "insert into Supplier (name, homeNumber, emailAddress, workNumber, mobileNumber) " +
+                                                           "values('Escobar Fabrics', 'sales@escobar.co.nz', '094443333','',''),('Alto Monte Fashion','sales@altomonte.com','073347776','',''); " +
+                                                           "END ";
+
 
         private readonly string _selectAllCustomers = "Select * from SiteUser where userType='C';";
 
@@ -118,9 +125,9 @@ namespace DataLayer
 
         private readonly string _updateColour = "update Colour set name=? where id=?;";
 
-        private readonly string _insertSupplier = "insert into Supplier (name, contactNumber, emailAddress) values (?, ?, ?);";
+        private readonly string _insertSupplier = "insert into Supplier (name, homeNumber, workNumber, mobileNumber, emailAddress) values (?, ?, ?, ?, ?);";
 
-        private readonly string _updateSupplier = "update Supplier set name=?, contactNumber=?, emailAddress=? where id=?;";
+        private readonly string _updateSupplier = "update Supplier set name=?, homeNumber=?, workNumber=?, mobileNumber=?, emailAddress=? where id=?;";
 
         private readonly string _selectAllSuppliers = "select * from Supplier;";
 
@@ -138,7 +145,7 @@ namespace DataLayer
 
         private readonly string _updateCapSupplierId = "update Cap set supplierId=? where id=?;";
 
-        private readonly string _selectAllOrders = "select * from CustomerOrder;";
+        private readonly string _selectAllOrders = "select * from CustomerOrder ORDER BY datePlaced;";
 
         private readonly string _selectSingleOrderById = "Select * from CustomerOrder where id=?;";
 
@@ -196,6 +203,8 @@ namespace DataLayer
             dbCommand = new OleDbCommand(_insertDefaultUserAdmin, _connection);
             RunDbCommandNoResults(dbCommand);
 
+            dbCommand = new OleDbCommand(_insertDefaultSuppliers, _connection);
+            RunDbCommandNoResults(dbCommand);
         }
 
         /// <summary>
@@ -354,7 +363,7 @@ namespace DataLayer
         /// <summary>
         ///     Return a single customer referenced by login. If no customer fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="login"></param>
         /// <returns></returns>
         public Customer GetSingleCustomerByLogin(string login)
         {
@@ -1019,7 +1028,9 @@ namespace DataLayer
                         item.ID = Convert.ToInt32(reader["id"]);
                         item.Name = reader["name"].ToString();
                         item.Email = reader["emailAddress"].ToString();
-                        item.ContactNumber = reader["contactNumber"].ToString();
+                        item.HomeNumber = reader["homeNumber"].ToString();
+                        item.WorkNumber = reader["workNumber"].ToString();
+                        item.MobileNumber = reader["mobileNumber"].ToString();
                         records.Add(item);
                     }
                 }
@@ -1065,7 +1076,9 @@ namespace DataLayer
                     item.ID = Convert.ToInt32(reader["id"]);
                     item.Name = reader["name"].ToString();
                     item.Email = reader["emailAddress"].ToString();
-                    item.ContactNumber = reader["contactNumber"].ToString();
+                    item.HomeNumber = reader["homeNumber"].ToString();
+                    item.WorkNumber = reader["workNumber"].ToString();
+                    item.MobileNumber = reader["mobileNumber"].ToString();
                 }
             }
             finally
@@ -1085,16 +1098,22 @@ namespace DataLayer
         ///     Add a new supplier with this name, contact number  and email
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="contactNumber"></param>
+        /// <param name="homeNumber"></param>
+        /// <param name="workNumber"></param>
+        /// <param name="mobileNumber"></param>
         /// <param name="email"></param>
-        public void AddNewSupplier(string name, string contactNumber, string email)
+        public void AddNewSupplier(string name, string homeNumber, string workNumber, string mobileNumber, string email)
         {
             OleDbCommand command = new OleDbCommand(_insertSupplier, _connection);
             command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
-            command.Parameters.Add(new OleDbParameter("@CONTACTNUMBER", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@HOMENUMBER", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@WORKNUMBER", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@MOBILENUMBER", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@EMAIL", OleDbType.VarChar));
             command.Parameters["@NAME"].Value = name;
-            command.Parameters["@CONTACTNUMBER"].Value = contactNumber;
+            command.Parameters["@HOMENUMBER"].Value = homeNumber;
+            command.Parameters["@WORKNUMBER"].Value = workNumber;
+            command.Parameters["@MOBILENUMBER"].Value = mobileNumber;
             command.Parameters["@EMAIL"].Value = email;
             RunDbCommandNoResults(command);
         }
@@ -1105,19 +1124,25 @@ namespace DataLayer
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        /// <param name="contactNumber"></param>
+        /// <param name="homeNumber"></param>
+        /// <param name="workNumber"></param>
+        /// <param name="mobileNumber"></param>
         /// <param name="email"></param>
-        public void UpdateExistingSupplier(int id, string name, string contactNumber, string email)
+        public void UpdateExistingSupplier(int id, string name, string homeNumber, string workNumber, string mobileNumber, string email)
         {
             OleDbCommand command =
                 new OleDbCommand(_updateSupplier,
                     _connection);
             command.Parameters.Add(new OleDbParameter("@NAME", OleDbType.VarChar));
-            command.Parameters.Add(new OleDbParameter("@CONTACTNUMBER", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@HOMENUMBER", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@WORKNUMBER", OleDbType.VarChar));
+            command.Parameters.Add(new OleDbParameter("@MOBILENUMBER", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@EMAIL", OleDbType.VarChar));
             command.Parameters.Add(new OleDbParameter("@IDENTIFIER", OleDbType.Integer));
             command.Parameters["@NAME"].Value = name;
-            command.Parameters["@CONTACTNUMBER"].Value = contactNumber;
+            command.Parameters["@HOMENUMBER"].Value = homeNumber;
+            command.Parameters["@WORKNUMBER"].Value = workNumber;
+            command.Parameters["@MOBILENUMBER"].Value = mobileNumber;
             command.Parameters["@EMAIL"].Value = email;
             command.Parameters["@IDENTIFIER"].Value = id;
 
@@ -1300,11 +1325,6 @@ namespace DataLayer
         ///     Update an existing cap by id.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="price"></param>
-        /// <param name="description"></param>
-        /// <param name="imageUrl"></param>
-        /// <param name="categoryId"></param>
         /// <param name="supplierId"></param>
         public void UpdateExistingCapSupplierId(int id, int supplierId)
         {
@@ -1356,6 +1376,7 @@ namespace DataLayer
                         CustomerOrder item = new CustomerOrder();
                         item.ID = Convert.ToInt32(reader["id"]);
                         item.Status = reader["status"].ToString();
+                        item.DatePlaced = Convert.ToDateTime(reader["datePlaced"]);
                         item.UserId = Convert.ToInt32(reader["userId"]);
                         records.Add(item);
                     }
@@ -1411,6 +1432,7 @@ namespace DataLayer
                     item.ID = Convert.ToInt32(reader["id"]);
                     item.Status = reader["status"].ToString();
                     item.UserId = Convert.ToInt32(reader["userId"]);
+                    item.DatePlaced = Convert.ToDateTime(reader["datePlaced"]);
                     item.Customer = GetSingleCustomerById(item.UserId);
                 }
             }
@@ -1452,9 +1474,11 @@ namespace DataLayer
         {
             OleDbCommand command = new OleDbCommand(_insertOrder, _connection);
             command.Parameters.Add(new OleDbParameter("@STATUS", OleDbType.VarChar));
-            command.Parameters.Add(new OleDbParameter("@CUSTOMERID", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@CUSTOMERID", OleDbType.Date));
+            //command.Parameters.Add(new OleDbParameter("@DATEPLACED", OleDbType.Integer));
             command.Parameters["@STATUS"].Value = status;
             command.Parameters["@CUSTOMERID"].Value = customerId;
+            //command.Parameters["@DATEPLACED"].Value = DateTime.Now;
             RunDbCommandNoResults(command);
         }
 
