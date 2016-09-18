@@ -131,6 +131,33 @@
         </div>
         <div class="row"><span class="BlankRow"></span></div>
         <div class="row">
+                <div class="col-md-2">
+                    <span class="BlankRow"></span>
+                </div>
+                <div class="col-md-3">
+                    <span class="ContentShiftLeft">
+                        <asp:Button ID="btnUserRegeneratePassword" OnClick="btnUserRegeneratePassword_OnClick"
+                            CausesValidation="false" Text="Change Password" runat="server"/>
+                    </span>
+                </div>
+            <div class="col-md-1">
+                <asp:CustomValidator runat="server"
+                            ControlToValidate="txtUserPassword"
+                            OnServerValidate="PasswordValidation"
+                            />
+            </div>
+                <div class="col-md-4">
+                    <span class="ContentShiftRight">
+                        <asp:TextBox ID="txtUserPassword" Text=""
+                            Enabled="false" runat="server" />
+                    </span>
+                </div>
+                <div class="col-md-2">
+                    <span class="BlankRow"></span>
+                </div>
+            </div>
+        <div class="row"><span class="BlankRow"></span></div>
+        <div class="row">
             <div class="col-md-2">
                         
             </div>

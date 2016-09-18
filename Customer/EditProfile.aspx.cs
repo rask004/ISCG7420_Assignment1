@@ -250,31 +250,35 @@ public partial class Customer_Profile : System.Web.UI.Page
                     txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
                     txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
 
-                //TODO: add password update controls.
+                
                 // update the change in password
-
-                /*
-                // email the Customer their new password.
-                // TODO: get emailing working on password change
-                try
+                if (btnUserRegeneratePassword.Enabled && false)
                 {
-                    string ReplyToEmail = controller.GetAvailableAdminEmail();
-                    if (ReplyToEmail.Equals(String.Empty))
+                    // email the Customer their new password.
+                    // TODO: get emailing working on password change
+                    try
                     {
-                        ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
-                    }
-                    GeneralFunctions.SendEmail(txtEmail.Text,
-                        GeneralConstants.EmailPasswordChangeSubject,
-                        String.Format(GeneralConstants.EmailPasswordChangeBody, txtFirstName.Text, txtLastName.Text, txtLogin.Text, "????????"),
-                        ReplyToEmail);
-                }
-                catch (SmtpException smtpEx)
-                {
-                    (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
-                }
+                        customer.Password = Security.GetPasswordHash(txtUserPassword.Text);
+                        controller.UpdatePasswordForCustomer(customer.ID, Security.GetPasswordHash(txtUserPassword.Text));
+                        Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
+                            customer.Password);
 
-                //TODO: update security token in Session, on password change.
-                */
+                        string ReplyToEmail = controller.GetAvailableAdminEmail();
+                        if (ReplyToEmail.Equals(String.Empty))
+                        {
+                            ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
+                        }
+                        GeneralFunctions.SendEmail(txtEmail.Text,
+                            GeneralConstants.EmailPasswordChangeSubject,
+                            String.Format(GeneralConstants.EmailPasswordChangeBody, txtFirstName.Text, txtLastName.Text, txtLogin.Text, "????????"),
+                            ReplyToEmail);
+                    }
+                    catch (SmtpException smtpEx)
+                    {
+                        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
+                        // if emailing fails, redirect to error page, notifying customer of password update, email fail, and remedy action to take.
+                    }
+                }
 
                 StringBuilder builder = new StringBuilder("~/Customer/Profile.aspx");
                 Response.Redirect(builder.ToString());
@@ -293,5 +297,25 @@ public partial class Customer_Profile : System.Web.UI.Page
 
             
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void btnUserRegeneratePassword_OnClick(object sender, EventArgs e)
+    {
+        if (btnUserRegeneratePassword.Text == "Change Password")
+        {
+            btnUserRegeneratePassword.Text = "Cancel Changes";
+            txtUserPassword.Enabled = true;
+        }
+        else
+        {
+            btnUserRegeneratePassword.Text = "Change Password";
+            txtUserPassword.Enabled = false;
+        }
+
     }
 }
