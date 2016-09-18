@@ -135,7 +135,10 @@ public partial class Customer_Profile : System.Web.UI.Page
     /// <param name="args"></param>
     protected void PasswordValidation(object sender, ServerValidateEventArgs args)
     {
-        Validation.ValidatePasswordLength(ref args, 10);
+        if (txtUserPassword.Enabled)
+        {
+            Validation.ValidatePasswordLength(ref args, 10);
+        }
 
         if (!args.IsValid)
         {
@@ -315,6 +318,7 @@ public partial class Customer_Profile : System.Web.UI.Page
         {
             btnUserRegeneratePassword.Text = "Change Password";
             txtUserPassword.Enabled = false;
+            txtUserPassword.Text = "";
         }
 
     }
