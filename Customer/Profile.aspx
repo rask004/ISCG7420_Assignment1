@@ -21,10 +21,17 @@
             </div>
         </div>
         <div class="row">
-            <span class="BlankRow"></span>
+            <br/>
         </div>
         <div class="row">
-            <span class="BlankRow"></span>
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <label ID="lblMessage" runat="server" style="background-color: #DDDDDD; font-size: 1.5em"></label>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row">
+            <br/>
         </div>
         <div class="row">
             <div class="col-md-2"></div>
@@ -192,12 +199,12 @@
                         OnPageIndexChanging="grdvCustomerOrders_OnPageIndexChanging">
                         
                         <Columns>
-                            <asp:BoundField DataField="OrderId" HeaderText="Order ID" ReadOnly="True" SortExpression="id"
+                            <asp:BoundField DataField="OrderId" HeaderText="Order ID" ReadOnly="True"
                                 />
                             <asp:BoundField DataField="CustomerOrder.DatePlaced" DataFormatString="{0:d}"
-                                HeaderText="Date" ReadOnly="True" SortExpression="DatePlaced"
+                                HeaderText="Date" ReadOnly="True" NullDisplayText="Not Recorded"
                                 />
-                            <asp:BoundField DataField="CustomerOrder.Status" HeaderText="Status" ReadOnly="True" SortExpression="status"
+                            <asp:BoundField DataField="CustomerOrder.Status" HeaderText="Status" ReadOnly="True"
                                 />
                             <asp:BoundField DataField="TotalQuantity" HeaderText="Total Quantity" ReadOnly="True"
                                 />

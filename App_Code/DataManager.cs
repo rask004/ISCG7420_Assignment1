@@ -145,11 +145,11 @@ namespace DataLayer
 
         private readonly string _updateCapSupplierId = "update Cap set supplierId=? where id=?;";
 
-        private readonly string _selectAllOrders = "select * from CustomerOrder ORDER BY datePlaced;";
+        private readonly string _selectAllOrders = "select * from CustomerOrder ORDER BY datePlaced DESC;";
 
         private readonly string _selectSingleOrderById = "Select * from CustomerOrder where id=?;";
 
-        private readonly string _insertOrder = "insert into CustomerOrder (status, userId) values (?, ?);";
+        private readonly string _insertOrder = "insert into CustomerOrder (status, userId, datePlaced) values (?, ?, ?);";
 
         private readonly string _updateOrderStatus = "update CustomerOrder set status=? where id=?;";
 
@@ -1376,7 +1376,10 @@ namespace DataLayer
                         CustomerOrder item = new CustomerOrder();
                         item.ID = Convert.ToInt32(reader["id"]);
                         item.Status = reader["status"].ToString();
-                        item.DatePlaced = Convert.ToDateTime(reader["datePlaced"]);
+                        if (reader["datePlaced"] != DBNull.Value)
+                        {
+                            item.DatePlaced = Convert.ToDateTime(reader["datePlaced"]);
+                        }
                         item.UserId = Convert.ToInt32(reader["userId"]);
                         records.Add(item);
                     }
@@ -1432,7 +1435,10 @@ namespace DataLayer
                     item.ID = Convert.ToInt32(reader["id"]);
                     item.Status = reader["status"].ToString();
                     item.UserId = Convert.ToInt32(reader["userId"]);
-                    item.DatePlaced = Convert.ToDateTime(reader["datePlaced"]);
+                    if (reader["datePlaced"] != DBNull.Value)
+                    {
+                        item.DatePlaced = Convert.ToDateTime(reader["datePlaced"]);
+                    } 
                     item.Customer = GetSingleCustomerById(item.UserId);
                 }
             }
@@ -1474,11 +1480,11 @@ namespace DataLayer
         {
             OleDbCommand command = new OleDbCommand(_insertOrder, _connection);
             command.Parameters.Add(new OleDbParameter("@STATUS", OleDbType.VarChar));
-            command.Parameters.Add(new OleDbParameter("@CUSTOMERID", OleDbType.Date));
-            //command.Parameters.Add(new OleDbParameter("@DATEPLACED", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@CUSTOMERID", OleDbType.Integer));
+            command.Parameters.Add(new OleDbParameter("@DATEPLACED", OleDbType.Date));
             command.Parameters["@STATUS"].Value = status;
             command.Parameters["@CUSTOMERID"].Value = customerId;
-            //command.Parameters["@DATEPLACED"].Value = DateTime.Now;
+            command.Parameters["@DATEPLACED"].Value = DateTime.Now;
             RunDbCommandNoResults(command);
         }
 

@@ -65,6 +65,21 @@ public partial class Customer_Details : System.Web.UI.Page
 
             ReBind_CustomerOrders();
         }
+
+        if (Request.QueryString[GeneralConstants.QueryStringGeneralMessageKey] != null)
+        {
+            if (Request.QueryString[GeneralConstants.QueryStringGeneralMessageKey].ToString()
+                .Equals(GeneralConstants.QueryStringGeneralMessageSuccessfulProfileUpdate))
+            {
+                lblMessage.InnerText = "Your profile was successfully updated.";
+            }
+            else if (Request.QueryString[GeneralConstants.QueryStringGeneralMessageKey].ToString()
+                    .Equals(GeneralConstants.QueryStringGeneralMessageSuccessfulPlacedNewOrder))
+            {
+                lblMessage.InnerText = "Your new Order has been completed.";
+            }
+        }
+        
     }
 
     /// <summary>
