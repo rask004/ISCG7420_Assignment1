@@ -36,10 +36,12 @@ public partial class Customer_Login : System.Web.UI.Page
     /// <param name="e"></param>
     protected void lgnTestingSection_OnAuthenticate(object sender, AuthenticateEventArgs e)
     {
-        PublicController controller = new PublicController();
+        PublicController customerManager = new PublicController();
 
-        if (controller.LoginIsValid(lgnTestingSection.UserName.Trim(), lgnTestingSection.Password))
+        // Check if this user is a customer.
+        if (customerManager.LoginIsValid(lgnTestingSection.UserName.Trim(), lgnTestingSection.Password))
         {
+            // login the customer
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, lgnTestingSection.UserName.Trim()));
             claims.Add(new Claim(ClaimTypes.Role, "Customer"));
@@ -49,15 +51,45 @@ public partial class Customer_Login : System.Web.UI.Page
             var authenticationManager = ctx.Authentication;
             authenticationManager.SignIn(id);
 
-            Customer customer = controller.GetCustomerByLogin(lgnTestingSection.UserName.Trim());
+            // update the session securityToken for this customer.
+            Customer customer = customerManager.GetCustomerByLogin(lgnTestingSection.UserName.Trim());
             Session[Security.SessionIdentifierLogin] = customer.Login;
             Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
                 customer.Password);
         }
         else
         {
-            Session.Abandon();
+            // Check if user is otherwise an administrator.
+            AdminController administratorManager = new AdminController();
+            // Check if this user is a customer.
+            if (administratorManager.LoginIsValid(lgnTestingSection.UserName.Trim(), lgnTestingSection.Password))
+            {
+                // login the administrator
+                var claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.Name, lgnTestingSection.UserName.Trim()));
+                claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+                claims.Add(new Claim(ClaimTypes.IsPersistent, lgnTestingSection.RememberMeText));
+                var id = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
+                var ctx = Request.GetOwinContext();
+                var authenticationManager = ctx.Authentication;
+                authenticationManager.SignIn(id);
+
+                // update the session securityToken for this customer.
+                Administrator admin = administratorManager.GetAdministratorByLogin(lgnTestingSection.UserName.Trim());
+                Session[Security.SessionIdentifierLogin] = admin.Login;
+                Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(admin.Login,
+                    admin.Password);
+            }
+            else
+            {
+                Session.Abandon();
+                var ctx = Request.GetOwinContext();
+                var authenticationManager = ctx.Authentication;
+                
+            }
         }
+
+
 
     }
 }

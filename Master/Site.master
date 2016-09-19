@@ -49,35 +49,52 @@
                     <a class="navbar-left" runat="server" href="~/Default"><img ID="imgLogo" runat="server" Height="80" alt="Logo" src="~/Images/Logo.png"/></a>
                 </div>
                 <%--links--%>
-                <div class="navbar-collapse collapse col-md-9" style="float:right">
-                    <div class="container">
-                        <span style="float:right">
+                <div class="navbar-collapse collapse col-md-9">
+                    <div class="container-fluid">
+                        <div class="row">
                             <ul class="nav navbar-nav">
-                                <li><a style="color: white" runat="server" href="~/Registration">Registration</a></li>
-
                                 <li><a style="color: white" runat="server" href="~/Contact">Contact Us</a></li>
-
-                                <li><a style="color: white" runat="server" href="~/Login">Login</a></li>
+                                <asp:LoginView id="lgnViewProfile" runat="server">
+                                    <AnonymousTemplate>
+                                        <li><a style="color: white" runat="server" href="~/Registration">Register</a></li>
+                                    </AnonymousTemplate>
+                                    <LoggedInTemplate>
+                                        <li><a style="color: white" runat="server" href="~/Customer/Profile">Profile</a></li>
+                                    </LoggedInTemplate>
+                                </asp:LoginView>
                             </ul>
-                        </span>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li style="color: white"><asp:LoginStatus ID="lgnStatusCustomer" runat="server" LogoutAction="Redirect" OnLoggingOut="lgnStatusCustomer_OnLoggingOut" LogoutPageUrl="~/Default.aspx"/> </li>
+                            </ul>
+                        </div>
+                        <div class="row">
+                            <asp:LoginView id="lgnViewCustomer" runat="server">
+                                <AnonymousTemplate>
+                                    <span style="color: white">Greetings Visitor!</span>
+                                </AnonymousTemplate>
+                                <LoggedInTemplate>
+                                    <span style="color: white">You are logged in as <asp:LoginName id="lgnNameCustomer" runat="Server" ></asp:LoginName>.</span>
+                                </LoggedInTemplate>
+                            </asp:LoginView>
+                        </div>
                     </div>
                 </div>
                 
             </div>
         </div>
         
-        <div class="container-fluid" style="position: fixed; top: 9%; height:93%; width: 100%; border: dashed yellow 1px;">
+        <div class="container-fluid" style="margin-top: 30px; border: dashed yellow 1px;">
             <%--Content area--%>
             <div class="row">
-                <div id="divLeftSidebar" class="col-md-3 col-sm-2" style="border: dashed orange 1px;">
+                <div id="divLeftSidebar" class="col-md-3" style="border: dashed orange 1px;">
                      <asp:ContentPlaceHolder ID="PageContentLeft" runat="server">
                      </asp:ContentPlaceHolder>
                 </div>
-                <div id="divCentreSpace" class="col-md-6 col-sm-8" style="border: dashed orange 1px;">
+                <div id="divCentreSpace" class="col-md-6" style="border: dashed orange 1px;">
                      <asp:ContentPlaceHolder ID="PageContentCentre" runat="server">
                      </asp:ContentPlaceHolder>
                 </div>
-                <div id="divRightsidebar" class="col-md-3 col-sm-2" style="border: dashed orange 1px;">
+                <div id="divRightsidebar" class="col-md-3" style="border: dashed orange 1px;">
                      <asp:ContentPlaceHolder ID="PageContentRight" runat="server">
                      </asp:ContentPlaceHolder>
                 </div>

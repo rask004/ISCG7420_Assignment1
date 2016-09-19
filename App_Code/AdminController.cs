@@ -883,28 +883,32 @@ namespace BusinessLayer
 
         /// <summary>
         ///     Given a login and password request, check these are valid.
-        ///     Login must be for an existing customer.
-        ///     Password when hashed must match the stored cryptographic hash for this customer.
+        ///     Login must be for an existing administrator.
+        ///     Password when hashed must match the stored cryptographic hash for this administrator.
         /// </summary>
         /// <param name="login"></param>
         /// <param name="password"></param>
         public bool LoginIsValid(string login, string password)
         {
             // customer with this login must exist in the system.
-            Customer customer = _dm.GetSingleCustomerByLogin(login);
-            if (customer == null)
+            Administrator admin = _dm.GetSingleAdministratorByLogin(login);
+            if (admin != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Administrator for Login Check. ID:" + admin.ID);
+                // the supplied password must match the stored hash.
+                var suppliedHash = Security.GetPasswordHash(password);
+
+                if (admin.Password.Equals(suppliedHash))
+                {
+                    // matching login and password
+                    return true;
+                }
+            }
+            else
             {
                 return false;
             }
 
-            // the supplied password must match the stored hash.
-            var suppliedHash = Security.GetPasswordHash(password);
-
-            if (customer.Password.Equals(suppliedHash))
-            {
-                // matching login and password
-                return true;
-            }
 
             return false;
         }

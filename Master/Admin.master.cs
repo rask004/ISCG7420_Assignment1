@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 namespace Master
@@ -72,17 +73,20 @@ namespace Master
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            try
-            {
-                MasterAdminSessionCheck.Text =
-                    Security.SessionIdentifierLogin + "=" + Session[Security.SessionIdentifierLogin].ToString() +
-                    ";" + Security.SessionIdentifierSecurityToken + "=" +
-                    Session[Security.SessionIdentifierSecurityToken].ToString();
-            }
-            catch (NullReferenceException)
-            {
-                MasterAdminSessionCheck.Text = "Could not find Session login and auth info, or User is not logged in.";
-            }
+            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void lgnStatusAdmin_OnLoggingOut(object sender, LoginCancelEventArgs e)
+        {
+            Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Session[Security.SessionIdentifierLogin] = null;
+            Session[Security.SessionIdentifierSecurityToken] = null;
+            Session.Abandon();
         }
     }
 }

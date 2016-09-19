@@ -36,7 +36,7 @@ namespace SecurityLayer
         // Identifies the username section.
         public static string SessionIdentifierSecurityToken
         {
-            get { return "h9o3f5y45d23d5u35nyl"; }
+            get { return "sessiontoken"; }
         }
 
         /// <summary>

@@ -353,18 +353,21 @@ namespace BusinessLayer
         {
             // customer with this login must exist in the system.
             Customer customer = _dm.GetSingleCustomerByLogin(login);
-            if (customer == null)
+            if (customer != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Customer for Login Check. ID:" + customer.ID);
+                // the supplied password must match the stored hash.
+                var suppliedHash = Security.GetPasswordHash(password);
+
+                if (customer.Password.Equals(suppliedHash))
+                {
+                    // matching login and password
+                    return true;
+                }
+            }
+            else
             {
                 return false;
-            }
-
-            // the supplied password must match the stored hash.
-            var suppliedHash = Security.GetPasswordHash(password);
-
-            if (customer.Password.Equals(suppliedHash))
-            {
-                // matching login and password
-                return true;
             }
 
             return false;

@@ -19,7 +19,9 @@
         <div class="row">
             <div class="col-md-12">
                 <span class="DecoHeader" style="margin-left: 11%;">
-                    <H3 style="margin-left: 30%"><asp:Label ID="lblLeftHeader" Text="Categories" runat="server" /></H3>  
+                    <div style="text-align: center">
+                        <H3 style="margin:20px auto"><asp:Label ID="lblLeftHeader" Text="Categories" runat="server" /></H3>  
+                    </div>
                 </span>
             </div>
         </div>
@@ -114,7 +116,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <span class="DecoHeader" style="margin-left: 11%;">
-                            <H3 style="margin-left: 38%"><asp:Label ID="lblCentreHeader" Text="Caps" runat="server" /></H3>  
+                            <div style="text-align: center">
+                                <H3 style="margin:20px auto"><asp:Label ID="lblCentreHeader" Text="Caps" runat="server" /></H3>  
+                            </div>
                         </span>
                     </div>
                 </div>
@@ -289,7 +293,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <span class="DecoHeader" style="margin-left: 11%;">
-                            <H3 style="margin-left: 28%"><asp:Label ID="lblRightHeader" Text="Shopping Cart" runat="server" /></H3>  
+                            <div style="text-align: center">
+                                <H3 style="margin:20px auto"><asp:Label ID="lblRightHeader" Text="Shopping Cart" runat="server" /></H3> 
+                            </div> 
                         </span>
                     </div>
                 </div>
@@ -436,8 +442,15 @@
                                     OnClick="btnCartClear_OnClick" />
                             </H4></div>
                             <div class="col-md-5"><H4>
-                                <asp:Button ID="btnProceedToCheckout" CssClass="ContentShiftRight" runat="server" Text="Checkout"
-                                    OnClick="btnProceedToCheckout_OnClick" Enabled="False"/>
+                                <asp:LoginView id="lgnviewCart" runat="server">
+                                    <AnonymousTemplate>
+                                        <i><span style="color:black">Login to complete order.</span></i>
+                                    </AnonymousTemplate>
+                                    <LoggedInTemplate>
+                                        <asp:Button ID="btnProceedToCheckout" CssClass="ContentShiftRight" runat="server" Text="Checkout"
+                                    OnClick="btnProceedToCheckout_OnClick" Enabled="True"/>
+                                    </LoggedInTemplate>
+                                </asp:LoginView>
                             </H4></div>
                             <div class="col-md-1"></div>
                         </div>

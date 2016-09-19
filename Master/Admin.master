@@ -49,20 +49,41 @@
                     <a class="navbar-left" runat="server" href="~/Admin/AdminHome"><img ID="imgLogo" runat="server" Height="80" alt="Logo" src="~/Images/Logo.png"/></a>
                 </div>
                 <%--links--%>
-                <div class="navbar-collapse collapse col-md-9" style="float:left">
-                    <div class="container">
-                        <span style="float:left">
+                <div class="navbar-collapse collapse col-md-9">
+                    <div class="container-fluid">
+                        <div class="row">
                             <ul class="nav navbar-nav">
-                                <li><a style="color: white" runat="server" href="~/Admin/AdminImages">Manage Images</a></li>
-                                <li><a style="color: white" runat="server" href="~/Admin/AdminAdministrators">Administrators</a></li>
-                                <li><a style="color: white" runat="server" href="~/Admin/AdminCustomerUsers">Customers</a></li>
-                                <li><a style="color: white" runat="server" href="~/Admin/AdminSuppliers">Suppliers</a></li>
-                                <li><a style="color: white" runat="server" href="~/Admin/AdminCategories">Categories</a></li>
-                                <li><a style="color: white" runat="server" href="~/Admin/AdminCaps">Products</a></li>
-                                <li><a style="color: white" runat="server" href="~/Admin/AdminColours">Colours</a></li>
-                                <li><a style="color: white" runat="server" href="~/Admin/AdminOrders">Orders</a></li>
+                                <asp:LoginView id="lgnViewAdministratorMenu" runat="server">
+                                    <AnonymousTemplate>
+                                    </AnonymousTemplate>
+                                    <LoggedInTemplate>
+                                        <li><a style="color: white" runat="server" href="~/Admin/AdminImages">Manage Images</a></li>
+                                        <li><a style="color: white" runat="server" href="~/Admin/AdminAdministrators">Administrators</a></li>
+                                        <li><a style="color: white" runat="server" href="~/Admin/AdminCustomerUsers">Customers</a></li>
+                                        <li><a style="color: white" runat="server" href="~/Admin/AdminSuppliers">Suppliers</a></li>
+                                        <li><a style="color: white" runat="server" href="~/Admin/AdminCategories">Categories</a></li>
+                                        <li><a style="color: white" runat="server" href="~/Admin/AdminCaps">Products</a></li>
+                                        <li><a style="color: white" runat="server" href="~/Admin/AdminColours">Colours</a></li>
+                                        <li><a style="color: white" runat="server" href="~/Admin/AdminOrders">Orders</a></li>
+                                    </LoggedInTemplate>
+                                </asp:LoginView>
                             </ul>
-                        </span>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li style="color: white"><asp:LoginStatus ID="lgnViewAdministrator" runat="server" LogoutAction="Redirect" OnLoggingOut="lgnStatusAdmin_OnLoggingOut" LogoutPageUrl="~/Default.aspx" /> </li>
+                            </ul>
+                        </div>
+                        <div class="row">
+                            <ul class="nav navbar-nav navbar-nav-right">
+                                <li><asp:LoginView id="LoginView1" runat="server">
+                                    <AnonymousTemplate>
+                                        <span style="color: white">You should not be here. Logout immediately.</span>
+                                    </AnonymousTemplate>
+                                    <LoggedInTemplate>
+                                        <span style="color: white">Admin <asp:LoginName id="lgnNameCustomer" runat="Server" ></asp:LoginName></span>
+                                    </LoggedInTemplate>
+                                </asp:LoginView></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

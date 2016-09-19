@@ -3,6 +3,8 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.AspNet.Identity;
+using SecurityLayer;
 
 namespace Master
 {
@@ -67,15 +69,18 @@ namespace Master
         {
 
         }
-
-        protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
-        {
-            Context.GetOwinContext().Authentication.SignOut();
-        }
-
-        protected void Login_OnClick(object sender, EventArgs e)
-        {
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void lgnStatusCustomer_OnLoggingOut(object sender, LoginCancelEventArgs e)
+        {
+            Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Session[Security.SessionIdentifierLogin] = null;
+            Session[Security.SessionIdentifierSecurityToken] = null;
+            Session.Abandon();
         }
     }
 }

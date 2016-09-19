@@ -398,8 +398,6 @@ public partial class AdminUsers : System.Web.UI.Page
 
             int id;
 
-            bool clientWasEmailedUponUpdate = true;
-
             try
             {
                 id = Convert.ToInt32(lblUsersId.Text);
@@ -413,6 +411,7 @@ public partial class AdminUsers : System.Web.UI.Page
             // try sending email before updating.
             string replyToAddress = String.Empty;
 
+            //TODO: update email message 
             string emailMessage = "Greetings {0},\n\nYour account has been updated.\n" +
                                   "Please use the following credentials the next time you login:\n\n" +
                                   "login:\t\t{0}\n{1}\n" +
@@ -439,46 +438,46 @@ public partial class AdminUsers : System.Web.UI.Page
                 replyToAddress = admins[0].Email;
             }
 
-            /* try
-            {
-                GeneralFunctions.SendEmail(txtUserEmail.Text, GeneralConstants.UserNewPasswordEmailSubject,
-                    String.Format(emailMessage, txtUserLogin.Text, emailedPasswordSubMessage, txtUserEmail.Text),
-                    replyToAddress);
-            }
-            catch (SmtpException)
-            {
-                // failed to send the email
-                clientWasEmailedUponUpdate = false;
-            } */
+            controller.AddOrUpdateCustomer(id, txtUserFirstName.Text,
+                txtUserLastName.Text, txtUserEmail.Text, txtUserLogin.Text,
+                txtUserHomeNumber.Text,
+                txtUserWorkNumber.Text, txtUserMobileNumber.Text, txtUserStreetAddress.Text, txtUserSuburb.Text,
+                txtUserCity.Text);
 
-            // only update the db if email was actually sent.
-            if (clientWasEmailedUponUpdate)
+            if (txtUserPassword.Enabled)
             {
-                controller.AddOrUpdateCustomer(id, txtUserFirstName.Text,
-                    txtUserLastName.Text, txtUserEmail.Text, txtUserLogin.Text,
-                    txtUserHomeNumber.Text,
-                    txtUserWorkNumber.Text, txtUserMobileNumber.Text, txtUserStreetAddress.Text, txtUserSuburb.Text,
-                    txtUserCity.Text);
+                Customer user = controller.FindCustomerByLogin(txtUserLogin.Text);
+                controller.UpdateCustomerPassword(user.ID, txtUserPassword.Text);
 
-                if (txtUserPassword.Enabled)
+                Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(user.Login,
+                    Security.GetPasswordHash(txtUserPassword.Text));
+
+                /* 
+                try
                 {
-                    Customer user = controller.FindCustomerByLogin(txtUserLogin.Text);
-                    controller.UpdateCustomerPassword(user.ID, txtUserPassword.Text);
+                    GeneralFunctions.SendEmail(txtUserEmail.Text, GeneralConstants.UserNewPasswordEmailSubject,
+                        String.Format(emailMessage, txtUserLogin.Text, emailedPasswordSubMessage, txtUserEmail.Text),
+                        replyToAddress);
                 }
-
-                Reload_Sidebar();
-
-                btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
-                txtUserPassword.Text = String.Empty;
-                txtUserPassword.Enabled = false;
-
-                lblMessageJumboTron.Text = "SUCCESS: User added or updated: " +
-                    lblUsersId.Text + ", " + txtUserFirstName.Text + " " + txtUserLastName.Text;
+                catch (SmtpException)
+                {
+                    // failed to send the email
+                    // TODO: handle email error.
+                    // redirect to Error page
+                    // email admin about error.
+                    clientWasEmailedUponUpdate = false;
+                } 
+                */
             }
-            else
-            {
-                lblMessageJumboTron.Text = "ERROR: could not send email to client. Admin was not updated.";
-            }
+
+            Reload_Sidebar();
+
+            btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
+            txtUserPassword.Text = String.Empty;
+            txtUserPassword.Enabled = false;
+
+            lblMessageJumboTron.Text = "SUCCESS: User added or updated: " +
+                lblUsersId.Text + ", " + txtUserFirstName.Text + " " + txtUserLastName.Text;
         }
 
     }
