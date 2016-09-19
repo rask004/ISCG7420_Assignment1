@@ -10,8 +10,6 @@ using BusinessLayer;
 using Common;
 using CommonLogging;
 
-//TODO: complete pagination for Available Products DataLists.
-
 /// <summary>
 /// 
 /// </summary>
@@ -25,13 +23,39 @@ public partial class _Default : System.Web.UI.Page
         get
         {
             if (ViewState["pg"] == null)
+            {
                 return 0;
+            }
             else
+            {
                 return Convert.ToInt16(ViewState["pg"]);
+            }
         }
         set
         {
             ViewState["pg"] = value;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public int CurrentCategoryId
+    {
+        get
+        {
+            if (ViewState["cid"] == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return Convert.ToInt32(ViewState["cid"]);
+            }
+        }
+        set
+        {
+            ViewState["cid"] = value;
         }
     }
 
@@ -53,7 +77,7 @@ public partial class _Default : System.Web.UI.Page
     private void ShowProductsGrid()
     {
         tblSingleItemDetail.Visible = false;
-        dlstAvailableProducts.Visible = true;
+        divAvailableProducts.Visible = true;
     }
 
     /// <summary>
@@ -62,7 +86,7 @@ public partial class _Default : System.Web.UI.Page
     private void ShowProductDetailsTable()
     {
         tblSingleItemDetail.Visible = true;
-        dlstAvailableProducts.Visible = false;
+        divAvailableProducts.Visible = false;
     }
 
     /// <summary>
@@ -75,11 +99,13 @@ public partial class _Default : System.Web.UI.Page
         if (categories.Count > 0)
         {
             int categoryId = categories[0].ID;
+            CurrentCategoryId = categoryId;
             string categoryName = categories[0].Name;
-            List<Cap> caps = controller.GetAllCapsByCategoryId(categoryId);
 
-            Load_Caps(caps);
+            Load_Caps();
             lblCentreHeader.Text = categoryName;
+
+            lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
         }
         
     }
@@ -88,10 +114,28 @@ public partial class _Default : System.Web.UI.Page
     /// 
     /// </summary>
     /// <param name="caps"></param>
-    private void Load_Caps(List<Cap> caps)
+    private void Load_Caps()
     {
-        dlstAvailableProducts.DataSource = caps;
+        PublicController controller = new PublicController();
+        List<Cap> caps = controller.GetAllCapsByCategoryId(CurrentCategoryId);
+        PagedDataSource pagedData = new PagedDataSource();
+        pagedData.DataSource = caps;
+        pagedData.CurrentPageIndex = AvailableProductsCurrentPageIndex;
+        pagedData.AllowPaging = true;
+        pagedData.PageSize = 3;
+        dlstAvailableProducts.DataSource = pagedData;
+        Prepare_PageButtons(pagedData);
         dlstAvailableProducts.DataBind();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="datasource"></param>
+    private void Prepare_PageButtons(PagedDataSource datasource)
+    {
+        btnPreviousProductPage.Enabled = !(datasource.IsFirstPage);
+        btnNextProductPage.Enabled = !(datasource.IsLastPage);
     }
 
     /// <summary>
@@ -189,12 +233,11 @@ public partial class _Default : System.Web.UI.Page
         {
             PublicController controller = new PublicController();
             int categoryId = Convert.ToInt32(e.CommandArgument);
+            CurrentCategoryId = categoryId;
             string categoryName = controller.GetCategoryName(categoryId);
-            List<Cap> caps = controller.GetAllCapsByCategoryId(categoryId);
-
             lblCentreHeader.Text = categoryName;
 
-            Load_Caps(caps);
+            Load_Caps();
 
             ShowProductsGrid();
         }
@@ -369,5 +412,26 @@ public partial class _Default : System.Web.UI.Page
             Bind_CartItems();
             UpdateCartTotals();
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void btnChangeProductPage_OnClick(object sender, EventArgs e)
+    {
+        if ((sender as LinkButton).Equals(btnPreviousProductPage))
+        {
+            AvailableProductsCurrentPageIndex--;
+        }
+        else if ((sender as LinkButton).Equals(btnNextProductPage))
+        {
+            AvailableProductsCurrentPageIndex++;
+        }
+
+        Load_Caps();
+
+        lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
     }
 }

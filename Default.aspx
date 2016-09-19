@@ -121,54 +121,69 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="container-fluid">
-                            <asp:DataList ID="dlstAvailableProducts" Visible="True" RepeatDirection="Vertical"
-                                RepeatColumns="3" RepeatLayout="Table" CellSpacing="5" CellPadding="5"
-                                runat="server" OnItemDataBound="dlstAvailableProducts_OnItemDataBound"
-                                GridLines="Both" 
-                                OnItemCommand="dlstAvailableProducts_OnItemCommand">
+                            <div id="divAvailableProducts" class="container-fluid" runat="server">
+                                <asp:DataList ID="dlstAvailableProducts" Visible="True" RepeatDirection="Vertical"
+                                    RepeatColumns="3" RepeatLayout="Table" CellSpacing="5" CellPadding="5"
+                                    runat="server" OnItemDataBound="dlstAvailableProducts_OnItemDataBound"
+                                    GridLines="Both" FooterStyle="border:1px solid black" Width="100%"
+                                    OnItemCommand="dlstAvailableProducts_OnItemCommand">
                 
-                                <ItemTemplate>
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-md-2"></div>
-                                            <div class="col-md-4">
-                                                <span><H4><asp:ImageButton ID="imgCapPicture"
-                                                    AlternateText='Image for <%# DataBinder.Eval(Container.DataItem, "name") %>'
-                                                    ImageUrl='<%# DataBinder.Eval(Container.DataItem, "imageUrl") %>'
-                                                    CommandName="loadCapDetails" 
-                                                    CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'
-                                                    Width="100%"
-                                                    runat="server"/></H4></span>
+                                    <ItemTemplate>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-4">
+                                                    <span><H4><asp:ImageButton ID="imgCapPicture"
+                                                        AlternateText='Image for <%# DataBinder.Eval(Container.DataItem, "name") %>'
+                                                        ImageUrl='<%# DataBinder.Eval(Container.DataItem, "imageUrl") %>'
+                                                        CommandName="loadCapDetails" 
+                                                        CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'
+                                                        Width="100%"
+                                                        runat="server"/></H4></span>
+                                                </div>
+                                                <div class="col-md-6"></div>
                                             </div>
-                                            <div class="col-md-6"></div>
+                                            <div class="row">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-8">
+                                                    <span><H4><asp:Label ID="lblCapName" 
+                                                        Text='<%# DataBinder.Eval(Container.DataItem, "name") %>'
+                                                        runat="server"/></H4></span>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <asp:Label Visible="False" ID="lblCapId" 
+                                                        Text='<%# DataBinder.Eval(Container.DataItem, "id") %>'
+                                                        runat="server"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-8">
+                                                    <span><H4><asp:Label ID="lblCapPrice" 
+                                                        Text='<%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "price")).ToString("C", CultureInfo.CurrentCulture) %>'
+                                                        runat="server"/></H4></span>
+                                                </div>
+                                                <div class="col-md-2">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-2"></div>
-                                            <div class="col-md-8">
-                                                <span><H4><asp:Label ID="lblCapName" 
-                                                    Text='<%# DataBinder.Eval(Container.DataItem, "name") %>'
-                                                    runat="server"/></H4></span>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <asp:Label Visible="False" ID="lblCapId" 
-                                                    Text='<%# DataBinder.Eval(Container.DataItem, "id") %>'
-                                                    runat="server"/>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-2"></div>
-                                            <div class="col-md-8">
-                                                <span><H4><asp:Label ID="lblCapPrice" 
-                                                    Text='<%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "price")).ToString("C", CultureInfo.CurrentCulture) %>'
-                                                    runat="server"/></H4></span>
-                                            </div>
-                                            <div class="col-md-2">
-                                            </div>
-                                        </div>
+                                    </ItemTemplate>
+                                </asp:DataList>
+                                
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-4">
+                                        <asp:LinkButton runat="server" ID="btnPreviousProductPage" OnClick="btnChangeProductPage_OnClick"
+                                            Text="Previous"/>
                                     </div>
-                                </ItemTemplate>
-                
-                            </asp:DataList>
+                                    <div class="col-md-1"><asp:Label runat="server" ID="lblCurrentProductPage"/></div>
+                                    <div class="col-md-3"><span class="ContentShiftRight">
+                                        <asp:LinkButton runat="server" ID="btnNextProductPage" OnClick="btnChangeProductPage_OnClick"
+                                            Text="Next"/>
+                                    </span></div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                            </div>
                             
                             <asp:Table ID="tblSingleItemDetail" CellPadding="5" CellSpacing="5" Visible="False"
                                 runat="server">
