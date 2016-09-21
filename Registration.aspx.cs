@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Mail;
 using System.Text;
 using System.Web.UI.WebControls;
 using Common;
@@ -218,35 +219,39 @@ public partial class Registration : System.Web.UI.Page
         {
             PublicController controller = new PublicController();
 
-            /*
-                // email the Customer their new registration details.
-                // TODO: get emailing working to notify registered user of details.
-                try
+            
+            // email the Customer their new registration details.
+            try
+            {
+                string ReplyToEmail = controller.GetAvailableAdminEmail();
+                if (ReplyToEmail.Equals(String.Empty))
                 {
-                    string ReplyToEmail = controller.GetAvailableAdminEmail();
-                    if (ReplyToEmail.Equals(String.Empty))
-                    {
-                        ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
-                    }
-                    GeneralFunctions.SendEmail(txtEmail.Text,
-                        GeneralConstants.EmailRegisteredCustomerSubject,
-                        String.Format(
-                            GeneralConstants.EmailRegisteredCustomerBody, txtFirstName.Text, txtLastName.Text, 
-                            txtLogin.Text, txtPassword.Text, txtHomeNumber.Text, txtWorkNumber.Text, txtMobileNumber.Text,
-                            txtStreetAddress.Text, txtSuburb.Text, txtCity.Text
-                        ),
-                        ReplyToEmail);
+                    ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
                 }
-                catch (SmtpException smtpEx)
-                {
-                    (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
-                }
-                */
 
-            // add the registered user to the db.
-            controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
-                txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
-                txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
+                // add the registered user to the db.
+                controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
+                    txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
+                    txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
+
+                // TODO: get emailing working to notify registered user of details.
+                /*
+                GeneralFunctions.SendEmail(txtEmail.Text,
+                    GeneralConstants.EmailRegisteredCustomerSubject,
+                    String.Format(
+                        GeneralConstants.EmailRegisteredCustomerBody, txtFirstName.Text, txtLastName.Text, 
+                        txtLogin.Text, txtPassword.Text, txtHomeNumber.Text, txtWorkNumber.Text, txtMobileNumber.Text,
+                        txtStreetAddress.Text, txtSuburb.Text, txtCity.Text),
+                    ReplyToEmail);
+                */
+            }
+            catch (SmtpException smtpEx)
+            {
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
+            }
+                
+            
+
 
             StringBuilder builder = new StringBuilder("~/Login.aspx");
             builder.Append("?").Append(GeneralConstants.QueryStringGeneralMessageKey);

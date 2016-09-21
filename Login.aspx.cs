@@ -78,7 +78,7 @@ public partial class Customer_Login : System.Web.UI.Page
             Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
                 customer.Password);
 
-            Response.Redirect("~/Customer/Profile");
+            Response.Redirect("~/Customer");
         }
         else
         {

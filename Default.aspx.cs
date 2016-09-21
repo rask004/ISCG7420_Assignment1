@@ -190,6 +190,18 @@ public partial class _Default : System.Web.UI.Page
             ShowProductsGrid();
 
             UpdateCartTotals();
+
+            List<OrderItem> items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+
+            if (!items.Any())
+            {
+                // disable checkout button.
+                Button btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
+                if (btnCheckout != null)
+                {
+                    btnCheckout.Enabled = false;
+                }
+            }
         }
     }
 
@@ -198,7 +210,7 @@ public partial class _Default : System.Web.UI.Page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void lstvCategoriesWithProductsOnItemDataBound(object sender, ListViewItemEventArgs e)
+    protected void LstvCategoriesWithProductsOnItemDataBound(object sender, ListViewItemEventArgs e)
     {
         ImageButton img = (e.Item.FindControl("imgCategoryPicture") as ImageButton);
         try
@@ -226,7 +238,7 @@ public partial class _Default : System.Web.UI.Page
     /// </summary>
     /// <param name="source"></param>
     /// <param name="e"></param>
-    protected void lstvCategoriesWithProducts_OnItemCommand(object source, ListViewCommandEventArgs e)
+    protected void LstvCategoriesWithProducts_OnItemCommand(object source, ListViewCommandEventArgs e)
     {
         if (e.CommandName == "loadCapsByCategory")
         {
@@ -277,6 +289,13 @@ public partial class _Default : System.Web.UI.Page
         cartItems.Clear();
         Bind_CartItems();
         UpdateCartTotals();
+
+        // no cart items, so disable checkout button.
+        Button btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
+        if (btnCheckout != null)
+        {
+            btnCheckout.Enabled = false;
+        }
     }
     
     /// <summary>
@@ -357,6 +376,13 @@ public partial class _Default : System.Web.UI.Page
         Bind_CartItems();
 
         UpdateCartTotals();
+
+        // cart items count > 0, therefore make sure checkout button is enabled.
+        Button btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
+        if (btnCheckout != null)
+        {
+            btnCheckout.Enabled = true;
+        }
     }
 
     /// <summary>
@@ -410,6 +436,18 @@ public partial class _Default : System.Web.UI.Page
             (Session[GeneralConstants.SessionCartItems] as List<OrderItem>).RemoveAt(e.Item.DataItemIndex);
             Bind_CartItems();
             UpdateCartTotals();
+
+            List<OrderItem> items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+
+            if (!items.Any())
+            {
+                // disable checkcout button.
+                Button btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
+                if (btnCheckout != null)
+                {
+                    btnCheckout.Enabled = false;
+                }
+            }
         }
     }
 

@@ -421,10 +421,9 @@ public partial class AdminUsers : System.Web.UI.Page
                 // email the Customer their new password.
                 try
                 {
-                    customer.Password = Security.GetPasswordHash(txtUserPassword.Text);
-                    controller.UpdateCustomerPassword(customer.ID, customer.Password);
+                    controller.UpdateCustomerPassword(customer.ID, txtUserPassword.Text);
                     Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
-                        customer.Password);
+                        Security.GetPasswordHash(txtUserPassword.Text));
 
                     // TODO: get emailing working on password change
                     /*

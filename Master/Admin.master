@@ -79,7 +79,7 @@
                                         <span style="color: white">You should not be here. Logout immediately.</span>
                                     </AnonymousTemplate>
                                     <LoggedInTemplate>
-                                        <span style="color: white">Admin <asp:LoginName id="lgnNameCustomer" runat="Server" ></asp:LoginName></span>
+                                        <span style="color: white">Current Admin: <asp:LoginName id="lgnNameCustomer" runat="Server" ></asp:LoginName></span>
                                     </LoggedInTemplate>
                                 </asp:LoginView></li>
                             </ul>

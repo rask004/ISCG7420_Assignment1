@@ -31,8 +31,8 @@
                 <ContentTemplate>
                     <div class="col-md-12">
                         <div class="container-fluid">
-                            <asp:ListView ID="lstvCategoriesWithProducts" OnItemDataBound="lstvCategoriesWithProductsOnItemDataBound"
-                                OnItemCommand="lstvCategoriesWithProducts_OnItemCommand"
+                            <asp:ListView ID="lstvCategoriesWithProducts" OnItemDataBound="LstvCategoriesWithProductsOnItemDataBound"
+                                OnItemCommand="LstvCategoriesWithProducts_OnItemCommand"
                                 runat="server">
                                 
                                 <LayoutTemplate>

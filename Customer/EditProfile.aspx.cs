@@ -260,10 +260,9 @@ public partial class Customer_Profile : System.Web.UI.Page
                     // email the Customer their new password.
                     try
                     {
-                        customer.Password = Security.GetPasswordHash(txtUserPassword.Text);
-                        controller.UpdatePasswordForCustomer(customer.ID, customer.Password);
+                        controller.UpdatePasswordForCustomer(customer.ID, txtUserPassword.Text);
                         Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
-                            customer.Password);
+                            Security.GetPasswordHash(txtUserPassword.Text));
 
                         string ReplyToEmail = controller.GetAvailableAdminEmail();
                         if (ReplyToEmail.Equals(String.Empty))
@@ -275,7 +274,7 @@ public partial class Customer_Profile : System.Web.UI.Page
                         /*
                         GeneralFunctions.SendEmail(txtEmail.Text,
                             GeneralConstants.EmailPasswordChangeSubject,
-                            String.Format(GeneralConstants.EmailPasswordChangeBody, txtFirstName.Text, txtLastName.Text, txtLogin.Text, "????????"),
+                            String.Format(GeneralConstants.EmailPasswordChangeBody, txtFirstName.Text, txtLastName.Text, txtLogin.Text, txtUserPassword.Text),
                             ReplyToEmail);
                         */
                     }

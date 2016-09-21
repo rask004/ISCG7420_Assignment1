@@ -90,10 +90,11 @@ namespace BusinessLayer
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="passwordhash"></param>
-        public void UpdatePasswordForCustomer(int id, string passwordhash)
+        /// <param name="password"></param>
+        public void UpdatePasswordForCustomer(int id, string password)
         {
-            _dm.UpdateExistingCustomerPassword(id, passwordhash);
+            string hash = Security.GetPasswordHash(password);
+            _dm.UpdateExistingCustomerPassword(id, hash);
             (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Customer Password Updated. ID:" + id);
 
         }
