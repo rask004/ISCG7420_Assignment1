@@ -82,5 +82,10 @@ namespace Master
             Session[Security.SessionIdentifierSecurityToken] = null;
             Session.Abandon();
         }
+
+        protected void Site_OnLoggedIn(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

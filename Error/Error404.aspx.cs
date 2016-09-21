@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class TESTING_OWIN_Default : System.Web.UI.Page
+public partial class Error_Error404 : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {

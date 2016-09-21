@@ -9,6 +9,7 @@
         </script>
         <script type="text/javascript" src="../Content/Validation.js">
         </script>
+    <asp:ContentPlaceHolder runat="server" ID="MetaPlaceholder"></asp:ContentPlaceHolder>
 </head>
 <body>
     <form id="frmError" runat="server">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Web.UI.WebControls;
 using Common;
 using BusinessLayer;
@@ -394,8 +395,6 @@ public partial class AdminUsers : System.Web.UI.Page
     {
         if (Page.IsValid)
         {
-            AdminController controller = new AdminController();
-
             int id;
 
             try
@@ -407,67 +406,43 @@ public partial class AdminUsers : System.Web.UI.Page
                 id = -1;
             }
 
-            // TODO: fix emailing.
-            // try sending email before updating.
-            string replyToAddress = String.Empty;
-
-            //TODO: update email message 
-            string emailMessage = "Greetings {0},\n\nYour account has been updated.\n" +
-                                  "Please use the following credentials the next time you login:\n\n" +
-                                  "login:\t\t{0}\n{1}\n" +
-                                  "\nRegards\n\nThe Quality Caps Administration Team\n\n";
-
-            string emailedPasswordSubMessage;
-
-            if (txtUserPassword.Enabled)
-            {
-                emailedPasswordSubMessage = "password:\t" + txtUserPassword.Text;
-            }
-            else
-            {
-                emailedPasswordSubMessage = String.Empty;
-            }
-
-            var admins = controller.GetAdministrators();
-            if (admins.Count == 0)
-            {
-                replyToAddress = GeneralConstants.AdminReplyToEmailDefault;
-            }
-            else
-            {
-                replyToAddress = admins[0].Email;
-            }
-
+            AdminController controller = new AdminController();
             controller.AddOrUpdateCustomer(id, txtUserFirstName.Text,
                 txtUserLastName.Text, txtUserEmail.Text, txtUserLogin.Text,
                 txtUserHomeNumber.Text,
                 txtUserWorkNumber.Text, txtUserMobileNumber.Text, txtUserStreetAddress.Text, txtUserSuburb.Text,
                 txtUserCity.Text);
 
-            if (txtUserPassword.Enabled)
+            Customer customer = controller.FindCustomerByLogin(txtUserLogin.Text);
+
+            // update the change in password
+            if (btnUserRegeneratePassword.Enabled)
             {
-                Customer user = controller.FindCustomerByLogin(txtUserLogin.Text);
-                controller.UpdateCustomerPassword(user.ID, txtUserPassword.Text);
-
-                Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(user.Login,
-                    Security.GetPasswordHash(txtUserPassword.Text));
-
-                /* 
+                // email the Customer their new password.
                 try
                 {
-                    GeneralFunctions.SendEmail(txtUserEmail.Text, GeneralConstants.UserNewPasswordEmailSubject,
-                        String.Format(emailMessage, txtUserLogin.Text, emailedPasswordSubMessage, txtUserEmail.Text),
-                        replyToAddress);
+                    customer.Password = Security.GetPasswordHash(txtUserPassword.Text);
+                    controller.UpdateCustomerPassword(customer.ID, customer.Password);
+                    Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
+                        customer.Password);
+
+                    // TODO: get emailing working on password change
+                    /*
+                    string ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
+                    GeneralFunctions.SendEmail(customer.Email,
+                        GeneralConstants.EmailPasswordChangeSubject,
+                        String.Format(GeneralConstants.EmailPasswordChangeBody, customer.FirstName, customer.LastName, customer.Login,
+                            customer.Password),
+                        ReplyToEmail);
+                    */
                 }
-                catch (SmtpException)
+                catch (SmtpException smtpEx)
                 {
-                    // failed to send the email
-                    // TODO: handle email error.
-                    // redirect to Error page
-                    // email admin about error.
-                    clientWasEmailedUponUpdate = false;
-                } 
-                */
+                    (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+                        "ERROR: Unable to send email in response to change in Customer password. Exception Message: " +
+                        smtpEx.Message + "; " + smtpEx.StatusCode);
+                    // if emailing fails, redirect to error page, notifying customer of password update, email fail, and remedy action to take.
+                }
             }
 
             Reload_Sidebar();

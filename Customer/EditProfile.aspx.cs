@@ -255,14 +255,13 @@ public partial class Customer_Profile : System.Web.UI.Page
 
                 
                 // update the change in password
-                if (btnUserRegeneratePassword.Enabled && false)
+                if (btnUserRegeneratePassword.Enabled)
                 {
                     // email the Customer their new password.
-                    // TODO: get emailing working on password change
                     try
                     {
                         customer.Password = Security.GetPasswordHash(txtUserPassword.Text);
-                        controller.UpdatePasswordForCustomer(customer.ID, Security.GetPasswordHash(txtUserPassword.Text));
+                        controller.UpdatePasswordForCustomer(customer.ID, customer.Password);
                         Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
                             customer.Password);
 
@@ -271,10 +270,14 @@ public partial class Customer_Profile : System.Web.UI.Page
                         {
                             ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
                         }
+
+                        // TODO: get emailing working on password change
+                        /*
                         GeneralFunctions.SendEmail(txtEmail.Text,
                             GeneralConstants.EmailPasswordChangeSubject,
                             String.Format(GeneralConstants.EmailPasswordChangeBody, txtFirstName.Text, txtLastName.Text, txtLogin.Text, "????????"),
                             ReplyToEmail);
+                        */
                     }
                     catch (SmtpException smtpEx)
                     {
@@ -283,7 +286,7 @@ public partial class Customer_Profile : System.Web.UI.Page
                     }
                 }
 
-                StringBuilder builder = new StringBuilder("~/Customer/Profile.aspx");
+                StringBuilder builder = new StringBuilder("~/Customer");
                 Response.Redirect(builder.ToString());
             }
             else

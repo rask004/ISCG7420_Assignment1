@@ -39,12 +39,12 @@
     {
         Exception ex = Server.GetLastError();
 
-        if (ex.Source.Contains("SQL Server") || ex.Message.Contains("Error Locating Server/Instance Specified"))
-        {
-            Server.ClearError();
-            Response.Clear();
-            Response.Redirect("~/Error/ErrorDatabaseConnection.aspx");
-        }
+        //if (ex.Source.Contains("SQL Server") || ex.Message.Contains("Error Locating Server/Instance Specified"))
+        //{
+        //    Server.ClearError();
+        //    Response.Clear();
+        //    Response.Redirect("~/Error/ErrorDatabaseConnection.aspx");
+        //}
 
     }
 

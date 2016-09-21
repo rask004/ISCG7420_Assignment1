@@ -59,23 +59,23 @@
                                         <li><a style="color: white" runat="server" href="~/Registration">Register</a></li>
                                     </AnonymousTemplate>
                                     <LoggedInTemplate>
-                                        <li><a style="color: white" runat="server" href="~/Customer/Profile">Profile</a></li>
+                                        <li><a style="color: white" runat="server" href="~/Customer">Profile</a></li>
                                     </LoggedInTemplate>
                                 </asp:LoginView>
-                            </ul>
-                            <ul class="nav navbar-nav navbar-right">
                                 <li style="color: white"><asp:LoginStatus ID="lgnStatusCustomer" runat="server" LogoutAction="Redirect" OnLoggingOut="lgnStatusCustomer_OnLoggingOut" LogoutPageUrl="~/Default.aspx"/> </li>
                             </ul>
                         </div>
                         <div class="row">
-                            <asp:LoginView id="lgnViewCustomer" runat="server">
-                                <AnonymousTemplate>
-                                    <span style="color: white">Greetings Visitor!</span>
-                                </AnonymousTemplate>
-                                <LoggedInTemplate>
-                                    <span style="color: white">You are logged in as <asp:LoginName id="lgnNameCustomer" runat="Server" ></asp:LoginName>.</span>
-                                </LoggedInTemplate>
-                            </asp:LoginView>
+                            <ul class="nav navbar-nav">
+                                <asp:LoginView id="lgnViewCustomer" runat="server">
+                                    <AnonymousTemplate>
+                                        <li style="color: white">Greetings Visitor!</li>
+                                    </AnonymousTemplate>
+                                    <LoggedInTemplate>
+                                        <li style="color: white">You are logged in as <asp:LoginName id="lgnNameCustomer" runat="Server" ></asp:LoginName>.</li>
+                                    </LoggedInTemplate>
+                                </asp:LoginView>
+                            </ul>
                         </div>
                     </div>
                 </div>

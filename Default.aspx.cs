@@ -113,7 +113,6 @@ public partial class _Default : System.Web.UI.Page
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="caps"></param>
     private void Load_Caps()
     {
         PublicController controller = new PublicController();
@@ -122,7 +121,7 @@ public partial class _Default : System.Web.UI.Page
         pagedData.DataSource = caps;
         pagedData.CurrentPageIndex = AvailableProductsCurrentPageIndex;
         pagedData.AllowPaging = true;
-        pagedData.PageSize = 3;
+        pagedData.PageSize = 9;
         dlstAvailableProducts.DataSource = pagedData;
         Prepare_PageButtons(pagedData);
         dlstAvailableProducts.DataBind();

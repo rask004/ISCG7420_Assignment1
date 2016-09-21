@@ -1,4 +1,5 @@
-﻿<%@ Page Title="Quality Caps LTD" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+﻿
+<%@ Page Title="Quality Caps LTD" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
 <%@ Import Namespace="System.Globalization" %>
 
 <%--  

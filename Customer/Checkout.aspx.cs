@@ -189,7 +189,7 @@ public partial class Customer_Checkout : System.Web.UI.Page
         controller.PlaceOrderForCustomer(login, items);
         items.Clear();
         StringBuilder builder = new StringBuilder();
-        builder.Append("~/Customer/Profile.aspx");
+        builder.Append("~/Customer");
         builder.Append("?");
         builder.Append(GeneralConstants.QueryStringGeneralMessageKey);
         builder.Append("=");
