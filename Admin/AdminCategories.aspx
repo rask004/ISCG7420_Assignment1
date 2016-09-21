@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="AdminCategories.aspx.cs" Inherits="AdminCategories" %>
+﻿<%@ Page Title="Admin - Categories" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="AdminCategories.aspx.cs" Inherits="AdminCategories" %>
 
 <%--  
     The Admin page for the Category Entity.
@@ -6,16 +6,9 @@
     Change Log:
         10-8-16  15:01       AskewR04        Created page and layout.
         11-8-16  19:00       AskewR04        Updated page to meet changes in master page, and improved with Data controls.
+        
 
 --%>
-
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <title>Administration - Categories</title>
-    <script type="text/javascript" src="~/Content/common.js" >
-    </script>
-    <script type="text/javascript" src="~/Content/Validation.js">
-    </script>
-</asp:Content>
 
 <asp:Content ID="AdminCategorySideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
     <div id="CategoryListingSection" class="AdminSection" 

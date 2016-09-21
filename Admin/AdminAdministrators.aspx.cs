@@ -1,6 +1,8 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Net.Mail;
+using System.Text;
 using System.Web.UI.WebControls;
 using Common;
 using BusinessLayer;
@@ -229,12 +231,7 @@ public partial class AdminUsers : System.Web.UI.Page
     {
         if (Page.IsValid)
         {
-            AdminController controller = new AdminController();
-
             int id;
-
-            bool clientWasEmailedUponUpdate = true;
-
             try
             {
                 id = Convert.ToInt32(lblUsersId.Text);
@@ -244,77 +241,48 @@ public partial class AdminUsers : System.Web.UI.Page
                 id = -1;
             }
 
-            // TODO: fix emailing.
-            // try sending email before updating.
-            string replyToAddress = String.Empty;
+            AdminController controller = new AdminController();
+            controller.AddOrUpdateAdmin(id, txtUserEmail.Text, txtUserLogin.Text);
+            Administrator admin = controller.GetAdministratorByLogin(txtUserLogin.Text);
 
-            string emailMessage = "Greetings {0},\n\nYour account has been updated.\n" +
-                                  "Please use the following credentials the next time you login:\n\n" +
-                                  "login:\t\t{0}\n{1}\n" +
-                                  "\nRegards\n\nThe Quality Caps Administration Team\n\n";
-
-            string emailedPasswordSubMessage;
-
-            if (txtUserPassword.Enabled)
+            // update the change in password
+            if (btnUserRegeneratePassword.Enabled)
             {
-                emailedPasswordSubMessage = "password:\t" + txtUserPassword.Text;
-            }
-            else
-            {
-                emailedPasswordSubMessage = String.Empty;
-            }
-
-            var admins = controller.GetAdministrators();
-            if (admins.Count == 0)
-            {
-                replyToAddress = GeneralConstants.AdminReplyToEmailDefault;
-            }
-            else
-            {
-                replyToAddress = admins[0].Email;
-            }
-
-            /* try
-            {
-                GeneralFunctions.SendEmail(txtUserEmail.Text, GeneralConstants.UserNewPasswordEmailSubject,
-                    String.Format(emailMessage, txtUserLogin.Text, emailedPasswordSubMessage, txtUserEmail.Text),
-                    replyToAddress);
-            }
-            catch (SmtpException)
-            {
-                // failed to send the email
-                clientWasEmailedUponUpdate = false;
-            } */
-
-            // only update the db if email was actually sent.
-            if (clientWasEmailedUponUpdate)
-            {
-                controller.AddOrUpdateAdmin(id, txtUserEmail.Text, txtUserLogin.Text);
-
-                if (txtUserPassword.Enabled)
+                // email the Customer their new password.
+                try
                 {
-                    string login = txtUserLogin.Text;
-                    var admin = controller.FindAdminByLoginName(login);
-                    if (admin != null)
-                    {
-                        controller.UpdateAdminPassword(admin.ID, txtUserPassword.Text);
-                    }
-                    
+                    controller.UpdateAdminPassword(admin.ID, txtUserPassword.Text);
+                    Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(admin.Login,
+                        Security.GetPasswordHash(txtUserPassword.Text));
+
+                    // TODO: get emailing working on password change
+                    /*
+                    string ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
+                    GeneralFunctions.SendEmail(admin.Email,
+                        GeneralConstants.EmailPasswordChangeSubject,
+                        String.Format(GeneralConstants.EmailPasswordChangeBody, "Administrator", "", txtUserLogin.Text,
+                            txtUserPassword.Text),
+                        ReplyToEmail);
+                    */
                 }
-
-                Reload_Sidebar();
-
-                btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
-                txtUserPassword.Text = String.Empty;
-                txtUserPassword.Enabled = false;
-
-                lblMessageJumboTron.Text = "SUCCESS: Admin added or updated: " +
-                                           lblUsersId.Text + ", " + txtUserLogin.Text;
+                catch (SmtpException smtpEx)
+                {
+                    (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+                        "ERROR: Unable to send email in response to change in Admin password. Exception Message: " +
+                        smtpEx.Message + "; " + smtpEx.StatusCode);
+                    // if emailing fails, redirect to error page, notifying customer of password update, email fail, and remedy action to take.
+                }
             }
-            else
-            {
-                lblMessageJumboTron.Text = "ERROR: could not send email to client. Admin was not updated.";
-            }
+
+            Reload_Sidebar();
+
+            btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
+            txtUserPassword.Text = String.Empty;
+            txtUserPassword.Enabled = false;
+
+            lblMessageJumboTron.Text = "SUCCESS: Admin added or updated: " +
+                                       lblUsersId.Text + ", " + txtUserLogin.Text;
         }
+
     }
 }

@@ -1,12 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Customer_Login" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="AdministrationLogin.aspx.cs" Inherits="Account_AdministrationLogin" %>
 
-<%--  
-    The Customer Login page for the Quality Caps Website.
-    
-    Change Log:
-
---%>
-<asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
+<asp:Content ID="Content3" ContentPlaceHolderID="AdminContentMain" Runat="Server">
     <div class="container PageSectionCentre">
         <div class="row">
             <div class="DecoHeader" style="margin-left:12%">

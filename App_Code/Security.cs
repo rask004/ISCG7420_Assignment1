@@ -36,9 +36,14 @@ namespace SecurityLayer
         // Identifies the username section.
         public static string SessionIdentifierSecurityToken
         {
-            get { return "h9o3f5y45d23d5u35nyl"; }
+            get { return "sessiontoken"; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public static string GetPasswordHash(string password)
         {
             string saltedPassword = password + PasswordSalt.ToString();
@@ -48,6 +53,10 @@ namespace SecurityLayer
             return hash;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static string GetRandomPassword()
         {
             Random random = new Random();
@@ -56,6 +65,13 @@ namespace SecurityLayer
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="passwordHash"></param>
+        /// <param name="sessionTokenHash"></param>
+        /// <returns></returns>
         public static bool IsValidLoginToken(string login, string passwordHash, string sessionTokenHash)
         {
             bool IsValid = false;
@@ -71,6 +87,12 @@ namespace SecurityLayer
             return IsValid;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="passwordHash"></param>
+        /// <returns></returns>
         public static string GenerateSecurityTokenHash(string login, string passwordHash)
         {
             StringBuilder builder = new StringBuilder();

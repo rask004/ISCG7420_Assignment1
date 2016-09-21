@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="AdminAdministrators.aspx.cs" Inherits="AdminUsers" %>
+﻿<%@ Page Title="Admin - Administrators" Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="AdminAdministrators.aspx.cs" Inherits="AdminUsers" %>
 
 <%--  
     The Admin page for the SiteUsers Entity. - Admin users only
@@ -9,15 +9,6 @@
         
 
 --%>
-
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <title>Administration - Users</title>
-    <script type="text/javascript" src="~/Content/common.js" >
-    </script>
-    <script type="text/javascript" src="~/Content/Validation.js">
-    </script>
-    
-</asp:Content>
 
 <asp:Content ID="AdminUsersSideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
     <div id="UsersListingSection" class="AdminSection" 

@@ -219,39 +219,45 @@ public partial class Registration : System.Web.UI.Page
         {
             PublicController controller = new PublicController();
 
-            // add the registered user to the db.
-            controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
-                txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
-                txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
-
-            (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "New Customer Registration, Login = " + txtLogin.Text);
-
-            // email the Customer their registration details.
-            // TODO: get emailing working on the web server.
-            // TODO: get the first admin email as registration reply to email.
-            MailAddress toAddress = new MailAddress(txtEmail.Text);
-            MailAddress fromAddress = new MailAddress(GeneralConstants.AdminReplyToEmailDefault);
-            MailMessage message = new MailMessage(fromAddress, toAddress);
-            message.Subject = "Quality Caps, " + GeneralConstants.UserNewRegistrationNotice;
-            message.Body = String.Format(GeneralConstants.UserNewRegistrationBody, txtLogin.Text, txtPassword.Text);
-            SmtpClient mailClient = new SmtpClient();
-
+            
+            // email the Customer their new registration details.
             try
             {
-                mailClient.Host = "mail.unitec.ac.nz";
-                mailClient.Send(message);
+                string ReplyToEmail = controller.GetAvailableAdminEmail();
+                if (ReplyToEmail.Equals(String.Empty))
+                {
+                    ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
+                }
+
+                // add the registered user to the db.
+                controller.RegisterCustomer(txtFirstName.Text, txtLastName.Text, txtLogin.Text,
+                    txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
+                    txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
+
+                // TODO: get emailing working to notify registered user of details.
+                /*
+                GeneralFunctions.SendEmail(txtEmail.Text,
+                    GeneralConstants.EmailRegisteredCustomerSubject,
+                    String.Format(
+                        GeneralConstants.EmailRegisteredCustomerBody, txtFirstName.Text, txtLastName.Text, 
+                        txtLogin.Text, txtPassword.Text, txtHomeNumber.Text, txtWorkNumber.Text, txtMobileNumber.Text,
+                        txtStreetAddress.Text, txtSuburb.Text, txtCity.Text),
+                    ReplyToEmail);
+                */
             }
             catch (SmtpException smtpEx)
             {
-                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "Failed to send Email to new registered customer, email=" + txtEmail.Text + "; error message: " + smtpEx.Message);
-                Response.Write("Failed to send Email to new registered customer, email=" + txtEmail.Text + "; error message: " + smtpEx.Message);
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
             }
+                
+            
+
 
             StringBuilder builder = new StringBuilder("~/Login.aspx");
             builder.Append("?").Append(GeneralConstants.QueryStringGeneralMessageKey);
             builder.Append("=").Append(GeneralConstants.QueryStringGeneralMessageSuccessfulRegistration);
 
-            Response.RedirectPermanent(builder.ToString());
+            Response.Redirect(builder.ToString());
         }
 
         

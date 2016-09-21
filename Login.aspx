@@ -1,8 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Customer_Login" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    Quality Caps - Customer Login
-</asp:Content>
+<%--  
+    The Customer Login page for the Quality Caps Website.
+    
+    Change Log:
+
+--%>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
     <div class="container PageSectionCentre">
         <div class="row">
@@ -18,7 +21,8 @@
             </div>
             <div class="col-md-6">
                 <div style="text-align: center; display: table-cell; vertical-align: middle">
-                    <asp:Login ID="lgnAdminSection" runat="server"></asp:Login>
+                    <asp:Login ID="lgnTestingSection" runat="server" OnLoggedIn="lgnTestingSection_OnLoggedIn"
+                        OnAuthenticate="lgnTestingSection_OnAuthenticate"></asp:Login>
                     <!-- add asp controls for reset password -->
                 </div>
             </div>

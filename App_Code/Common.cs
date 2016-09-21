@@ -29,7 +29,15 @@ namespace Common
 
         public static readonly Double MoneyGstRate = 0.15;
 
-        public static readonly string UserNewPasswordEmailSubject = "New Password Notice";
+        public static readonly string EmailPasswordChangeSubject = "Quality Caps, change in customer details";
+
+        public static readonly string EmailRegisteredCustomerSubject = "Quality Caps, new customer details";
+
+        public static readonly string EmailPasswordChangeBody =
+            "Dear {0} {1},\n\nYour login details have changed to:\n\nLogin:\t\t{2}\nPassword:\t{3}\n\n\nRegards,\n\nThe Quality Caps Team\n";
+
+        public static readonly string EmailRegisteredCustomerBody =
+            "Dear {0} {1},\n\nYou are now registered as a customer for the Quality Caps Website.\n\nYour Details:\n\nLogin:\t\t{2}\nPassword:\t{3}\n\nHome Number:   {4}\nWork Number:   {5}\nMobile Number: {6}\n\nAddress: {7}\n         {8}, {9}\n\nYou may change these details by logging in and navigating to your profile page.\n\nIf you did not register on our side, reply to this email ASAP to resolve the matter.\n\n\nRegards,\n\nThe Quality Caps Team\n";
 
         public static readonly string UserNewRegistrationNotice = "New Registration Notice";
 
@@ -86,9 +94,11 @@ namespace Common
 
         public static readonly string QueryStringGeneralMessageSuccessfulRegistration = "e5vt8n57";
 
-        public static readonly string SessionCartItems = "cartItems";
+        public static readonly string QueryStringGeneralMessageSuccessfulProfileUpdate = "456o8wbn7564";
 
-        public static readonly string SessionCustomerIdentifier = "SessionCustomerId";
+        public static readonly string QueryStringGeneralMessageSuccessfulPlacedNewOrder = "346w98w4wva00d";
+
+        public static readonly string SessionCartItems = "cartItems";
     }
 
     /// <summary>
@@ -108,7 +118,7 @@ namespace Common
 
             try
             {
-                client.Host = "localhost";
+                client.Host = "mail.unitec.ac.nz";
                 client.Send(message);
             }
             catch (SmtpException smtpEx)

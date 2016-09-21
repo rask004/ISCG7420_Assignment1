@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Web;
 using System.Web.UI;
@@ -55,9 +56,14 @@ public partial class Customer_Profile : System.Web.UI.Page
 
             if (customer == null)
             {
+                // Abandon the session
+                Session.Abandon();
+                // Log Error
                 string message = "ERROR: Was expecting a valid customer. Login used to retrieve customer: " + login;
-                Response.Write(message);
                 (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
+                // TODO: complete this error handling
+                // Email Admin about Error
+                // Redirect to error page for unrecognized customers.
             }
             else
             {
@@ -108,38 +114,18 @@ public partial class Customer_Profile : System.Web.UI.Page
         }
 
         PublicController controller = new PublicController();
-        if (controller.EmailIsAlreadyInUse(args.Value))
+        // If email is unchanged
+        if (controller.GetCustomerByLogin(txtLogin.Text).Email.Equals(txtEmail.Text))
+        {
+            args.IsValid = true;
+        }
+        // If email changed but in use by another customer
+        else if (controller.EmailIsAlreadyInUse(args.Value))
         {
             args.IsValid = false;
             lblErrorMessages.Text += "This Email is already in use. ";
-            return;
         }
 
-    }
-
-    /// <summary>
-    ///     Validate the login, and post warnings if not valid
-    ///     Login must be unique
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
-    protected void LoginValidation(object sender, ServerValidateEventArgs args)
-    {
-        Validation.ValidateAlphaNumericInput(ref args);
-
-        if (!args.IsValid)
-        {
-            lblErrorMessages.Text += "Login should only be letters and numbers. ";
-            return;
-        }
-
-        PublicController controller = new PublicController();
-        if (controller.LoginIsAlreadyInUse(args.Value))
-        {
-            args.IsValid = false;
-            lblErrorMessages.Text += "This Login is already in use. ";
-            return;
-        }
     }
 
     /// <summary>
@@ -149,7 +135,10 @@ public partial class Customer_Profile : System.Web.UI.Page
     /// <param name="args"></param>
     protected void PasswordValidation(object sender, ServerValidateEventArgs args)
     {
-        Validation.ValidatePasswordLength(ref args, 10);
+        if (txtUserPassword.Enabled)
+        {
+            Validation.ValidatePasswordLength(ref args, 10);
+        }
 
         if (!args.IsValid)
         {
@@ -264,18 +253,75 @@ public partial class Customer_Profile : System.Web.UI.Page
                     txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
                     txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
 
-                // email the Customer their new registration details.
-                // TODO: get emailing working on the web server.
+                
+                // update the change in password
+                if (btnUserRegeneratePassword.Enabled)
+                {
+                    // email the Customer their new password.
+                    try
+                    {
+                        controller.UpdatePasswordForCustomer(customer.ID, txtUserPassword.Text);
+                        Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
+                            Security.GetPasswordHash(txtUserPassword.Text));
 
+                        string ReplyToEmail = controller.GetAvailableAdminEmail();
+                        if (ReplyToEmail.Equals(String.Empty))
+                        {
+                            ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
+                        }
+
+                        // TODO: get emailing working on password change
+                        /*
+                        GeneralFunctions.SendEmail(txtEmail.Text,
+                            GeneralConstants.EmailPasswordChangeSubject,
+                            String.Format(GeneralConstants.EmailPasswordChangeBody, txtFirstName.Text, txtLastName.Text, txtLogin.Text, txtUserPassword.Text),
+                            ReplyToEmail);
+                        */
+                    }
+                    catch (SmtpException smtpEx)
+                    {
+                        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
+                        // if emailing fails, redirect to error page, notifying customer of password update, email fail, and remedy action to take.
+                    }
+                }
+
+                StringBuilder builder = new StringBuilder("~/Customer");
+                Response.Redirect(builder.ToString());
             }
             else
             {
+                // Abandon the session
+                Session.Abandon();
+                // Log Error
                 string message = "ERROR: Customer not recognized. Login used: " + txtLogin.Text;
-                lblErrorMessages.Text = message;
                 (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
+                // TODO: complete this error handling
+                // Email Admin about Error
+                // Redirect to error page for unrecognized customers.
             }
 
             
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void btnUserRegeneratePassword_OnClick(object sender, EventArgs e)
+    {
+        if (btnUserRegeneratePassword.Text == "Change Password")
+        {
+            btnUserRegeneratePassword.Text = "Cancel Changes";
+            txtUserPassword.Enabled = true;
+        }
+        else
+        {
+            btnUserRegeneratePassword.Text = "Change Password";
+            txtUserPassword.Enabled = false;
+            txtUserPassword.Text = "";
+        }
+
     }
 }

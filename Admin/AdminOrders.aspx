@@ -8,14 +8,6 @@
 
 --%>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <title>Administration - Orders</title>
-    <script type="text/javascript" src="~/Content/common.js" >
-    </script>
-    <script type="text/javascript" src="~/Content/Validation.js">
-    </script>
-</asp:Content>
-
 <asp:Content ID="AdminOrderSideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
     <div id="OrderListingSection" class="AdminSection" 
         style="position: fixed; overflow-y: scroll; overflow-x: hidden; width: 22%; max-height:86%">
@@ -82,27 +74,18 @@
         <asp:UpdatePanel ID="CurrentItemMainPanel" UpdateMode="Always" runat="server">
             <ContentTemplate>
                 <div class="row">
-                    <div class="col-md-12">
-                        <span class="BlankRow">
-                        </span>
-                    </div>
-                </div>
-                <div class="row">
-                    <span class="BlankRow"></span>
-                </div>
-                <div class="row">
                     <div class="col-md-2">
                         
                     </div>
                     <div class="col-md-4">
                         <span>
-                            <b><asp:Label CssClass="MainItemHeader" ID="lblOrderIdHeader" runat="server" AssociatedControlID="lblOrderId" 
-                                                Text="ID:" /></b>
+                            <asp:Label CssClass="MainItemHeader" ID="lblOrderIdHeader" runat="server" AssociatedControlID="lblOrderId" 
+                                                Text="ID:" />
                         </span>
                     </div>
                     <div class="col-md-4">
                         <span class="ContentShiftRight ">
-                            <b><asp:Label ID="lblOrderId" Text="Order_Id" runat="server" /></b>
+                            <asp:Label ID="lblOrderId" Text="Order_Id" runat="server" />
                         </span>
                     </div>
                     <div class="col-md-2">
@@ -120,8 +103,8 @@
                         </span>
                     </div>
                     <div class="col-md-4">
-                        <span class="ContentShiftRight"><b><asp:Label ID="lblCustomerName" Text="Customer_Details" 
-                            Enabled="false" runat="server" /></b></span>
+                        <span class="ContentShiftRight"><asp:Label ID="lblCustomerName" Text="Customer_Details" 
+                            Enabled="false" runat="server" /></span>
                     </div>
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
@@ -138,30 +121,50 @@
                         </span>
                     </div>
                     <div class="col-md-4">
-                        <span class="ContentShiftRight"><b>
+                        <span class="ContentShiftRight">
                             <asp:DropDownList ID="ddlOrderStatus" Enabled="false" runat="server">
                             </asp:DropDownList>
-                        </b></span>
+                        </span>
                     </div>
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <span class="BlankRow"></span>
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <span>
+                            <asp:Label ID="lblOrderDateHeader" runat="server" AssociatedControlID="lblOrderDate" 
+                                                CssClass="MainItemHeader" Text="Date:" />
+                        </span>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="ContentShiftRight">
+                            <asp:Label ID="lblOrderDate" Enabled="false" Text="?" runat="server">
+                            </asp:Label>
+                        </span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <br/>
                 </div>
                 <div class="row">
                     <div class="col-md-2">
                     </div>
                     <div class="col-md-4">
-                        <span class="ContentShiftLeft"><b>Order Subtotal:</b></span>
+                        <span>
+                            <asp:Label runat="server" AssociatedControlID="lblOrderSubtotal" 
+                                                CssClass="MainItemHeader" Text="Order Subtotal:" />
+                        </span>
                     </div>
-                    <div class="col-md-1">
-                        <span class="ContentShiftRight"><b>$</b></span>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <span class="ContentShiftRight">
-                            <asp:Label ID="lblOrderSubtotal" Text="0.00" runat="server" />
+                            <asp:Label ID="lblOrderSubtotal" Text="$0.00" runat="server" />
                         </span>
                     </div>
                     <div class="col-md-2">
@@ -171,86 +174,99 @@
                     <div class="col-md-2">
                     </div>
                     <div class="col-md-4">
-                        <span class="ContentShiftLeft"><b>Order GST:</b></span>
+                        <span>
+                            <asp:Label runat="server" AssociatedControlID="lblOrderGst" 
+                                                CssClass="MainItemHeader" Text="Order GST:" />
+                        </span>
                     </div>
-                    <div class="col-md-1">
-                        <span class="ContentShiftRight"><b>$</b></span>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <span class="ContentShiftRight">
-                            <asp:Label ID="lblOrderGst" Text="0.00" runat="server" />
+                            <asp:Label ID="lblOrderGst" Text="$0.00" runat="server" />
                         </span>
                     </div>
                     <div class="col-md-2">
                     </div>
                 </div>
                 <div class="row">
-                    <span class="BlankRow"></span>
+                    <br/>
                 </div>
                 <div class="row">
                     <div class="col-md-2">
                     </div>
                     <div class="col-md-4">
-                        <span class="ContentShiftLeft"><b>Order Full Total:</b></span>
+                        <span>
+                            <asp:Label runat="server" AssociatedControlID="lblOrderTotal" 
+                                                CssClass="MainItemHeader" Text="Order Full Total:" />
+                        </span>
                     </div>
-                    <div class="col-md-1">
-                        <span class="ContentShiftRight"><b>$</b></span>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <span class="ContentShiftRight">
-                            <asp:Label ID="lblOrderTotal" Text="0.00" runat="server" />
+                            <asp:Label ID="lblOrderTotal" Text="$0.00" runat="server" />
                         </span>
                     </div>
                     <div class="col-md-2">
                     </div>
                 </div>
                 <div class="row">
-                    <span class="BlankRow"></span>
-                </div>
-                <div class="row">
-                    <span class="BlankRow"></span>
+                    <br/>
                 </div>
                 <div class="row">
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
                     </div>
                     <div class="col-md-8">
-                        <asp:Table ID="tblOrderItemListing" CssClass="AdminTable" runat="server">
-                            <asp:TableHeaderRow>
-                                <asp:TableHeaderCell Text="Cap"/>
-                                <asp:TableHeaderCell Text="Colour"/>
-                                <asp:TableHeaderCell Text="Quantity"/>
-                                <asp:TableHeaderCell Text="Price"/>
-                            </asp:TableHeaderRow>
-                        </asp:Table>
+                        <asp:GridView Width="100%" ID="grdvCustomerOrders" AllowSorting="False" CellPadding="5" 
+                            CellSpacing="5" AutoGenerateDeleteButton="False" AutoGenerateEditButton="False"
+                            AutoGenerateSelectButton="False" AutoGenerateColumns="False"
+                            AllowPaging="True" runat="server" PageSize="5" 
+                            OnPageIndexChanging="grdvCustomerOrders_OnPageIndexChanging">
+                        
+                            <Columns>
+                                <asp:BoundField DataField="Cap.Name" HeaderText="Cap" ReadOnly="True" SortExpression="CapId"
+                                    />
+                                <asp:BoundField DataField="Colour.Name" HeaderText="Colour" ReadOnly="True" SortExpression="ColourId"
+                                    />
+                                <asp:BoundField DataField="Quantity" HeaderText="Quantity" ReadOnly="True"
+                                    />
+                                <asp:BoundField DataField="Cap.Price" HeaderText="Unit Price" ReadOnly="True"
+                                    DataFormatString="{0:c}"
+                                    />
+
+                            </Columns>
+                        
+                            <EmptyDataTemplate>
+                                <H4><span><label>Please select an Order.</label></span></H4>
+                            </EmptyDataTemplate>
+                        
+                        </asp:GridView>
                     </div>
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
                     </div>
                 </div>
                 <div class="row">
-                    <span class="BlankRow"></span>
+                    <br/>
                 </div>
                 <div class="row">
-                    <span class="BlankRow"></span>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-1">
+                        <span class="BlankRow"></span>
+                    </div>
+                    <div class="col-md-5">
                         <span class="ContentShiftLeft">
                             <asp:Button ID="btnCancelChanges" OnClick="CancelButton_Click" CausesValidation="false" 
                                 CssClass="MainButton" Text="Cancel" Enabled="false" runat="server"/>
                         </span>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <span class="ContentShiftRight">
                             <asp:Button ID="btnSaveChanges" 
                                 OnClick="SaveButton_Click" 
                                 CssClass="MainButton" Text="Save Changes" Enabled="false" runat="server"/>
                         </span>
                     </div>
-                </div>
-                <div class="row">
-                    <span class="BlankRow"></span>
+                    <div class="col-md-1">
+                        <span class="BlankRow"></span>
+                    </div>
                 </div>
                 <div class="row">
                     <span class="BlankRow"></span>
@@ -260,7 +276,6 @@
                         <asp:Label id="lblMessageJumboTron" CssClass="jumbotron" style="float: right; margin: 4px;" runat="server" />
                     </div>
                 </div>
-                
             </ContentTemplate>
             <Triggers>
                 <asp:AsyncPostBackTrigger ControlID="btnSaveChanges" />

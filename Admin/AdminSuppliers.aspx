@@ -8,14 +8,6 @@
 
 --%>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <title>Administration - Suppliers</title>
-    <script type="text/javascript" src="~/Content/common.js" >
-    </script>
-    <script type="text/javascript" src="~/Content/Validation.js">
-    </script>
-</asp:Content>
-
 <asp:Content ID="AdminSupplierSideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
     <div id="SupplierListingSection" class="AdminSection" 
         style="position: fixed; overflow-y: scroll; overflow-x: hidden; width: 22%; max-height:86%">
@@ -114,11 +106,18 @@
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <span>
                             <asp:Label ID="lblSupplierNameHeader" runat="server" AssociatedControlID="txtSupplierName" 
                                                 CssClass="MainItemHeader" Text="Supplier Name:" />
                         </span>
+                        
+                    </div>
+                    <div class="col-md-1">
+                        <asp:RequiredFieldValidator ID="valRequiredSupplierName" runat="server" 
+                            ControlToValidate="txtSupplierName"
+                            ErrorMessage="*" ForeColor="red"
+                            />
                     </div>
                     <div class="col-md-4">
                         <span class="ContentShiftRight"><asp:TextBox ID="txtSupplierName" Enabled="false" runat="server" /></span>
@@ -129,40 +128,18 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                    </div>
-                    <div class="col-md-4">
-                    </div>
-                    <div class="col-md-4">
-                        <span class="ContentShiftLeft"><b>
-                            <asp:RequiredFieldValidator ID="valRequiredSupplierName" runat="server" 
-                            ControlToValidate="txtSupplierName"
-                            ErrorMessage="The Supplier Name is a required field." ForeColor="red"
-                            />
-                            <asp:CustomValidator runat="server"  ID="valInvalidSupplierName"
-                            ControlToValidate="txtSupplierName"
-                            ErrorMessage="The Supplier Name must only have alphabetic characters, spaces, commas, periods or apostrophes."
-                            ClientValidationFunction="ValidateNameString"
-                            OnServerValidate="SupplierNameValidation"
-                            Display="Static"
-                            ForeColor="Red"
-                            />
-                        </b></span>
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
                         <span class="BlankRow"></span>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <span>
-                            <asp:Label ID="lblSupplierNumberHeader" runat="server" AssociatedControlID="txtSupplierContactNumber" 
-                                                CssClass="MainItemHeader" Text="Contact Number:" />
+                            <asp:Label ID="lblSupplierHomeNumberHeader" runat="server" AssociatedControlID="txtSupplierHomeNumber" 
+                                                CssClass="MainItemHeader" Text="Home Number:" />
                         </span>
                     </div>
+                    <div class="col-md-1">
+                    </div>
                     <div class="col-md-4">
-                        <span class="ContentShiftRight"><asp:TextBox ID="txtSupplierContactNumber" Enabled="false" runat="server" /></span>
+                        <span class="ContentShiftRight"><asp:TextBox ID="txtSupplierHomeNumber" Enabled="false" runat="server" /></span>
                     </div>
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
@@ -170,37 +147,57 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <span>
+                            <asp:Label ID="lblSupplierWorkNumberHeader" runat="server" AssociatedControlID="txtSupplierWorkNumber" 
+                                                CssClass="MainItemHeader" Text="Work Number:" />
+                        </span>
+                    </div>
+                    <div class="col-md-1">
                     </div>
                     <div class="col-md-4">
-                    </div>
-                    <div class="col-md-4">
-                        <span class="ContentShiftLeft"><b>
-                            <asp:RequiredFieldValidator ID="valRequiredSupplierContactNumber" runat="server" 
-                            ControlToValidate="txtSupplierContactNumber"
-                            ErrorMessage="The Supplier Contact Number is a required field." ForeColor="red"
-                            />
-                            <asp:CustomValidator runat="server"  ID="valNumberSupplierContact"
-                            ControlToValidate="txtSupplierContactNumber"
-                            ErrorMessage="The Supplier Number must only have numbers. It must be in the form 0N[N]NNN[N]NNN, e.g. 09555444, 0755557777."
-                            ClientValidationFunction="ValidateLandlineNumber"
-                            OnServerValidate="SupplierNumberValidation"
-                            Display="Static"
-                            ForeColor="Red"
-                            />
-                        </b></span>
+                        <span class="ContentShiftRight"><asp:TextBox ID="txtSupplierWorkNumber" Enabled="false" runat="server" /></span>
                     </div>
                     <div class="col-md-2">
+                        <span class="BlankRow"></span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-2">
                         <span class="BlankRow"></span>
                     </div>
+                    <div class="col-md-3">
+                        <span>
+                            <asp:Label ID="lblSupplierMobileNumberHeader" runat="server" AssociatedControlID="txtSupplierMobileNumber" 
+                                                CssClass="MainItemHeader" Text="Mobile Number:" />
+                        </span>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
                     <div class="col-md-4">
+                        <span class="ContentShiftRight"><asp:TextBox ID="txtSupplierMobileNumber" Enabled="false" runat="server" /></span>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <span class="BlankRow"></span>
+                    </div>
+                    <div class="col-md-3">
                         <span>
                             <asp:Label ID="lblSupplierEmailHeader" runat="server" AssociatedControlID="txtSupplierEmail" 
                                                 CssClass="MainItemHeader" Text="Email:" />
                         </span>
+                    </div>
+                    <div class="col-md-1">
+                        <asp:RequiredFieldValidator ID="valRequiredSupplierEmail" runat="server" 
+                            ControlToValidate="txtSupplierEmail"
+                            ErrorMessage="*" ForeColor="red"
+                            />
                     </div>
                     <div class="col-md-4">
                         <span class="ContentShiftRight"><asp:TextBox ID="txtSupplierEmail" Enabled="false" runat="server" /></span>
@@ -212,14 +209,8 @@
                 <div class="row">
                     <div class="col-md-2">
                     </div>
-                    <div class="col-md-4">
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                         <span class="ContentShiftLeft"><b>
-                            <asp:RequiredFieldValidator ID="valRequiredSupplierEmail" runat="server" 
-                            ControlToValidate="txtSupplierEmail"
-                            ErrorMessage="The Supplier Email is a required field." ForeColor="red"
-                            />
                             <asp:CustomValidator runat="server"  ID="valCharsAndFormatSupplierEmail"
                             ControlToValidate="txtSupplierEmail"
                             ErrorMessage="The Supplier Email must match the format <chars@[subdomain.]site.domain>."
@@ -228,13 +219,60 @@
                             Display="Static"
                             ForeColor="Red"
                             />
+                            <asp:CustomValidator runat="server"  ID="valInvalidSupplierName"
+                            ControlToValidate="txtSupplierName"
+                            ErrorMessage="The Supplier Name must only have alphabetic characters, spaces, commas, periods or apostrophes."
+                            ClientValidationFunction="ValidateNameString"
+                            OnServerValidate="SupplierNameValidation"
+                            Display="Static"
+                            ForeColor="Red"
+                            />
+                            <asp:CustomValidator runat="server"  ID="valRequiredNumber"
+                            ErrorMessage="There must have at least one contact number."
+                            OnServerValidate="NumberRequiredValidation"
+                            Display="Static"
+                            ForeColor="Red"
+                            />
+                            <asp:CustomValidator runat="server"  ID="valHomeNumberCorrect"
+                            ControlToValidate="txtSupplierHomeNumber"
+                            ErrorMessage="The Home Number must be in the format 0N[N]NNN[N]NNN, e.g. 095554444, 075555333, 0455551111."
+                            ClientValidationFunction="ValidateLandlineNumber"
+                            OnServerValidate="LandlineNumberValidation"
+                            Display="Static"
+                            ForeColor="Red"
+                            />
+                            <asp:CustomValidator runat="server"  ID="valWorkNumberCorrect"
+                            ControlToValidate="txtSupplierWorkNumber"
+                            ErrorMessage="The  Work Number must be in the format 0N[N]NNN[N]NNN, e.g. 095554444, 075555333, 0455551111."
+                            ClientValidationFunction="ValidateLandlineNumber"
+                            OnServerValidate="LandlineNumberValidation"
+                            Display="Static"
+                            ForeColor="Red"
+                            />
+                            <asp:CustomValidator runat="server"  ID="valMobileNumberCorrect"
+                            ControlToValidate="txtSupplierMobileNumber"
+                            ErrorMessage="The User Mobile Number must be in the format +NNNN[N]NNN[N]NNN or 02N[N]NNN[N]NNN, e.g. +61385554444, 02755553333."
+                            ClientValidationFunction="ValidateMobileNumber"
+                            OnServerValidate="MobileNumberValidation"
+                            Display="Static"
+                            ForeColor="Red"
+                            />
+                            <asp:RequiredFieldValidator ID="valRequiredSupplierContactNumber" runat="server" 
+                            ControlToValidate="txtSupplierHomeNumber"
+                            ErrorMessage="The Supplier Contact Number is a required field." ForeColor="red"
+                            />
+                            <asp:CustomValidator runat="server"  ID="valNumberSupplierContact"
+                            ControlToValidate="txtSupplierHomeNumber"
+                            ErrorMessage="The Supplier Number must only have numbers. It must be in the form 0N[N]NNN[N]NNN, e.g. 09555444, 0755557777."
+                            ClientValidationFunction="ValidateLandlineNumber"
+                            OnServerValidate="SupplierNumberValidation"
+                            Display="Static"
+                            ForeColor="Red"
+                            />
                         </b></span>
                     </div>
                     <div class="col-md-2">
                     </div>
-                </div>
-                <div class="row">
-                    <span class="BlankRow"></span>
                 </div>
                 <div class="row">
                     <span class="BlankRow"></span>

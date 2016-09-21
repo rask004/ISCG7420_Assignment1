@@ -1,7 +1,16 @@
 ﻿<%@ Page Title="Quality Caps - Edit Profile" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="EditProfile.aspx.cs" Inherits="Customer_Profile" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="TitlePlaceholder" Runat="Server">
-    <%= Title %>
+<%--  
+    The page for the Quality Caps Website.
+    
+    Change Log:
+
+--%>
+<asp:Content ID="Content1" ContentPlaceHolderID="AdditionalScripts" Runat="Server">
+    <script type="text/javascript" src="../Content/common.js">
+    </script>
+    <script type="text/javascript" src="../Content/Validation.js">
+    </script>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
     <div class="container PageSectionCentre">
@@ -118,6 +127,33 @@
             </div>
             <div class="col-md-2">
                         
+            </div>
+        </div>
+        <div class="row"><span class="BlankRow"></span></div>
+        <div class="row">
+            <div class="col-md-2">
+                <span class="BlankRow"></span>
+            </div>
+            <div class="col-md-3">
+                <span class="ContentShiftLeft">
+                    <asp:Button ID="btnUserRegeneratePassword" OnClick="btnUserRegeneratePassword_OnClick"
+                        CausesValidation="false" Text="Change Password" runat="server"/>
+                </span>
+            </div>
+            <div class="col-md-1">
+                <asp:CustomValidator runat="server"
+                            ControlToValidate="txtUserPassword"
+                            OnServerValidate="PasswordValidation"
+                            />
+            </div>
+            <div class="col-md-4">
+                <span class="ContentShiftRight">
+                    <asp:TextBox ID="txtUserPassword" Text=""
+                        Enabled="false" runat="server" />
+                </span>
+            </div>
+            <div class="col-md-2">
+                <span class="BlankRow"></span>
             </div>
         </div>
         <div class="row"><span class="BlankRow"></span></div>

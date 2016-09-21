@@ -8,8 +8,6 @@ using CommonLogging;
 using DataLayer;
 using SecurityLayer;
 
-//TODO: fix issue with HttpContext.Current.Application and Logger.
-
 namespace BusinessLayer
 {
     /// <summary>
@@ -27,8 +25,6 @@ namespace BusinessLayer
     {
         private readonly DataManager _dm;
 
-        private readonly Logger _logger;
-
         /// <summary>
         ///     Constructor
         ///     Create ShoppingController and store reference to DataManager.
@@ -39,7 +35,6 @@ namespace BusinessLayer
 
             StringBuilder builder = new StringBuilder();
             builder.Append("PublicController.PublicController :: PublicController Created.");
-            _logger = (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger);
             (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, builder.ToString());
         }
 
@@ -95,10 +90,11 @@ namespace BusinessLayer
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="passwordhash"></param>
-        public void UpdatePasswordForCustomer(int id, string passwordhash)
+        /// <param name="password"></param>
+        public void UpdatePasswordForCustomer(int id, string password)
         {
-            _dm.UpdateExistingCustomerPassword(id, passwordhash);
+            string hash = Security.GetPasswordHash(password);
+            _dm.UpdateExistingCustomerPassword(id, hash);
             (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Customer Password Updated. ID:" + id);
 
         }
@@ -239,7 +235,7 @@ namespace BusinessLayer
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<Colour> GetAllcolours()
+        public List<Colour> GetAllColours()
         {
             List<Colour> colours = _dm.GetAllColours();
             (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved List of all Colours");
@@ -265,9 +261,188 @@ namespace BusinessLayer
         /// <returns></returns>
         public Colour GetColourById(int id)
         {
-            Colour cap = _dm.GetSingleColourById(id);
+            Colour colour = _dm.GetSingleColourById(id);
             (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Colour. ID:" + id);
-            return cap;
+            return colour;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public List<CustomerOrder> GetAllOrdersByCustomer(string login)
+        {
+            Customer customer = _dm.GetSingleCustomerByLogin(login);
+            if (customer != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Retrieved Customer. ID:" + customer.ID);
+                List<CustomerOrder> orders = _dm.GetAllOrders();
+                for (int i = orders.Count - 1; i >= 0; i--)
+                {
+                    if (orders[i].Customer.ID != customer.ID)
+                    {
+                        orders.RemoveAt(i);
+                    }
+                }
+
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info,
+                    "Retrieved Customer Orders for customer, ID:" + customer.ID + ", Count:" + orders.Count);
+                return orders;
+            }
+            else
+            {
+                // No such customer exists, therefore there are no orders tied to that customer.
+                return new List<CustomerOrder>();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public List<OrderSummary> GetAllOrderSummariesByCustomer(string login)
+        {
+            List<OrderSummary> summaries = new List<OrderSummary>();
+
+            List<OrderItem> orderItems;
+            List<CustomerOrder> orders = _dm.GetAllOrders();
+            foreach (var customerOrder in orders)
+            {
+                // ignore orders not for this customer.
+                if (!customerOrder.Customer.Login.Equals(login))
+                {
+                    continue;
+                }
+
+                // get totals for quantity and cost,
+                int totalQuantity = 0;
+                double totalCost = 0;
+                orderItems = _dm.GetAllOrderItemsByOrderId(customerOrder.ID);
+                foreach (var orderItem in orderItems)
+                {
+                    totalQuantity += orderItem.Quantity;
+                    totalCost += orderItem.Cap.Price*orderItem.Quantity;
+                }
+
+                summaries.Add(new OrderSummary
+                {
+                    CustomerOrder = customerOrder,
+                    OrderId = customerOrder.ID,
+                    SubTotalPrice = totalCost,
+                    TotalQuantity = totalQuantity
+                });
+            }
+
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info,
+                    "Retrieved Order Summaries for customer, login:" + login + ", Count:" + summaries.Count);
+            return summaries;
+        }
+
+        /// <summary>
+        ///     Given a login and password request, check these are valid.
+        ///     Login must be for an existing customer.
+        ///     Password when hashed must match the stored cryptographic hash for this customer.
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        public bool LoginIsValid(string login, string password)
+        {
+            // customer with this login must exist in the system.
+            Customer customer = _dm.GetSingleCustomerByLogin(login);
+            if (customer != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Customer for Login Check. ID:" + customer.ID);
+                // the supplied password must match the stored hash.
+                var suppliedHash = Security.GetPasswordHash(password);
+
+                if (customer.Password.Equals(suppliedHash))
+                {
+                    // matching login and password
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetAvailableAdminEmail()
+        {
+            List<Administrator> admins = _dm.GetAllAdministrators();
+            if (admins.Count == 0)
+            {
+                return String.Empty;
+            }
+            else
+            {
+                return admins[0].Email;
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="items"></param>
+        public void PlaceOrderForCustomer(string login, List<OrderItem> items)
+        {
+            Customer customer = _dm.GetSingleCustomerByLogin(login);
+            if (customer == null)
+            {
+                // throw exception - incorrect customer Identifier
+                throw new NullReferenceException("ERROR: A requested customer does not exist. Customer Login: " + login);
+            }
+            else
+            {
+                // need to find id of new order, which is auto-increment generated.
+                // find all existing orders before inserting a new order.
+                List<CustomerOrder> oldOrders = GetAllOrdersByCustomer(customer.Login);
+                _dm.InsertNewOrder("Waiting", customer.ID);
+                // now AFTER inserting new order, request all existing orders again - including the new order.
+                // this assumes only one new order was inserted during the times between order requests.
+                List<CustomerOrder> newOrders = GetAllOrdersByCustomer(customer.Login);
+                // now remove all orders in the first list from the second - should leave only the order(s) just inserted.
+                // more efficient to use a double reverse loop, eliminating from both with each match.
+                for (var i = newOrders.Count - 1; i >= 0; i--)
+                {
+                    for (var j = oldOrders.Count - 1; j >= 0; j--)
+                    {
+                        if (oldOrders[j].ID == newOrders[i].ID)
+                        {
+                            oldOrders.RemoveAt(j);
+                            newOrders.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
+
+                try
+                {
+                    CustomerOrder newOrder = newOrders[0];
+                    foreach (var orderItem in items)
+                    {
+                        _dm.InsertNewOrderItem(newOrder.ID, orderItem.CapId, orderItem.ColourId, orderItem.Quantity);
+                    }
+                }
+                catch (ArgumentOutOfRangeException rangeEx)
+                {
+                    // throw exception - could not find newly inserted order.
+                    throw new ArgumentOutOfRangeException("ERROR: could not find newly inserted Order.", rangeEx);
+                }
+            }
         }
     }
 }

@@ -604,11 +604,35 @@ namespace BusinessLayer
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string GetSupplierContactNumber(int id)
+        public string GetSupplierHomeNumber(int id)
         {
             Supplier item = _dm.GetSingleSupplierById(id);
             _logger.Log(LoggingLevel.Info, "Retrieved Supplier Contact, ID:" + id);
-            return item.ContactNumber;
+            return item.HomeNumber;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetSupplierWorkNumber(int id)
+        {
+            Supplier item = _dm.GetSingleSupplierById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Supplier Contact, ID:" + id);
+            return item.WorkNumber;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetSupplierMobileNumber(int id)
+        {
+            Supplier item = _dm.GetSingleSupplierById(id);
+            _logger.Log(LoggingLevel.Info, "Retrieved Supplier Contact, ID:" + id);
+            return item.MobileNumber;
         }
 
         /// <summary>
@@ -629,17 +653,19 @@ namespace BusinessLayer
         /// </summary>
         /// <param name="id">id of the supplier. May be for a new supplier.</param>
         /// <param name="name">name of the supplier.</param>
-        /// <param name="contactNumber"></param>
+        /// <param name="homeNumber"></param>
+        /// <param name="workNumber"></param>
+        /// <param name="mobileNumber"></param>
         /// <param name="email"></param>
-        public void AddOrUpdateSupplier(int id, string name, string contactNumber, string email)
+        public void AddOrUpdateSupplier(int id, string name, string homeNumber, string workNumber, string mobileNumber, string email)
         {
             if (id < 0)
             {
-                _dm.AddNewSupplier(name, contactNumber, email);
+                _dm.AddNewSupplier(name, homeNumber, workNumber, mobileNumber, email);
             }
             else
             {
-                _dm.UpdateExistingSupplier(id, name, contactNumber, email);
+                _dm.UpdateExistingSupplier(id, name, homeNumber, workNumber, mobileNumber, email);
             }
 
             _logger.Log(LoggingLevel.Info, "Updated Supplier, ID:" + id + " Name:" + name);
@@ -790,6 +816,48 @@ namespace BusinessLayer
             return order.Status;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public DateTime GetOrderDate(int orderId)
+        {
+            CustomerOrder order = _dm.GetSingleOrderById(orderId);
+            _logger.Log(LoggingLevel.Info, "Retrieved Order Status, ID:" + orderId);
+            return order.DatePlaced;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<OrderSummary> GetOrderSummaries()
+        {
+            List<CustomerOrder> orders = _dm.GetAllOrders();
+            List<OrderSummary> summaries = new List<OrderSummary>();
+
+            foreach (var customerOrder in orders)
+            {
+                int qty = 0;
+                double cost = 0;
+                List<OrderItem> orderItems = _dm.GetAllOrderItemsByOrderId(customerOrder.ID);
+
+                foreach (var orderItem in orderItems)
+                {
+                    qty += orderItem.Quantity;
+                    cost += orderItem.Cap.Price * orderItem.Quantity;
+                }
+
+                summaries.Add( new OrderSummary {OrderId = customerOrder.ID, CustomerOrder = customerOrder, SubTotalPrice = cost, TotalQuantity = qty});
+
+            }
+
+            _logger.Log(LoggingLevel.Info, "Retrieved All Order Summaries.");
+
+            return summaries;
+        }
+
 
         /// <summary>
         ///     
@@ -811,6 +879,50 @@ namespace BusinessLayer
             List<OrderItem> orderitems = _dm.GetAllOrderItemsByOrderId(id);
             _logger.Log(LoggingLevel.Info, "Retrieved All OrderItems, ID:" + id);
             return orderitems;
+        }
+
+        /// <summary>
+        ///     Given a login and password request, check these are valid.
+        ///     Login must be for an existing administrator.
+        ///     Password when hashed must match the stored cryptographic hash for this administrator.
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        public bool LoginIsValid(string login, string password)
+        {
+            // customer with this login must exist in the system.
+            Administrator admin = _dm.GetSingleAdministratorByLogin(login);
+            if (admin != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Administrator for Login Check. ID:" + admin.ID);
+                // the supplied password must match the stored hash.
+                var suppliedHash = Security.GetPasswordHash(password);
+
+                if (admin.Password.Equals(suppliedHash))
+                {
+                    // matching login and password
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public Administrator GetAdministratorByLogin(string login)
+        {
+            Administrator admin = _dm.GetSingleAdministratorByLogin(login);
+            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Administrator. ID:" + admin.ID);
+            return admin;
         }
     }
 }
