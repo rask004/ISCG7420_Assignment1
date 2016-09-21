@@ -7,6 +7,7 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Web;
 using BusinessLayer;
+using Common;
 
 
 namespace DataLayer
@@ -162,8 +163,7 @@ namespace DataLayer
 
         private DataManager()
         {
-            _connection = new OleDbConnection(ConfigurationManager.ConnectionStrings["DeveloperExpressConnection"]
-                .ConnectionString);
+            _connection = new OleDbConnection(GeneralConstants.DefaultConnectionString);
 
             BuildDatabase();
         }

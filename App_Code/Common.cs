@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net.Mail;
+using System.Configuration;
+using System.Web.Configuration;
 
 namespace Common
 {
@@ -94,6 +96,24 @@ namespace Common
         public static readonly string QueryStringGeneralMessageSuccessfulPlacedNewOrder = "346w98w4wva00d";
 
         public static readonly string SessionCartItems = "cartItems";
+
+        public static string DefaultConnectionString
+        {
+            get
+            {
+                CompilationSection compilationSection =
+                    (CompilationSection) System.Configuration.ConfigurationManager.GetSection(@"system.web/compilation");
+                if (compilationSection.Debug)
+                {
+                    return ConfigurationManager.ConnectionStrings["DeveloperExpressConnection"].ConnectionString;
+                }
+                else
+                {
+                    return ConfigurationManager.ConnectionStrings["ReleaseConnection"].ConnectionString;
+                }
+                
+            }
+        }
     }
 
     /// <summary>
