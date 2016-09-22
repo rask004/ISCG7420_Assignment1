@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Configuration;
+using System.Web;
 using System.Web.Configuration;
 
 namespace Common
@@ -10,6 +11,8 @@ namespace Common
     /// </summary>
     public static class GeneralConstants
     {
+        public static readonly string ReleaseMachineName = "DOCHYPER";
+
         public static readonly string CustomerUserType = "C";
         public static readonly string AdminUserType = "A";
 
@@ -30,6 +33,10 @@ namespace Common
         public static readonly string[] PermittedOrderStatuses = new string[] {"Waiting", "Shipped"};
 
         public static readonly Double MoneyGstRate = 0.15;
+
+        public static readonly string EmailErrorSubject = "Error, Quality Caps Website.";
+
+        public static readonly string EmailErrorBody = "Error Report:\n\n{0}\n\nSource Page:\n{1}.";
 
         public static readonly string EmailPasswordChangeSubject = "Quality Caps, change in customer details";
 
@@ -101,15 +108,14 @@ namespace Common
         {
             get
             {
-                CompilationSection compilationSection =
-                    (CompilationSection) System.Configuration.ConfigurationManager.GetSection(@"system.web/compilation");
-                if (compilationSection.Debug)
+                
+                if (HttpContext.Current.Server.MachineName.Equals(ReleaseMachineName))
                 {
-                    return ConfigurationManager.ConnectionStrings["DeveloperExpressConnection"].ConnectionString;
+                    return ConfigurationManager.ConnectionStrings["ReleaseConnection"].ConnectionString;
                 }
                 else
                 {
-                    return ConfigurationManager.ConnectionStrings["ReleaseConnection"].ConnectionString;
+                    return ConfigurationManager.ConnectionStrings["DeveloperExpressConnection"].ConnectionString;
                 }
                 
             }

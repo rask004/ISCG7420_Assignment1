@@ -71,7 +71,7 @@ namespace DataLayer
                                                            "END ";
 
         private readonly string _insertDefaultSuppliers = "if (select count(id) from dbo.Supplier) = 0 BEGIN " +
-                                                           "insert into Supplier (name, homeNumber, emailAddress, workNumber, mobileNumber) " +
+                                                           "insert into Supplier (name, emailAddress, homeNumber, workNumber, mobileNumber) " +
                                                            "values('Escobar Fabrics', 'sales@escobar.co.nz', '094443333','',''),('Alto Monte Fashion','sales@altomonte.com','073347776','',''); " +
                                                            "END ";
 
