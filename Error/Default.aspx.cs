@@ -40,6 +40,11 @@ public partial class Error_Default : System.Web.UI.Page
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void btnSendEmail_OnClick(object sender, EventArgs e)
     {
         if (Page.IsValid)

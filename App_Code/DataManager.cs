@@ -15,13 +15,13 @@ namespace DataLayer
 
     /// <summary>
     /// DataLayer Tier Management Object
-    /// 
-    /// Uses a generic pattern for all methods. The Entity Type must be specified for each method.
     /// </summary>
     public class DataManager
     {
+        // database connection.
         private readonly OleDbConnection _connection;
 
+        // Stored SQL queries.
         private readonly string _buildSiteUserTable = "if OBJECT_ID(N'dbo.SiteUser', N'U') is NULL BEGIN " +
                                                      "create table dbo.SiteUser(id   int   IDENTITY(1, 1)   primary key, login   nvarchar(64)    not null, " +
                                                      "password    nvarchar(64)    not null, userType    char(1)     not null, emailAddress    nvarchar(100)   not null, " +
@@ -161,8 +161,12 @@ namespace DataLayer
         private readonly string _selectAllCapsByCategoryId = "select * from Cap where categoryId=?;";
 
 
+        /// <summary>
+        ///     DatabaseManager Constructor.
+        /// </summary>
         private DataManager()
         {
+            // Get connection string for Connection Object, depending on if developer or release version.
             _connection = new OleDbConnection(GeneralConstants.DefaultConnectionString);
 
             BuildDatabase();
@@ -233,7 +237,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Getter for DataManager Singleton Instance
+        ///     WAS reference to singleton instance. Currently just returns a new instance.
         /// </summary>
         public static DataManager Instance
         {
@@ -246,7 +250,7 @@ namespace DataLayer
         /// <summary>
         ///     OleDb method to get list of all customers.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Customer, all customers in DB system.</returns>
         public List<Customer> GetAllCustomers()
         {
             List<Customer> records = new List<Customer>();
@@ -293,9 +297,10 @@ namespace DataLayer
         }
 
         /// <summary>
-        /// 
+        ///     Given a customer ID, disable the customer.
+        ///     If ID does not reference a customer, nothing happens.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">integer, being the ID of customer.</param>
         public void DisableExistingCustomer(int id)
         {
             OleDbCommand command = new OleDbCommand(_updateCustomerIsDisabled, _connection);
@@ -307,8 +312,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single customer referenced by id. If no customer fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, for customer ID</param>
+        /// <returns>null or Customer object.</returns>
         public Customer GetSingleCustomerById(int id)
         {
             OleDbDataReader reader = null;
@@ -356,15 +361,14 @@ namespace DataLayer
                 _connection.Close();
             }
 
-
             return customer;
         }
 
         /// <summary>
         ///     Return a single customer referenced by login. If no customer fetched, return null.
         /// </summary>
-        /// <param name="login"></param>
-        /// <returns></returns>
+        /// <param name="login">string, login of customer</param>
+        /// <returns>null or Customer object.</returns>
         public Customer GetSingleCustomerByLogin(string login)
         {
             Customer customer = null;
@@ -397,9 +401,7 @@ namespace DataLayer
                     customer.Suburb = reader["suburb"].ToString();
                     customer.City = reader["city"].ToString();
                     customer.IsDisabled = Convert.ToBoolean(reader["isDisabled"]);
-
                 }
-                
             }
             finally
             {
@@ -408,7 +410,6 @@ namespace DataLayer
                     reader.Close();
                 }
                 _connection.Close();
-
             }
 
             return customer;
@@ -417,7 +418,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single customer referenced by email. If no customer fetched, return null.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="email">string, email of customer</param>
+        /// <returns>null or Customer object.</returns>
         public Customer GetSingleCustomerByEmail(string email)
         {
             OleDbDataReader reader = null;
@@ -564,7 +566,8 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     
+        ///     Update the password of a customer.
+        ///     If no such customer exists, do nothing.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="passwordHash"></param>
@@ -581,9 +584,9 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     OleDb method to get list of all admins.
+        ///     get list of all admins.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>list, Administrator, contains all administrators.</returns>
         public List<Administrator> GetAllAdministrators()
         {
             List<Administrator> records = new List<Administrator>();
@@ -626,7 +629,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Return a single customer referenced by id. If no customer fetched, return null.
+        ///     Return a single administrator referenced by id. If no customer fetched, return null.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -714,8 +717,7 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     Add a new admin with this login  and email
-        ///     Use randomised password for security.
+        ///     Add a new admin with this login, password hash  and email
         /// </summary>
         /// <param name="email"></param>
         /// <param name="login"></param>
@@ -733,7 +735,8 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Update an existing admin by id.
+        ///     Update an existing admin email and/or login by id.
+        ///     If no such admin exists, do nothing.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="email"></param>
@@ -754,7 +757,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     
+        ///     Update password of an admin, by id.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="passwordHash"></param>
@@ -775,7 +778,7 @@ namespace DataLayer
         /// <summary>
         ///     get list of all Category.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Category, all categories.</returns>
         public List<Category> GetAllCategories()
         {
             List<Category> records = new List<Category>();
@@ -890,7 +893,7 @@ namespace DataLayer
         /// <summary>
         ///     get list of all Colour.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Colour, all Colours</returns>
         public List<Colour> GetAllColours()
         {
             List<Colour> records = new List<Colour>();
@@ -1005,7 +1008,7 @@ namespace DataLayer
         /// <summary>
         ///     get list of all suppliers.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Supplier, all suppliers</returns>
         public List<Supplier> GetAllSuppliers()
         {
             List<Supplier> records = new List<Supplier>();
@@ -1120,7 +1123,8 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     Update an existing supplier by id.
+        ///     Update a supplier by id.
+        ///     If no existing supplier, do nothing.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -1153,11 +1157,14 @@ namespace DataLayer
         /// <summary>
         ///     get list of all cap.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Cap, all caps</returns>
         public List<Cap> GetAllCaps()
         {
             List<Cap> records = new List<Cap>();
             OleDbDataReader reader = null;
+
+            Dictionary<int, Supplier> foundSuppliers = new Dictionary<int, Supplier>();
+            Dictionary<int, Category> foundCategories = new Dictionary<int, Category>();
 
             try
             {
@@ -1187,8 +1194,18 @@ namespace DataLayer
                     // As DataReader requires an open connection, finish using the DataReader before using these methods.
                     foreach (Cap cap in records)
                     {
-                        cap.Category = GetSingleCategoryById(cap.CategoryId);
-                        cap.Supplier = GetSingleSupplierById(cap.SupplierId);
+                        // reuse Supplier and Category objects, where different Caps reference the same Supplier or Category.
+                        if (!foundSuppliers.ContainsKey(cap.SupplierId))
+                        {
+                            foundSuppliers[cap.SupplierId] = GetSingleSupplierById(cap.SupplierId);
+                        }
+                        cap.Supplier = foundSuppliers[cap.SupplierId];
+
+                        if (!foundCategories.ContainsKey(cap.CategoryId))
+                        {
+                            foundCategories[cap.CategoryId] = GetSingleCategoryById(cap.CategoryId);
+                        }
+                        cap.Category = foundCategories[cap.CategoryId];
                     }
                 }
             }
@@ -1292,7 +1309,8 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     Update an existing cap by id.
+        ///     Update a cap by id.
+        ///     If no such cap exists, do nothing.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -1323,6 +1341,7 @@ namespace DataLayer
 
         /// <summary>
         ///     Update an existing cap by id.
+        ///     Update the supplierId.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="supplierId"></param>
@@ -1338,6 +1357,7 @@ namespace DataLayer
 
         /// <summary>
         ///     Update an existing cap by id.
+        ///     Update the categoryId.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="categoryId"></param>
@@ -1352,9 +1372,9 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     
+        ///     get list of order.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, CustomerOrder, all orders.</returns>
         public List<CustomerOrder> GetAllOrders()
         {
             List<CustomerOrder> records = new List<CustomerOrder>();
@@ -1366,6 +1386,8 @@ namespace DataLayer
                 {
                     _connection.Open();
                 }
+
+                Dictionary<int, Customer> foundCustomers = new Dictionary<int, Customer>();
 
                 reader = (new OleDbCommand(_selectAllOrders, _connection)).ExecuteReader();
 
@@ -1388,7 +1410,11 @@ namespace DataLayer
                     // As DataReader requires an open connection, finish using the DataReader before using these methods.
                     foreach (var customerOrder in records)
                     {
-                        customerOrder.Customer = GetSingleCustomerById(customerOrder.UserId);
+                        if (!foundCustomers.ContainsKey(customerOrder.UserId))
+                        {
+                            foundCustomers[customerOrder.UserId] = GetSingleCustomerById(customerOrder.UserId);
+                        }
+                        customerOrder.Customer = foundCustomers[customerOrder.UserId];
                     }
                 }
             }
@@ -1407,10 +1433,11 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     
+        ///     Get one customer order.
+        ///     If the customer id used to get orders is not for a customer, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, the is of the customer.</param>
+        /// <returns>nul or CustomerOrder object.</returns>
         public CustomerOrder GetSingleOrderById(int id)
         {
             OleDbDataReader reader = null;
@@ -1498,6 +1525,7 @@ namespace DataLayer
         {
             List<OrderItem> records = new List<OrderItem>();
             OleDbDataReader reader = null;
+            CustomerOrder order = GetSingleOrderById(orderId);
 
             // As each order item references a cap and colour, keep a list of the caps and colours retrieved
             // then if separate orderItems reference the same Cap or colour, reuse that cap or colour
@@ -1511,8 +1539,6 @@ namespace DataLayer
 
             try
             {
-                CustomerOrder order = GetSingleOrderById(orderId);
-
                 if (_connection.State != ConnectionState.Open)
                 {
                     _connection.Open();
@@ -1537,27 +1563,17 @@ namespace DataLayer
                     // so OrderItems with same cap / colour will reference that same Cap / colour object.
                     foreach (var orderItem in records)
                     {
-                        if (foundCaps.ContainsKey(orderItem.CapId))
+                        if (!foundCaps.ContainsKey(orderItem.CapId))
                         {
-                            orderItem.Cap = foundCaps[orderItem.CapId];
+                            foundCaps[orderItem.CapId] = GetSingleCapById(orderItem.CapId);
                         }
-                        else
-                        {
-                            Cap cap = GetSingleCapById(orderItem.CapId);
-                            orderItem.Cap = cap;
-                            foundCaps[orderItem.CapId] = cap;
-                        }
+                        orderItem.Cap = foundCaps[orderItem.CapId];
 
-                        if (foundColours.ContainsKey(orderItem.ColourId))
+                        if (!foundColours.ContainsKey(orderItem.ColourId))
                         {
-                            orderItem.Colour = foundColours[orderItem.ColourId];
+                            foundColours[orderItem.ColourId] = GetSingleColourById(orderItem.ColourId);
                         }
-                        else
-                        {
-                            Colour colour = GetSingleColourById(orderItem.ColourId);
-                            orderItem.Colour = colour;
-                            foundColours[orderItem.ColourId] = colour;
-                        }
+                        orderItem.Colour = foundColours[orderItem.ColourId];
                     }
 
                     // Suppliers and categories will still be duplicated, until this is fixed.
@@ -1578,7 +1594,7 @@ namespace DataLayer
 
 
         /// <summary>
-        /// 
+        ///     
         /// </summary>
         /// <param name="orderId"></param>
         /// <param name="capId"></param>
@@ -1599,10 +1615,11 @@ namespace DataLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get list of caps.
+        ///     Use a category ID to select caps with.
         /// </summary>
-        /// <param name="categoryId"></param>
-        /// <returns></returns>
+        /// <param name="categoryId">integer, the ID of the category to match caps by.</param>
+        /// <returns>List, Cap, list of caps.</returns>
         public List<Cap> GetCapsByCategoryId(int categoryId)
         {
             Category category = GetSingleCategoryById(categoryId);
