@@ -6,9 +6,9 @@
 <head runat="server">
     <title><%= Page.Title %></title>
     <script type="text/javascript" src="../Content/common.js">
-        </script>
-        <script type="text/javascript" src="../Content/Validation.js">
-        </script>
+    </script>
+    <script type="text/javascript" src="../Content/Validation.js">
+    </script>
     <asp:ContentPlaceHolder runat="server" ID="MetaPlaceholder"></asp:ContentPlaceHolder>
 </head>
 <body>

@@ -129,9 +129,30 @@ namespace Common
     {
         public static void SendEmail(string destinationEmail, string subject, string messageBody, string replyToEmail)
         {
-            var toAddress = new MailAddress(destinationEmail);
-            var replyAddress = new MailAddress(replyToEmail);
-            MailMessage message = new MailMessage(replyAddress, toAddress);
+            MailMessage message = new MailMessage();
+            try
+            {
+                message.To.Add(destinationEmail);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ArgumentNullException || ex is ArgumentException)
+                {
+                    throw new SmtpException("No destination email provided.");
+                }    
+                else if (ex is FormatException)
+                {
+                    throw new SmtpException("Destination email is not in correct email format.");
+                }
+            }
+
+            if (replyToEmail.Equals(String.Empty))
+            {
+                throw new SmtpException("ReplyTo email is Required.");
+            }
+            message.From = new MailAddress(replyToEmail);
+                
+            
             message.Subject = subject;
             message.Body = messageBody;
 
@@ -142,9 +163,15 @@ namespace Common
                 client.Host = "mail.unitec.ac.nz";
                 client.Send(message);
             }
-            catch (SmtpException smtpEx)
+            catch (Exception ex)
             {
-                throw smtpEx;
+                if (ex is SmtpException)
+                {
+                    SmtpException smtpEx = ex as SmtpException;
+                    throw smtpEx;
+                }
+
+                throw ex;
             }
         }
     }

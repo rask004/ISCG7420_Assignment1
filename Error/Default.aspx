@@ -3,15 +3,18 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ErrorTitle" Runat="Server">
     GENERAL ERROR
 </asp:Content>
+<asp:Content runat="server" ContentPlaceHolderID="MetaPlaceholder">
+    
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ErrorBody" Runat="Server">
     <p>
         An Error has occurred. 
     </p>
     
-    <asp:UpdatePanel UpdateMode="Conditional" ChildrenAsTriggers="True"  runat="server">
-        <ContentTemplate>
     
-            <%-- If no previous error, show unknown section. --%>
+    <asp:UpdatePanel runat="server">
+        <ContentTemplate>
+            <%-- If no known error, show unknown section. --%>
             <section class="container-fluid" id="UnknownErrorSection" runat="server">
                 <div class="col-md-12">
                     <br/>
@@ -24,25 +27,28 @@
                 <div class="col-md-12">
                     <br/>
                     <p><b><label>Error Type:</label></b> <label id="lblErrorName" runat="server"></label></p>
-                    <br/>
-                    <p><b><label>Source URL:</label></b> <label id="lblErrorSourceUrl" runat="server"></label></p>
                     <p><b><label>HResult Code:</label></b> <label id="lblErrorHResult" runat="server"></label></p>
                     <br/>
-                    <p><b><label id="lblInnerExceptionHeader" hidden runat="server">InnerException:</label></b> 
-                        <label id="lblInnerExceptionName" runat="server"></label></p>
                     <br/>
-                    <asp:Button Text="Email Report to Admin" ID="btnSendEmail" OnClick="btnSendEmail_OnClick" runat="server"/>
+                    <b><label>Email Report to Admin</label></b>
+                    <br/>
+                    <br/>
+                    <label>Name: </label><asp:Textbox type="text" ID="txtSenderName" AutoPostBack="False" runat="server"/> (Optional)
+                    <br/>
+                    <label>Email: </label>
+                    <asp:RequiredFieldValidator runat="server" ErrorMessage="*" ControlToValidate="txtSenderEmail"></asp:RequiredFieldValidator>
+                    <asp:CustomValidator ControlToValidate="txtSenderEmail" OnServerValidate="OnServerValidate" runat="server"></asp:CustomValidator>
+                    <asp:Textbox  type="text" ID="txtSenderEmail" AutoPostBack="False" runat="server"/> (Optional)
+                    <br/>
+                    <br/>
+                    <asp:Button ID="btnSendEmail" runat="server" Text="Send Email" OnClick="btnSendEmail_OnClick"/>
                     <br/>
                     <p><asp:Literal runat="server" ID="litEmailResponse"/></p>
-                    <label id="hddnInnerName"  runat="server"></label>
-                    <label id="hddnInnerMessage"  runat="server"></label>
-                    <label id="hddnInnerHResult"  runat="server"></label>
-                    <label id="hddnInnerStackTrace"  runat="server"></label>
                 </div>
             </section>
-        
         </ContentTemplate>
     </asp:UpdatePanel>
+        
 
 </asp:Content>
 

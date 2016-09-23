@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Common;
+using SecurityLayer;
 
 //TODO: complete this section addressing generic errors. An email can be sent by User to Admin.
 
@@ -24,7 +25,7 @@ public partial class Error_Default : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            Exception ex = Server.GetLastError();
+            Exception ex = Session["lastError"] as Exception;
             if (ex == null)
             {
                 KnownErrorSection.Visible = false;
@@ -35,49 +36,62 @@ public partial class Error_Default : System.Web.UI.Page
 
             lblErrorName.InnerText = ex.GetType().ToString();
             lblErrorHResult.InnerText = ex.HResult.ToString();
-            lblErrorSourceUrl.InnerText = "~" + Request.RawUrl;
+
+        }
+    }
+
+    protected void btnSendEmail_OnClick(object sender, EventArgs e)
+    {
+        if (Page.IsValid)
+        {
+            Exception ex = Session["lastError"] as Exception;
+            string Message = "Name: " + lblErrorName.InnerText + "\nHResult: " + lblErrorHResult.InnerText + "\n\n";
+            Message += "StackTrace: " + ex.StackTrace + "\n\n\n";
             if (ex.InnerException != null)
             {
-                lblInnerExceptionName.InnerText = ex.InnerException.GetType().ToString();
-                lblInnerExceptionHeader.Visible = true;
-                hddnInnerHResult.InnerText = ex.InnerException.HResult.ToString();
-                hddnInnerMessage.InnerText = ex.InnerException.Message;
-                hddnInnerStackTrace.InnerText = ex.InnerException.StackTrace;
-                hddnInnerName.InnerText = ex.InnerException.GetType().ToString();
+                Message += "InnerException: " + ex.InnerException.GetType().ToString() + "\n";
+                Message += "HResult: " + ex.InnerException.HResult + "\n";
+                Message += "StackTrace: " + ex.InnerException.StackTrace + "\n\n";
+            }
+
+            if (txtSenderName.Text != String.Empty)
+            {
+                Message += "Sent By: " + txtSenderName.Text;
+            }
+
+            string EmailMessage = string.Format(GeneralConstants.EmailErrorBody, Message, Session["pageOfLastError"]);
+
+            try
+            {
+                GeneralFunctions.SendEmail(GeneralConstants.AdminReplyToEmailDefault,
+                    GeneralConstants.EmailErrorSubject, EmailMessage,
+                    txtSenderEmail.Text);
+                litEmailResponse.Text = "The Email Has Been Sent.";
+            }
+            catch (SmtpException)
+            {
+                litEmailResponse.Text =
+                    "There was an error sending the email. You can manually email the Administrator at " +
+                    GeneralConstants.AdminReplyToEmailDefault + ".";
             }
         }
+        
+
+        
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void btnSendEmail_OnClick(object sender, EventArgs e)
+    /// <param name="source"></param>
+    /// <param name="args"></param>
+    protected void OnServerValidate(object source, ServerValidateEventArgs args)
     {
-        if (Page.IsValid)
+        Validation.ValidateEmailInput(ref args);
+
+        if (!args.IsValid)
         {
-            StringBuilder builder = new StringBuilder();
-            //builder.Append("SENDER: " + inputReportUserName.Value + "\n\n");
-            //builder.Append("ERROR:\n" + lblReportData.InnerText + "\n\n");
-            string EmailMessage = String.Format(
-                GeneralConstants.EmailErrorBody, builder.ToString(), "");
-            try
-            {
-                GeneralFunctions.SendEmail(GeneralConstants.AdminReplyToEmailDefault,
-                    GeneralConstants.EmailErrorSubject,
-                    EmailMessage, "");
-                    //inputReportUserEmail.Value);
-
-                litEmailResponse.Text = "The Eamil was sent successfully.";
-            }
-            catch (SmtpException)
-            {
-                litEmailResponse.Text = "Could not send the email. You can manually email the Administrator at " +
-                                        GeneralConstants.AdminReplyToEmailDefault + ".";
-            }
-
-
+            litEmailResponse.Text = "ERROR: email is not valid. Please Correct.";
         }
     }
 }

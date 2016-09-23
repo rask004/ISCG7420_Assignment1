@@ -4,8 +4,8 @@
     ERROR: Cannot connect to the Database
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ErrorBody" Runat="Server">
-    <p>The Database Server did not respond in time to a request.</p>
-    <p>If this Error keeps happening, the Database Server may be down for maintenance or inactive.</p>
+    <p>There was no response from the Database System.</p>
+    <p>If this Error keeps happening, the Database may be down for maintenance at this time.</p>
     <br/>
     <br/>
     <%-- Send Email to Admin --%>

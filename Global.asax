@@ -39,20 +39,18 @@
     {
         Exception ex = Server.GetLastError();
 
-        if (ex.Source.Contains("SQL Server") || ex.Message.Contains("Error Locating Server/Instance Specified"))
+        if (ex.InnerException != null && ex.InnerException.ToString().Contains("SQL Server") &&
+            ex.InnerException.ToString().Contains("Server is not found"))
         {
-            Server.ClearError();
-            Response.Clear();
-            Response.Redirect("~/Error/ErrorDatabaseConnection.aspx");
+            Response.Redirect("/Error/ErrorDatabaseConnection");
         }
 
+        Session["lastError"] = ex.InnerException;
 
-        if (ex is HttpUnhandledException && ex.InnerException != null)
-        {
-            ex = ex.InnerException;
-            throw ex;
-        }
-
+        // Issue with the default error page losing information upon postback - Url changes from last page accessed to the Error page, losing data.
+        // This approach avoids the problem. 
+        Session["pageOfLastError"] = Request.RawUrl;
+        Response.Redirect("/Error/Default");
     }
 
     /// <summary>
@@ -62,6 +60,8 @@
     /// <param name="e"></param>
     void Session_Start(object sender, EventArgs e)
     {
+        Session["lastError"] = null;
+        Session["pageOfLastError"] = null;
         Session[GeneralConstants.SessionCartItems] = new List<OrderItem>();
         Session[Security.SessionIdentifierLogin] = null;
         Session[Security.SessionIdentifierSecurityToken] = null;
@@ -75,6 +75,8 @@
     void Session_End(object sender, EventArgs e)
     {
         Session[Security.SessionIdentifierLogin] = null;
+        Session["lastError"] = null;
+        Session["pageOfLastError"] = null;
         Session[Security.SessionIdentifierSecurityToken] = null;
         if (Session[GeneralConstants.SessionCartItems] != null)
         {
