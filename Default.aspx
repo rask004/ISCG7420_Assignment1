@@ -63,7 +63,7 @@
                                             <div class="col-md-4">
                                                 <span><H4><asp:ImageButton ID="imgCategoryPicture"
                                                     AlternateText='Image for <%# DataBinder.Eval(Container.DataItem, "name") %>'
-                                                    Width="50%"
+                                                    Width="70%"
                                                     CommandName="loadCapsByCategory" 
                                                     CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'
                                                     runat="server"/></H4></span>
@@ -192,8 +192,8 @@
                             
                             <asp:Table ID="tblSingleItemDetail" CellPadding="5" CellSpacing="5" Visible="False"
                                 runat="server">
-                                <asp:TableRow>
-                                    <asp:TableCell>
+                                <asp:TableRow Width="100%">
+                                    <asp:TableCell Width="50%">
                                         <label>ID:</label>
                                     </asp:TableCell>
                                     <asp:TableCell>
@@ -205,8 +205,8 @@
                                         </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
-                                <asp:TableRow>
-                                    <asp:TableCell>
+                                <asp:TableRow Width="100%">
+                                    <asp:TableCell Width="50%">
                                         <asp:Label ID="lblCurrentCapName" runat="server"/>
                                     </asp:TableCell>
                                     <asp:TableCell>
@@ -218,8 +218,8 @@
                                         </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
-                                <asp:TableRow>
-                                    <asp:TableCell>
+                                <asp:TableRow Width="100%">
+                                    <asp:TableCell Width="50%">
                                         <label>Colour:</label>
                                     </asp:TableCell>
                                     <asp:TableCell>
@@ -235,8 +235,8 @@
                                         </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
-                                <asp:TableRow>
-                                    <asp:TableCell>
+                                <asp:TableRow Width="100%">
+                                    <asp:TableCell Width="50%">
                                         <label>Quantity:</label>
                                     </asp:TableCell>
                                     <asp:TableCell>
@@ -249,9 +249,9 @@
                                         </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
-                                <asp:TableRow>
-                                    <asp:TableCell>
-                                        <asp:Image ID="imgCurrentCapPicture" runat="server"/>
+                                <asp:TableRow Width="100%">
+                                    <asp:TableCell Width="50%">
+                                        <img style="max-height: 100%; max-width: 100%" ID="imgCurrentCapPicture" runat="server"/>
                                     </asp:TableCell>
                                     <asp:TableCell>
                                         <div class="col-md-1">
@@ -262,13 +262,13 @@
                                         </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
-                                <asp:TableRow>
-                                    <asp:TableCell>
+                                <asp:TableRow Width="100%">
+                                    <asp:TableCell Width="50%">
                                         <p></p>
                                     </asp:TableCell>
                                 </asp:TableRow>
-                                <asp:TableRow>
-                                    <asp:TableCell>
+                                <asp:TableRow Width="100%">
+                                    <asp:TableCell Width="50%">
                                         <asp:Button ID="btnCancel" Text="Cancel" OnClick="btnCancel_OnClick" runat="server"/>
                                     </asp:TableCell>
                                     <asp:TableCell>
@@ -368,31 +368,12 @@
                         </div>
                         <div class="row">
                             <div class="col-md-1"></div>
-                            <div class="col-md-5"><H4>
-                                <label class="ContentShiftLeft">SubTotal</label>
+                            <div class="col-md-6"><H4>
+                                <label>SubTotal</label>
                             </H4></div>
-                            <div class="col-md-5"><H4>
-                                $ <asp:Label CssClass="ContentShiftRight" ID="lblSubtotal" Text="0.00" runat="server"/>
-                            </H4></div>
-                            <div class="col-md-1"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-5">
-                        
-                            </div>
-                            <div class="col-md-5">
-                        
-                            </div>
-                            <div class="col-md-1"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-5"><H4>
-                                <label class="ContentShiftLeft">GST</label>
-                            </H4></div>
-                            <div class="col-md-5"><H4>
-                                $ <asp:Label CssClass="ContentShiftRight" ID="lblGst" Text="0.00" runat="server"/>
+                            <div class="col-md-1"><label>$</label></div>
+                            <div class="col-md-3" style="text-align: right"><H4>
+                                <asp:Label ID="lblSubtotal" Text="0.00" runat="server"/>
                             </H4></div>
                             <div class="col-md-1"></div>
                         </div>
@@ -408,11 +389,33 @@
                         </div>
                         <div class="row">
                             <div class="col-md-1"></div>
-                            <div class="col-md-5"><H4>
-                                <label class="ContentShiftLeft">TOTAL</label>
+                            <div class="col-md-6"><H4>
+                                <label>GST</label>
                             </H4></div>
-                            <div class="col-md-5"><H4>
-                                $ <asp:Label CssClass="ContentShiftRight" ID="lblTotalCost" Text="0.00" runat="server"/>
+                            <div class="col-md-1"><label>$</label></div>
+                            <div class="col-md-3" style="text-align: right"><H4>
+                                <asp:Label ID="lblGst" Text="0.00" runat="server"/>
+                            </H4></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+                        
+                            </div>
+                            <div class="col-md-5">
+                        
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-6"><H4>
+                                <label>TOTAL</label>
+                            </H4></div>
+                            <div class="col-md-1"><label>$</label></div>
+                            <div class="col-md-3" style="text-align: right"><H4>
+                                <asp:Label ID="lblTotalCost" Text="0.00" runat="server"/>
                             </H4></div>
                             <div class="col-md-1"></div>
                         </div>
@@ -439,16 +442,16 @@
                         <div class="row" style="border-top: black 2px solid; margin: 4%;">
                             <div class="col-md-1"></div>
                             <div class="col-md-5"><H4>
-                                <asp:Button ID="btnCartClear" CssClass="ContentShiftLeft" runat="server" Text="Clear"
+                                <asp:Button ID="btnCartClear" runat="server" Text="Clear"
                                     OnClick="btnCartClear_OnClick" />
                             </H4></div>
-                            <div class="col-md-5"><H4>
+                            <div class="col-md-5" style="text-align: right"><H4>
                                 <asp:LoginView id="lgnviewCart" runat="server">
                                     <AnonymousTemplate>
                                         <i><span style="color:black">Login to complete order.</span></i>
                                     </AnonymousTemplate>
                                     <LoggedInTemplate>
-                                        <asp:Button ID="btnProceedToCheckout" CssClass="ContentShiftRight" runat="server" Text="Checkout"
+                                        <asp:Button ID="btnProceedToCheckout" runat="server" Text="Checkout"
                                     OnClick="btnProceedToCheckout_OnClick" Enabled="True"/>
                                     </LoggedInTemplate>
                                 </asp:LoginView>

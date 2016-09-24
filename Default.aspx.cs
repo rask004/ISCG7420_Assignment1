@@ -402,7 +402,7 @@ public partial class _Default : System.Web.UI.Page
             lblCurrentCapName.Text = cap.Name;
             lblCurrentCapPrice.Text = cap.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 
-            imgCurrentCapPicture.ImageUrl = cap.ImageUrl;
+            imgCurrentCapPicture.Src = cap.ImageUrl;
             lblCurrentCapDescription.Text = cap.Description;
 
             nptQuantity.Value = "1";
