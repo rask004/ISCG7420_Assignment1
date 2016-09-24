@@ -1,43 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using Common;
-using WebGrease.Css.Extensions;
 using BusinessLayer;
+using Common;
 using CommonLogging;
 using SecurityLayer;
 
 /// <summary>
-///      
-/// The Admin page for the Product Entity.
-///
-/// Change Log:
-///        22-8-16  12:30       AskewR04   Created page and layout.
-///
+///     The Admin page for the Product Entity.
+///     Change Log:
+///     22-8-16  12:30       AskewR04   Created page and layout.
 /// </summary>
-public partial class AdminCaps : System.Web.UI.Page
+public partial class AdminCaps : Page
 {
     /// <summary>
-    /// 
     /// </summary>
     private void Reload_Sidebar()
     {
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
         dbrptSideBarItems.DataSource = controller.GetCaps();
         dbrptSideBarItems.DataBind();
 
-        List<Category> categories = controller.GetCategories();
-        List<Supplier> suppliers = controller.GetSuppliers();
+        var categories = controller.GetCategories();
+        var suppliers = controller.GetSuppliers();
         if (categories.Count == 0 || suppliers.Count == 0)
         {
             btnAddCap.Enabled = false;
@@ -58,16 +46,21 @@ public partial class AdminCaps : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     Gather a list of URLs for images uploaded.
     /// </summary>
     private void PrepareListOfUploadedImages()
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
-        DirectoryInfo uploadedDirectoryInfo = new DirectoryInfo(Server.MapPath(GeneralConstants.ImagesUploadFolder));
+        var uploadedDirectoryInfo = new DirectoryInfo(Server.MapPath(GeneralConstants.ImagesUploadFolder));
         ddlImgCapList.Items.Clear();
 
-        ddlImgCapList.Items.Add(new ListItem { Text = GeneralConstants.CapImageDefaultListName, Value = GeneralConstants.CapImageDefaultFileName });
+        ddlImgCapList.Items.Add(new ListItem
+        {
+            Text = GeneralConstants.CapImageDefaultListName,
+            Value = GeneralConstants.CapImageDefaultFileName
+        });
 
         // permitted types are in MIME form. Cannot directly compare to extension.
         // but each type will include the extension.
@@ -77,7 +70,11 @@ public partial class AdminCaps : System.Web.UI.Page
             {
                 if (permittedMimeType.Contains(file.Extension.Substring(1)))
                 {
-                    ddlImgCapList.Items.Add(new ListItem { Text=file.Name, Value=GeneralConstants.ImagesUploadFolder + "/" + file.Name });
+                    ddlImgCapList.Items.Add(new ListItem
+                    {
+                        Text = file.Name,
+                        Value = GeneralConstants.ImagesUploadFolder + "/" + file.Name
+                    });
                     break;
                 }
             }
@@ -86,6 +83,8 @@ public partial class AdminCaps : System.Web.UI.Page
 
     /// <summary>
     ///     Load the page, prepare the table of items, and the admin form
+    ///     There must be suppliers and categories in the system.
+    ///     If not, the form will not be loaded and editing not allowed.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -93,12 +92,23 @@ public partial class AdminCaps : System.Web.UI.Page
     {
         if (!Page.IsPostBack)
         {
+            var controller = new AdminController();
+            if (!(controller.GetCategories().Any() && controller.GetSuppliers().Any()))
+            {
+                lblMessageJumboTron.Text = "At least one Category and one Supplier must exist";
+                btnAddCap.Enabled = false;
+                btnCancelChanges.Enabled = false;
+                btnSaveChanges.Enabled = false;
+                dbrptSideBarItems.DataSource = null;
+                return;
+            }
+
             txtCapName.MaxLength = GeneralConstants.CapNameMaxLength;
             txtCapDescription.MaxLength = GeneralConstants.CapDescriptionMaxLength;
 
             txtCapName.Width = new Unit(txtCapName.MaxLength, UnitType.Em);
             txtCapPrice.Width = new Unit(8, UnitType.Em);
-            txtCapDescription.Width = new Unit(txtCapDescription.MaxLength / 3 + 2, UnitType.Em);
+            txtCapDescription.Width = new Unit(txtCapDescription.MaxLength/3 + 2, UnitType.Em);
             txtCapDescription.Height = new Unit(6, UnitType.Em);
 
             PrepareListOfUploadedImages();
@@ -121,20 +131,20 @@ public partial class AdminCaps : System.Web.UI.Page
     {
         if (e.CommandName == "loadItem")
         {
-            AdminController controller = new AdminController();
-            int itemId = Convert.ToInt32(e.CommandArgument);
-            string name = controller.GetCapName(itemId);
-            string price = controller.GetCapPrice(itemId).ToString("F2", CultureInfo.CreateSpecificCulture("en-US"));
-            string desc = controller.GetCapDescription(itemId);
-            string pictureUrl = controller.GetCapImageUrl(itemId);
+            var controller = new AdminController();
+            var itemId = Convert.ToInt32(e.CommandArgument);
+            var name = controller.GetCapName(itemId);
+            var price = controller.GetCapPrice(itemId).ToString("F2", CultureInfo.CreateSpecificCulture("en-US"));
+            var desc = controller.GetCapDescription(itemId);
+            var pictureUrl = controller.GetCapImageUrl(itemId);
             lblCapId.Text = itemId.ToString();
             txtCapName.Text = name;
             txtCapPrice.Text = price;
             txtCapDescription.Text = desc;
 
-            string[] pictureUrlParts = pictureUrl.Split('/');
+            var pictureUrlParts = pictureUrl.Split('/');
 
-            string pictureFileName = pictureUrlParts[pictureUrlParts.Length - 1];
+            var pictureFileName = pictureUrlParts[pictureUrlParts.Length - 1];
 
             if (pictureFileName == null || ddlImgCapList.Items.FindByText(pictureFileName) == null)
             {
@@ -142,10 +152,11 @@ public partial class AdminCaps : System.Web.UI.Page
             }
             else
             {
-                ddlImgCapList.SelectedIndex = ddlImgCapList.Items.IndexOf(ddlImgCapList.Items.FindByText(pictureFileName));
+                ddlImgCapList.SelectedIndex =
+                    ddlImgCapList.Items.IndexOf(ddlImgCapList.Items.FindByText(pictureFileName));
             }
 
-            ddlImgCapList_ChangeSelection(this, e);
+            imgCapImagePreview.Src = ddlImgCapList.SelectedItem.Value;
 
             txtCapPrice.Enabled = true;
             txtCapName.Enabled = true;
@@ -160,25 +171,17 @@ public partial class AdminCaps : System.Web.UI.Page
             btnCancelChanges.Enabled = true;
 
             lblMessageJumboTron.Text = "Item " + lblCapId.Text + " Loaded.";
-            
         }
     }
 
     /// <summary>
-    /// 
+    ///     Updare the shown cap image
     /// </summary>
-    /// <param name="sender"></param>
+    /// <param name="sender">ddlImgCapList</param>
     /// <param name="e"></param>
     protected void ddlImgCapList_ChangeSelection(object sender, EventArgs e)
     {
-        if (ddlImgCapList.SelectedItem.Text.Equals(GeneralConstants.CapImageDefaultListName))
-        {
-            imgCapImagePreview.Src = ddlImgCapList.SelectedItem.Value;
-        }
-        else
-        {
-            imgCapImagePreview.Src = ddlImgCapList.SelectedItem.Value;
-        }
+        imgCapImagePreview.Src = ddlImgCapList.SelectedItem.Value;
     }
 
     /// <summary>
@@ -188,10 +191,10 @@ public partial class AdminCaps : System.Web.UI.Page
     /// <param name="e"></param>
     protected void AddButton_Click(object sender, EventArgs e)
     {
-        lblCapId.Text = String.Empty;
-        txtCapName.Text = String.Empty;
+        lblCapId.Text = string.Empty;
+        txtCapName.Text = string.Empty;
         txtCapPrice.Text = GeneralConstants.CapPriceNew;
-        txtCapDescription.Text = String.Empty;
+        txtCapDescription.Text = string.Empty;
         txtCapName.Enabled = true;
         txtCapPrice.Enabled = true;
         txtCapDescription.Enabled = true;
@@ -222,7 +225,7 @@ public partial class AdminCaps : System.Web.UI.Page
     /// <summary>
     ///     Undo any uncommitted changes.
     /// </summary>
-    /// <param name="sender"></param>
+    /// <param name="sender">Cancel Button</param>
     /// <param name="e"></param>
     protected void CancelButton_Click(object sender, EventArgs e)
     {
@@ -261,19 +264,19 @@ public partial class AdminCaps : System.Web.UI.Page
         Validation.ValidateMoneyInput(ref args);
     }
 
-    
+
     /// <summary>
     ///     Save Changes.
     ///     If id is for an existing Product, update the Product.
     ///     Else add a new Product.
     /// </summary>
-    /// <param name="sender"></param>
+    /// <param name="sender">Save Button</param>
     /// <param name="e"></param>
     protected void SaveButton_Click(object sender, EventArgs e)
     {
         if (Page.IsValid)
         {
-            AdminController controller = new AdminController();
+            var controller = new AdminController();
 
             int id;
 
@@ -288,15 +291,14 @@ public partial class AdminCaps : System.Web.UI.Page
 
             controller.AddOrUpdateCap(id,
                 txtCapName.Text, Convert.ToSingle(txtCapPrice.Text), txtCapDescription.Text,
-                imgCapImagePreview.Src, Convert.ToInt32(ddlCapCategories.SelectedValue), Convert.ToInt32(ddlCapSuppliers.SelectedValue));
+                imgCapImagePreview.Src, Convert.ToInt32(ddlCapCategories.SelectedValue),
+                Convert.ToInt32(ddlCapSuppliers.SelectedValue));
 
             Reload_Sidebar();
 
             lblMessageJumboTron.Text = "SUCCESS: Cap added or updated: " +
-                                        txtCapName.Text +
-                                        ", " + imgCapImagePreview.Src;
-                            
+                                       txtCapName.Text +
+                                       ", " + imgCapImagePreview.Src;
         }
-        
     }
 }
