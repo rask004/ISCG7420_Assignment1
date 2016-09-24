@@ -243,8 +243,8 @@
                     </div>
                     <div class="col-md-4">
                         <span class="ContentShiftRight">
-                            <asp:Image ID="imgCapImagePreview" 
-                            ImageUrl="~\Images\Cap_NoImage.png" runat="server" />
+                            <img style="max-width: 100%; max-height: 100%" ID="imgCapImagePreview" 
+                            src="~\Images\Cap_NoImage.png" runat="server" />
                         </span>
                     </div>
                     <div class="col-md-2">

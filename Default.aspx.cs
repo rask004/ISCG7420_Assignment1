@@ -315,9 +315,9 @@ public partial class _Default : System.Web.UI.Page
                 }
                 double gst = subtotal*GeneralConstants.MoneyGstRate;
 
-                lblSubtotal.Text = subtotal.ToString("C", CultureInfo.CurrentCulture);
-                lblGst.Text = gst.ToString("C", CultureInfo.CurrentCulture);
-                lblTotalCost.Text = (subtotal + gst).ToString("C", CultureInfo.CurrentCulture);
+                lblSubtotal.Text = subtotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                lblGst.Text = gst.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                lblTotalCost.Text = (subtotal + gst).ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
             }
             else
             {
@@ -400,7 +400,7 @@ public partial class _Default : System.Web.UI.Page
 
             lblCurrentCapId.Text = cap.ID.ToString();
             lblCurrentCapName.Text = cap.Name;
-            lblCurrentCapPrice.Text = cap.Price.ToString("C", CultureInfo.CurrentCulture);
+            lblCurrentCapPrice.Text = cap.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 
             imgCurrentCapPicture.ImageUrl = cap.ImageUrl;
             lblCurrentCapDescription.Text = cap.Description;

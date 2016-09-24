@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -123,7 +124,7 @@ public partial class AdminCaps : System.Web.UI.Page
             AdminController controller = new AdminController();
             int itemId = Convert.ToInt32(e.CommandArgument);
             string name = controller.GetCapName(itemId);
-            string price = controller.GetCapPrice(itemId).ToString();
+            string price = controller.GetCapPrice(itemId).ToString("F2", CultureInfo.CreateSpecificCulture("en-US"));
             string desc = controller.GetCapDescription(itemId);
             string pictureUrl = controller.GetCapImageUrl(itemId);
             lblCapId.Text = itemId.ToString();
@@ -142,13 +143,14 @@ public partial class AdminCaps : System.Web.UI.Page
             else
             {
                 ddlImgCapList.SelectedIndex = ddlImgCapList.Items.IndexOf(ddlImgCapList.Items.FindByText(pictureFileName));
-                ddlImgCapList_ChangeSelection(this, e);
             }
-            
+
+            ddlImgCapList_ChangeSelection(this, e);
+
             txtCapPrice.Enabled = true;
             txtCapName.Enabled = true;
             txtCapDescription.Enabled = true;
-            imgCapImagePreview.Enabled = true;
+            imgCapImagePreview.Disabled = false;
             ddlImgCapList.Enabled = true;
 
             ddlCapCategories.Enabled = true;
@@ -171,11 +173,11 @@ public partial class AdminCaps : System.Web.UI.Page
     {
         if (ddlImgCapList.SelectedItem.Text.Equals(GeneralConstants.CapImageDefaultListName))
         {
-            imgCapImagePreview.ImageUrl = ddlImgCapList.SelectedItem.Value;
+            imgCapImagePreview.Src = ddlImgCapList.SelectedItem.Value;
         }
         else
         {
-            imgCapImagePreview.ImageUrl = ddlImgCapList.SelectedItem.Value;
+            imgCapImagePreview.Src = ddlImgCapList.SelectedItem.Value;
         }
     }
 
@@ -207,7 +209,7 @@ public partial class AdminCaps : System.Web.UI.Page
             ddlImgCapList.SelectedIndex = 0;
         }
 
-        imgCapImagePreview.ImageUrl = GeneralConstants.CapImageDefaultFileName;
+        imgCapImagePreview.Src = GeneralConstants.CapImageDefaultFileName;
 
         txtCapName.Focus();
 
@@ -227,7 +229,7 @@ public partial class AdminCaps : System.Web.UI.Page
         txtCapName.Enabled = false;
         txtCapDescription.Enabled = false;
         txtCapPrice.Enabled = false;
-        imgCapImagePreview.ImageUrl = GeneralConstants.CapImageDefaultFileName;
+        imgCapImagePreview.Src = GeneralConstants.CapImageDefaultFileName;
         ddlCapCategories.Enabled = false;
         ddlCapSuppliers.Enabled = false;
 
@@ -286,15 +288,13 @@ public partial class AdminCaps : System.Web.UI.Page
 
             controller.AddOrUpdateCap(id,
                 txtCapName.Text, Convert.ToSingle(txtCapPrice.Text), txtCapDescription.Text,
-                imgCapImagePreview.ImageUrl, Convert.ToInt32(ddlCapCategories.SelectedValue), Convert.ToInt32(ddlCapSuppliers.SelectedValue));
+                imgCapImagePreview.Src, Convert.ToInt32(ddlCapCategories.SelectedValue), Convert.ToInt32(ddlCapSuppliers.SelectedValue));
 
             Reload_Sidebar();
 
-            PrepareListOfUploadedImages();
-
             lblMessageJumboTron.Text = "SUCCESS: Cap added or updated: " +
                                         txtCapName.Text +
-                                        ", " + imgCapImagePreview.ImageUrl;
+                                        ", " + imgCapImagePreview.Src;
                             
         }
         

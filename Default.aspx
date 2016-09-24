@@ -165,7 +165,7 @@
                                                 <div class="col-md-2"></div>
                                                 <div class="col-md-8">
                                                     <span><H4><asp:Label ID="lblCapPrice" 
-                                                        Text='<%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "price")).ToString("C", CultureInfo.CurrentCulture) %>'
+                                                        Text='<%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "price")).ToString("C", CultureInfo.CreateSpecificCulture("en-US")) %>'
                                                         runat="server"/></H4></span>
                                                 </div>
                                                 <div class="col-md-2">
@@ -346,7 +346,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-1"></div>
-                                        <div class="col-md-3"><label><%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.price")).ToString("C", CultureInfo.CurrentCulture) %></label></div>
+                                        <div class="col-md-3"><label><%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.price")).ToString("C", CultureInfo.CreateSpecificCulture("en-US")) %></label></div>
                                         <div class="col-md-5"><label><%# DataBinder.Eval(Container.DataItem, "Colour.name") %></label></div>
                                         <div class="col-md-2"><label><%# DataBinder.Eval(Container.DataItem, "quantity") %></label></div>
                                         <div class="col-md-1"></div>

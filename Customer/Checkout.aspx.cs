@@ -60,9 +60,9 @@ public partial class Customer_Checkout : System.Web.UI.Page
             summary.SubTotalPrice += orderItem.Cap.Price * orderItem.Quantity;
         }
 
-        lblSubTotal.InnerText = summary.SubTotalPrice.ToString("C", CultureInfo.CurrentCulture);
-        lblSubTotalGst.InnerText = (summary.SubTotalGst).ToString("C", CultureInfo.CurrentCulture);
-        lblFullTotal.InnerText = (summary.TotalPrice).ToString("C", CultureInfo.CurrentCulture);
+        lblSubTotal.InnerText = summary.SubTotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+        lblSubTotalGst.InnerText = (summary.SubTotalGst).ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+        lblFullTotal.InnerText = (summary.TotalPrice).ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
     }
 
     /// <summary>

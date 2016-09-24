@@ -128,14 +128,14 @@
                                                             <label>X </label>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <label><%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.Price")).ToString("C", CultureInfo.CurrentCulture) %></label>
+                                                            <label><%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.Price")).ToString("C", CultureInfo.CreateSpecificCulture("en-US")) %></label>
                                                             <label id="lblCapPrice" hidden ><%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.Price")) %></label>
                                                         </div>
                                                         <div class="col-md-1">
                                                             <label>=</label>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <span class="ContentShiftRight"><label id="lblTotalPrice"><%# (Convert.ToInt32(DataBinder.Eval(Container.DataItem, "Quantity")) * Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.Price"))).ToString("C", CultureInfo.CurrentCulture) %></label></span>
+                                                            <span class="ContentShiftRight"><label id="lblTotalPrice"><%# (Convert.ToInt32(DataBinder.Eval(Container.DataItem, "Quantity")) * Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.Price"))).ToString("C", CultureInfo.CreateSpecificCulture("en-US")) %></label></span>
                                                         </div>
                                                         <div class="col-md-1">
                                                             

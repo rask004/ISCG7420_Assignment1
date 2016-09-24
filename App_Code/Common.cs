@@ -28,7 +28,7 @@ namespace Common
 
         public static readonly string ImagesUploadFolder = "~/UploadFiles";
 
-        public static readonly string[] PermittedContentTypes = new string[] {"image/jpeg", "image/png"};
+        public static readonly string[] PermittedContentTypes = new string[] {"image/jpeg", "image/jpg", "image/png"};
 
         public static readonly string[] PermittedOrderStatuses = new string[] {"Waiting", "Shipped"};
 

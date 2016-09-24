@@ -127,9 +127,9 @@ public partial class AdminOrders : System.Web.UI.Page
                 summary.TotalQuantity += orderItem.Quantity;
             }
 
-            lblOrderSubtotal.Text = summary.SubTotalPrice.ToString("C", CultureInfo.CurrentCulture);
-            lblOrderGst.Text = summary.SubTotalGst.ToString("C", CultureInfo.CurrentCulture);
-            lblOrderTotal.Text = summary.TotalPrice.ToString("C", CultureInfo.CurrentCulture);
+            lblOrderSubtotal.Text = summary.SubTotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+            lblOrderGst.Text = summary.SubTotalGst.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+            lblOrderTotal.Text = summary.TotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 
             Rebind_OrderItems();
 

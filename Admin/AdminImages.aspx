@@ -63,7 +63,7 @@
                                 <ItemTemplate>
                                     <td runat="server" style="border: black 1px solid; padding: 0.5%">
                                         <p>
-                                            <asp:Image ID="imgCurrentImage" ImageUrl=<%# DataBinder.Eval(Container.DataItem, "Value") %> runat="server"/>
+                                            <img ID="imgCurrentImage" style="max-width: 100%; max-height: 100%" src=<%# DataBinder.Eval(Container.DataItem, "Value") %> runat="server"/>
                                         </p>
                                         <p>
                                             <%# DataBinder.Eval(Container.DataItem, "Text") %>
