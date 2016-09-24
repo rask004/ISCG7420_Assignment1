@@ -21,8 +21,8 @@
             </div>
             <div class="col-md-6">
                 <div style="text-align: center; display: table-cell; vertical-align: middle">
-                    <asp:Login ID="lgnTestingSection" runat="server" OnLoggedIn="lgnTestingSection_OnLoggedIn"
-                        OnAuthenticate="lgnTestingSection_OnAuthenticate"></asp:Login>
+                    <asp:Login ID="lgnTestingSection" runat="server"
+                        OnAuthenticate="lgnTestingSection_OnAuthenticate" OnLoggingIn="lgnTestingSection_OnLoggingIn"></asp:Login>
                     <!-- add asp controls for reset password -->
                 </div>
             </div>

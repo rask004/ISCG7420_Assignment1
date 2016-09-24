@@ -256,11 +256,11 @@ public partial class AdminUsers : System.Web.UI.Page
                         Security.GetPasswordHash(txtUserPassword.Text));
 
                     // TODO: get emailing working on password change
-                    GeneralFunctions.SendEmail(admin.Email,
-                        GeneralConstants.EmailPasswordChangeSubject,
-                        String.Format(GeneralConstants.EmailPasswordChangeBody, "Administrator", "", txtUserLogin.Text,
-                            txtUserPassword.Text),
-                        GeneralConstants.AdminReplyToEmailDefault);
+                    //GeneralFunctions.SendEmail(admin.Email,
+                    //    GeneralConstants.EmailPasswordChangeSubject,
+                    //    String.Format(GeneralConstants.EmailPasswordChangeBody, "Administrator", "", txtUserLogin.Text,
+                    //        txtUserPassword.Text),
+                    //    GeneralConstants.AdminReplyToEmailDefault);
                     
                 }
                 catch (SmtpException smtpEx)

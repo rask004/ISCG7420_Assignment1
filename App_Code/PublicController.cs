@@ -14,12 +14,14 @@ namespace BusinessLayer
     ///     Business Object to manage Customer activities.
     /// 
     ///     Responsible for supporting
-    ///         Adding, updating and removing items in the shopping cart
-    ///         Checkout reporting
-    ///         Post checkout reporting
+    ///         Checkout
+    ///         Retrieving customer details
     ///         Registering new Customers
-    ///         
-    ///     
+    ///         Updating customers.
+    ///         Getting categories associated to products.
+    ///         Getting caps associated with a category.
+    ///         Checking if a customer account is suspended.
+    ///         Checking if a customer account matches a login and password.
     /// </summary>
     public class PublicController
     {
@@ -300,10 +302,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get Summaries of each order (total quantity, total price, order id), related to a customer.
         /// </summary>
-        /// <param name="login"></param>
-        /// <returns></returns>
+        /// <param name="login">the login of the customer</param>
+        /// <returns>List, OrderSummary, summaries of each order.</returns>
         public List<OrderSummary> GetAllOrderSummariesByCustomer(string login)
         {
             List<OrderSummary> summaries = new List<OrderSummary>();
@@ -348,8 +350,8 @@ namespace BusinessLayer
         ///     Login must be for an existing customer.
         ///     Password when hashed must match the stored cryptographic hash for this customer.
         /// </summary>
-        /// <param name="login"></param>
-        /// <param name="password"></param>
+        /// <param name="login">login for a customer</param>
+        /// <param name="password">password (unhashed) for a customer</param>
         public bool LoginIsValid(string login, string password)
         {
             // customer with this login must exist in the system.
@@ -375,9 +377,9 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Retrieve the first available Email from an Admin.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>email address, for an administrator.</returns>
         public string GetAvailableAdminEmail()
         {
             List<Administrator> admins = _dm.GetAllAdministrators();
@@ -393,10 +395,13 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Complete and create a new order, given the customer login and the items for the order.
+        ///
         /// </summary>
-        /// <param name="login"></param>
-        /// <param name="items"></param>
+        /// <exception cref="NullReferenceException">If the login does not match an existing customer.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If creating a new order fails.</exception>
+        /// <param name="login">string, login, for an existing customer.</param>
+        /// <param name="items">List, OrderItem, list of items for the order.</param>
         public void PlaceOrderForCustomer(string login, List<OrderItem> items)
         {
             Customer customer = _dm.GetSingleCustomerByLogin(login);
@@ -443,6 +448,24 @@ namespace BusinessLayer
                     throw new ArgumentOutOfRangeException("ERROR: could not find newly inserted Order.", rangeEx);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Check if a customer account is suspended or not.
+        /// </summary>
+        /// <returns>True if customer is suspended, false if not.</returns>
+        public bool IsCustomerSuspended(string login)
+        {
+            bool isSuspended = true;
+
+            Customer customer = GetCustomerByLogin(login);
+
+            if (!customer.IsDisabled)
+            {
+                isSuspended = false;
+            }
+
+            return isSuspended;
         }
     }
 }

@@ -129,4 +129,21 @@ public partial class Customer_Login : System.Web.UI.Page
     {
 
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void lgnTestingSection_OnLoggingIn(object sender, LoginCancelEventArgs e)
+    {
+        PublicController controller = new PublicController();
+
+        if (controller.IsCustomerSuspended(lgnTestingSection.UserName.Trim()))
+        {
+            e.Cancel = true;
+            lblLoginMessages.InnerText =
+                "This Account has been suspended.\nTo request reactivation, please contact the Administrator.";
+        }
+    }
 }
