@@ -934,8 +934,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single Colour referenced by id. If no Colour fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, id of Colour</param>
+        /// <returns>Colour object or null</returns>
         public Colour GetSingleColourById(int id)
         {
             OleDbDataReader reader = null;
@@ -977,7 +977,7 @@ namespace DataLayer
         /// <summary>
         ///     Add a new Colour with this name
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">string, name of colour</param>
         public void AddNewColour(string name)
         {
             OleDbCommand command = new OleDbCommand(_insertColour, _connection);
@@ -989,8 +989,8 @@ namespace DataLayer
         /// <summary>
         ///     Update an existing Colour by id.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
+        /// <param name="id">integer, id of colour</param>
+        /// <param name="name">string, name, new name of colour</param>
         public void UpdateExistingColour(int id, string name)
         {
             OleDbCommand command =
@@ -1053,8 +1053,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single supplier referenced by id. If no supplier fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, id of supplier</param>
+        /// <returns>Supplier object or null</returns>
         public Supplier GetSingleSupplierById(int id)
         {
             OleDbDataReader reader = null;
@@ -1098,13 +1098,13 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Add a new supplier with this name, contact number  and email
+        ///     Add a new supplier with this name, contact number and email
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="homeNumber"></param>
-        /// <param name="workNumber"></param>
-        /// <param name="mobileNumber"></param>
-        /// <param name="email"></param>
+        /// <param name="name">string, name</param>
+        /// <param name="homeNumber">string, home phone number</param>
+        /// <param name="workNumber">string, work phone number</param>
+        /// <param name="mobileNumber">string, mobile phone number</param>
+        /// <param name="email">string, email</param>
         public void AddNewSupplier(string name, string homeNumber, string workNumber, string mobileNumber, string email)
         {
             OleDbCommand command = new OleDbCommand(_insertSupplier, _connection);
@@ -1126,12 +1126,12 @@ namespace DataLayer
         ///     Update a supplier by id.
         ///     If no existing supplier, do nothing.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="homeNumber"></param>
-        /// <param name="workNumber"></param>
-        /// <param name="mobileNumber"></param>
-        /// <param name="email"></param>
+        /// <param name="id">integer, id of supplier</param>
+        /// <param name="name">string, name of supplier</param>
+        /// <param name="homeNumber">string, home phone number</param>
+        /// <param name="workNumber">string, work phone number</param>
+        /// <param name="mobileNumber">string, mobile phone number</param>
+        /// <param name="email">string, email</param>
         public void UpdateExistingSupplier(int id, string name, string homeNumber, string workNumber, string mobileNumber, string email)
         {
             OleDbCommand command =
@@ -1225,8 +1225,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single cap referenced by id. If no cap fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, id of Cap</param>
+        /// <returns>Cap object, or null</returns>
         public Cap GetSingleCapById(int id)
         {
             OleDbDataReader reader = null;
@@ -1283,12 +1283,12 @@ namespace DataLayer
         /// <summary>
         ///     Add a new cap with this name and data.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="price"></param>
-        /// <param name="description"></param>
-        /// <param name="imageUrl"></param>
-        /// <param name="categoryId"></param>
-        /// <param name="supplierId"></param>
+        /// <param name="name">string, name</param>
+        /// <param name="price">floating point, cost of Cap</param>
+        /// <param name="description">string, description of Cap</param>
+        /// <param name="imageUrl">string, server URL to image</param>
+        /// <param name="categoryId">integer, category</param>
+        /// <param name="supplierId">integer, supplier</param>
         public void AddNewCap(string name, Single price, string description, string imageUrl, int categoryId, int supplierId)
         {
             OleDbCommand command = new OleDbCommand(_insertCap, _connection);
@@ -1312,13 +1312,13 @@ namespace DataLayer
         ///     Update a cap by id.
         ///     If no such cap exists, do nothing.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="price"></param>
-        /// <param name="description"></param>
-        /// <param name="imageUrl"></param>
-        /// <param name="categoryId"></param>
-        /// <param name="supplierId"></param>
+        /// <param name="id">integer, id of cap</param>
+        /// <param name="name">string, name</param>
+        /// <param name="price">floating point, cost of Cap</param>
+        /// <param name="description">string, description of Cap</param>
+        /// <param name="imageUrl">string, server URL to image</param>
+        /// <param name="categoryId">integer, category</param>
+        /// <param name="supplierId">integer, supplier</param>
         public void UpdateExistingCap(int id, string name, Single price, string description, string imageUrl, int categoryId, int supplierId)
         {
             OleDbCommand command = new OleDbCommand(_updateCap, _connection);
@@ -1342,9 +1342,10 @@ namespace DataLayer
         /// <summary>
         ///     Update an existing cap by id.
         ///     Update the supplierId.
+        ///     Do nothing if no matching Cap.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="supplierId"></param>
+        /// <param name="id">integer, id of Cap</param>
+        /// <param name="supplierId">integer, supplier ID</param>
         public void UpdateExistingCapSupplierId(int id, int supplierId)
         {
             OleDbCommand command = new OleDbCommand(_updateCapSupplierId, _connection);
@@ -1358,9 +1359,10 @@ namespace DataLayer
         /// <summary>
         ///     Update an existing cap by id.
         ///     Update the categoryId.
+        ///     Do nothing if no matching Cap.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="categoryId"></param>
+        /// <param name="id">integer, id of Cap</param>
+        /// <param name="categoryId">integer, category ID</param>
         public void UpdateExistingCapCategoryId(int id, int categoryId)
         {
             OleDbCommand command = new OleDbCommand(_updateCapCategoryId, _connection);
@@ -1484,10 +1486,10 @@ namespace DataLayer
 
 
         /// <summary>
-        /// 
+        ///     Update status of order.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="status"></param>
+        /// <param name="id">integer, is of Order</param>
+        /// <param name="status">string, status to update to</param>
         public void UpdateOrderStatus(int id, string status)
         {
             OleDbCommand command = new OleDbCommand(_updateOrderStatus, _connection);
@@ -1499,10 +1501,11 @@ namespace DataLayer
         }
 
         /// <summary>
-        /// 
+        ///     Insert new order.
+        ///     For date placed, default to Now.
         /// </summary>
-        /// <param name="status"></param>
-        /// <param name="customerId"></param>
+        /// <param name="status">string, status to use.</param>
+        /// <param name="customerId">integer, id of customer</param>
         public void InsertNewOrder(string status, int customerId)
         {
             OleDbCommand command = new OleDbCommand(_insertOrder, _connection);
@@ -1517,10 +1520,10 @@ namespace DataLayer
 
 
         /// <summary>
-        /// 
+        ///     Get all order items
         /// </summary>
-        /// <param name="orderId"></param>
-        /// <returns></returns>
+        /// <param name="orderId">integer, id of order</param>
+        /// <returns>List, OrderItem, of all itens for the order.</returns>
         public List<OrderItem> GetAllOrderItemsByOrderId(int orderId)
         {
             List<OrderItem> records = new List<OrderItem>();
@@ -1594,12 +1597,12 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     
+        ///     Add new order item.
         /// </summary>
-        /// <param name="orderId"></param>
-        /// <param name="capId"></param>
-        /// <param name="colourId"></param>
-        /// <param name="quantity"></param>
+        /// <param name="orderId">integer, id of order</param>
+        /// <param name="capId">integer, id of cap</param>
+        /// <param name="colourId">integer, id of colour</param>
+        /// <param name="quantity">integer, quantity of order.</param>
         public void InsertNewOrderItem(int orderId, int capId, int colourId, int quantity)
         {
             OleDbCommand command = new OleDbCommand(_insertOrderItem, _connection);

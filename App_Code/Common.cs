@@ -104,6 +104,9 @@ namespace Common
 
         public static readonly string SessionCartItems = "cartItems";
 
+        /// <summary>
+        ///     Determines the connection string to use depending on which machine is running the application.
+        /// </summary>
         public static string DefaultConnectionString
         {
             get
@@ -123,10 +126,17 @@ namespace Common
     }
 
     /// <summary>
-    /// 
+    ///     Support functions shared across the application.
     /// </summary>
     public static class GeneralFunctions
     {
+        /// <summary>
+        ///     manage sending an email.
+        /// </summary>
+        /// <param name="destinationEmail">To Address</param>
+        /// <param name="subject">Subject line</param>
+        /// <param name="messageBody">Body paragraph</param>
+        /// <param name="replyToEmail">From and ReplyTo Address.</param>
         public static void SendEmail(string destinationEmail, string subject, string messageBody, string replyToEmail)
         {
             MailMessage message = new MailMessage();

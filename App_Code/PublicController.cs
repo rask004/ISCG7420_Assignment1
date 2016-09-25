@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -41,22 +43,23 @@ namespace BusinessLayer
         }
 
         /// <summary>
+        ///     Register a new customer.
         /// 
+        ///     Assumes the customer has a unique login and email.
         /// </summary>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
-        /// <param name="login"></param>
-        /// <param name="password"></param>
-        /// <param name="email"></param>
-        /// <param name="homeNumber"></param>
-        /// <param name="workNumber"></param>
-        /// <param name="mobileNumber"></param>
-        /// <param name="streetAddress"></param>
-        /// <param name="suburb"></param>
-        /// <param name="city"></param>
+        /// <param name="firstName">string, first name of customer</param>
+        /// <param name="lastName">string, last name of customer</param>
+        /// <param name="login">string, login of customer</param>
+        /// <param name="password">string, password of customer</param>
+        /// <param name="email">string, email of customer</param>
+        /// <param name="homeNumber">string, home phone number of customer</param>
+        /// <param name="workNumber">string, work phone number of customer</param>
+        /// <param name="mobileNumber">string, mobile phone number of customer</param>
+        /// <param name="streetAddress">string, street address of customer</param>
+        /// <param name="suburb">string, suburb of customer</param>
+        /// <param name="city">string, city of customer</param>
         public void RegisterCustomer(string firstName, string lastName, string login, string password, string email,
-            string homeNumber,
-            string workNumber, string mobileNumber, string streetAddress, string suburb, string city)
+            string homeNumber, string workNumber, string mobileNumber, string streetAddress, string suburb, string city)
         {
             string hash = Security.GetPasswordHash(password);
             _dm.AddNewCustomer(email, login, hash, firstName, lastName, homeNumber, workNumber, mobileNumber,
@@ -65,19 +68,21 @@ namespace BusinessLayer
         }
 
         /// <summary>
+        ///     Update a customer.
         /// 
+        ///     Assume the login and email is unique.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
-        /// <param name="login"></param>
-        /// <param name="email"></param>
-        /// <param name="homeNumber"></param>
-        /// <param name="workNumber"></param>
-        /// <param name="mobileNumber"></param>
-        /// <param name="streetAddress"></param>
-        /// <param name="suburb"></param>
-        /// <param name="city"></param>
+        /// <param name="id">integer, id of customer to update</param>
+        /// <param name="firstName">string, first name of customer</param>
+        /// <param name="lastName">string, last name of customer</param>
+        /// <param name="login">string, login of customer</param>
+        /// <param name="email">string, email of customer</param>
+        /// <param name="homeNumber">string, home phone number of customer</param>
+        /// <param name="workNumber">string, work phone number of customer</param>
+        /// <param name="mobileNumber">string, mobile phone number of customer</param>
+        /// <param name="streetAddress">string, street address of customer</param>
+        /// <param name="suburb">string, suburb of customer</param>
+        /// <param name="city">string, city of customer</param>
         public void UpdateRegisteredCustomer(int id, string firstName, string lastName, string login, string email,
             string homeNumber,
             string workNumber, string mobileNumber, string streetAddress, string suburb, string city)
@@ -89,10 +94,12 @@ namespace BusinessLayer
         }
 
         /// <summary>
+        ///     Update a customer password.
         /// 
+        ///     Assumed the supplied password is UNHASHED.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="password"></param>
+        /// <param name="id">integer, id of the customer</param>
+        /// <param name="password">an unhashed password</param>
         public void UpdatePasswordForCustomer(int id, string password)
         {
             string hash = Security.GetPasswordHash(password);
@@ -102,10 +109,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Check if a login matches any existing customer.
         /// </summary>
-        /// <param name="login"></param>
-        /// <returns></returns>
+        /// <param name="login">string, login, of Customer</param>
+        /// <returns>true or false</returns>
         public bool LoginIsAlreadyInUse(string login)
         {
             Customer customer = _dm.GetSingleCustomerByLogin(login);
@@ -118,10 +125,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Check if an email matches any existing customer.
         /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
+        /// <param name="email">string, email, of Customer</param>
+        /// <returns>true or false</returns>
         public bool EmailIsAlreadyInUse(string email)
         {
             Customer customer = _dm.GetSingleCustomerByEmail(email);
@@ -159,7 +166,7 @@ namespace BusinessLayer
         /// 
         /// </summary>
         /// <param name="CapId"></param>
-        /// <returns></returns>
+        /// <returns>Cap, matching the id, or null</returns>
         public Cap GetCapDetails(int CapId)
         {
             Cap cap = _dm.GetSingleCapById(CapId);
@@ -170,7 +177,7 @@ namespace BusinessLayer
         /// <summary>
         ///     Get a single cap ImageUrl, from the first cap found with this category id.
         /// </summary>
-        /// <param name="categoryId"></param>
+        /// <param name="categoryId">integer, id of category</param>
         /// <returns>a string (imageUrl), or null</returns>
         public string GetFirstCapImageByCategoryId(int categoryId)
         {
@@ -187,10 +194,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get all caps liked to a given category.
         /// </summary>
-        /// <param name="categoryId"></param>
-        /// <returns></returns>
+        /// <param name="categoryId">integer, id of category</param>
+        /// <returns>List, Cap, all caps matching a category</returns>
         public List<Cap> GetAllCapsByCategoryId(int categoryId)
         {
             List<Cap> caps = _dm.GetCapsByCategoryId(categoryId);
@@ -199,10 +206,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get a customer, using the ID.
         /// </summary>
-        /// <param name="customerId"></param>
-        /// <returns></returns>
+        /// <param name="customerId">integer, id of the customer</param>
+        /// <returns>Customer object or null</returns>
         public Customer GetCustomerById(int customerId)
         {
             Customer customer = _dm.GetSingleCustomerById(customerId);
@@ -211,10 +218,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get a customer, using a login.
         /// </summary>
-        /// <param name="login"></param>
-        /// <returns></returns>
+        /// <param name="login">string login of customer</param>
+        /// <returns>Customer object or null</returns>
         public Customer GetCustomerByLogin(string login)
         {
             Customer customer = _dm.GetSingleCustomerByLogin(login);
@@ -223,20 +230,25 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get name of a category, given a category id.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">id of matching category.</param>
+        /// <returns>string, name of category, or null</returns>
         public string GetCategoryName(int id)
         {
             Category category = _dm.GetSingleCategoryById(id);
             (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Category. ID:" + id);
+            if (category == null)
+            {
+                return String.Empty;
+            }
             return category.Name;
         }
 
         /// <summary>
-        /// 
+        ///     Get list of colours
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Colours</returns>
         public List<Colour> GetAllColours()
         {
             List<Colour> colours = _dm.GetAllColours();
@@ -245,10 +257,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get a cap, using an id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, id of cap</param>
+        /// <returns>Cap object or null</returns>
         public Cap GetCapById(int id)
         {
             Cap cap = _dm.GetSingleCapById(id);
@@ -257,10 +269,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get a Colour, using an id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, id of Colour</param>
+        /// <returns>Colour object or null</returns>
         public Colour GetColourById(int id)
         {
             Colour colour = _dm.GetSingleColourById(id);
@@ -269,10 +281,10 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get list of orders made by a customer
         /// </summary>
-        /// <param name="login"></param>
-        /// <returns></returns>
+        /// <param name="login">string, login of customer</param>
+        /// <returns>List, CustomerOrder</returns>
         public List<CustomerOrder> GetAllOrdersByCustomer(string login)
         {
             Customer customer = _dm.GetSingleCustomerByLogin(login);
