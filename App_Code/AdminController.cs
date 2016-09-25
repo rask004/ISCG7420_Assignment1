@@ -34,9 +34,9 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        ///     
+        ///     Get all customers.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Customer, all customers</returns>
         public List<Customer> GetCustomers()
         {
             List<Customer> items = _dm.GetAllCustomers();
@@ -48,39 +48,57 @@ namespace BusinessLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get first name of a customer
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">integer, id of customer</param>
         /// <returns></returns>
         public string GetCustomerFirstName(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            string customerId = "NULL";
+            if (customer != null)
+            {
+                customerId = customer.ID.ToString();
+            }
             StringBuilder builder = new StringBuilder();
             builder.Append("AdminController.GetCustomerFirstName :: Retrieved Single Customer: ");
-            builder.Append(id);
+            builder.Append(customerId);
             builder.Append(" for FirstName");
             _logger.Log(LoggingLevel.Info, builder.ToString());
+            if (customer == null)
+            {
+                return String.Empty;
+            }
             return customer.FirstName;
         }
 
         /// <summary>
-        /// 
+        ///     Get last name of customer
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, customer id</param>
+        /// <returns>string, last name</returns>
         public string GetCustomerLastName(int id)
         {
             Customer customer = _dm.GetSingleCustomerById(id);
+            string customerId = "NULL";
+            if (customer != null)
+            {
+                customerId = customer.ID.ToString();
+            }
             StringBuilder builder = new StringBuilder();
             builder.Append("AdminController.GetCustomerLastName :: Retrieved Single Customer: ");
-            builder.Append(id);
+            builder.Append(customerId);
             builder.Append(" for LastName");
             _logger.Log(LoggingLevel.Info, builder.ToString());
+            if (customer == null)
+            {
+                return String.Empty;
+            }
             return customer.LastName;
         }
 
         /// <summary>
-        /// 
+        ///     
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
