@@ -170,7 +170,16 @@ namespace BusinessLayer
         public Cap GetCapDetails(int CapId)
         {
             Cap cap = _dm.GetSingleCapById(CapId);
-            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved single Cap. ID: " + cap.ID);
+            if (cap != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Retrieved Cap. ID:" + CapId);
+            }
+            else
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Could not retrieve Cap. ID:" + CapId);
+            }
             return cap;
         }
 
@@ -213,7 +222,16 @@ namespace BusinessLayer
         public Customer GetCustomerById(int customerId)
         {
             Customer customer = _dm.GetSingleCustomerById(customerId);
-            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customerId);
+            if (customer != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Retrieved Customer. ID:" + customerId);
+            }
+            else
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Could not retrieve Customer. ID:" + customerId);
+            }
             return customer;
         }
 
@@ -225,7 +243,17 @@ namespace BusinessLayer
         public Customer GetCustomerByLogin(string login)
         {
             Customer customer = _dm.GetSingleCustomerByLogin(login);
-            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Customer. ID:" + customer.ID);
+            if (customer != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Retrieved Customer. Login:" + login);
+            }
+            else
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Could not retrieve Customer. Login:" + login);
+            }
+            
             return customer;
         }
 
@@ -237,7 +265,16 @@ namespace BusinessLayer
         public string GetCategoryName(int id)
         {
             Category category = _dm.GetSingleCategoryById(id);
-            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Category. ID:" + id);
+            if (category != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Retrieved Category. ID:" + id);
+            }
+            else
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Error, "Could not retrieve Category. ID:" + id);
+            }
             if (category == null)
             {
                 return String.Empty;
@@ -264,7 +301,16 @@ namespace BusinessLayer
         public Cap GetCapById(int id)
         {
             Cap cap = _dm.GetSingleCapById(id);
-            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Cap. ID:" + id);
+            if (cap != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Retrieved Cap. ID:" + id);
+            }
+            else
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Error, "Could not retrieve Cap. ID:" + id);
+            }
             return cap;
         }
 
@@ -276,7 +322,16 @@ namespace BusinessLayer
         public Colour GetColourById(int id)
         {
             Colour colour = _dm.GetSingleColourById(id);
-            (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(LoggingLevel.Info, "Retrieved Colour. ID:" + id);
+            if (colour != null)
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Info, "Retrieved Colour. ID:" + id);
+            }
+            else
+            {
+                (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
+                    LoggingLevel.Error, "Could not retrieve Colour. ID:" + id);
+            }
             return colour;
         }
 
@@ -471,6 +526,12 @@ namespace BusinessLayer
             bool isSuspended = true;
 
             Customer customer = GetCustomerByLogin(login);
+
+            if (customer == null)
+            {
+                // cannot suspend an administrator, or a non-existent customer.
+                return false;
+            }
 
             if (!customer.IsDisabled)
             {
