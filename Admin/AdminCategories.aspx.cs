@@ -1,35 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Web.UI;
 using System.Web.UI.WebControls;
-using Common;
-using WebGrease.Css.Extensions;
 using BusinessLayer;
+using Common;
 using CommonLogging;
 using SecurityLayer;
 
 /// <summary>
-///      
-/// The Admin page for the Category Entity.
-///
-/// Change Log:
-///        9-8-16  18:01       AskewR04   Created page and layout.
-///        9-8-16  23:01       AskewR04   Completed app logic for handling DB updates and adds.
-///       10-8-16  15:05       AskewR04   Updated logic to update SideBar upon save.
-///       11-8-16  16:00       AskewR04   Changed sidebar to Repeater. Changed master and page layout for easier
-///                                         page update management. Added a jumbotron message box for informing 
-///                                         admin of current state.
-///
+///     The Admin page for the Category Entity.
+///     Change Log:
+///     9-8-16  18:01       AskewR04   Created page and layout.
+///     9-8-16  23:01       AskewR04   Completed app logic for handling DB updates and adds.
+///     10-8-16  15:05       AskewR04   Updated logic to update SideBar upon save.
+///     11-8-16  16:00       AskewR04   Changed sidebar to Repeater. Changed master and page layout for easier
+///     page update management. Added a jumbotron message box for informing
+///     admin of current state.
+///     20-9-16     18:06      AskewR04   Final review
 /// </summary>
-public partial class AdminCategories : System.Web.UI.Page
+public partial class AdminCategories : Page
 {
     /// <summary>
-    /// 
+    ///     Reload sidebar with categories.
     /// </summary>
     private void Reload_Sidebar()
     {
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
         dbrptSideBarItems.DataSource = controller.GetCategories();
         dbrptSideBarItems.DataBind();
     }
@@ -41,7 +36,8 @@ public partial class AdminCategories : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
         if (!Page.IsPostBack)
         {
@@ -66,13 +62,13 @@ public partial class AdminCategories : System.Web.UI.Page
     {
         if (e.CommandName == "loadItem")
         {
-            AdminController controller = new AdminController();
-            int itemId = Convert.ToInt32(e.CommandArgument);
-            string name = controller.GetCategoryName(itemId);
+            var controller = new AdminController();
+            var itemId = Convert.ToInt32(e.CommandArgument);
+            var name = controller.GetCategoryName(itemId);
             if (name == null)
             {
-                lblCategoryId.Text = String.Empty;
-                txtCategoryName.Text = String.Empty;
+                lblCategoryId.Text = string.Empty;
+                txtCategoryName.Text = string.Empty;
                 lblMessageJumboTron.Text = "could not load item " + itemId;
             }
             else
@@ -97,8 +93,8 @@ public partial class AdminCategories : System.Web.UI.Page
     /// <param name="e"></param>
     protected void AddButton_Click(object sender, EventArgs e)
     {
-        lblCategoryId.Text = String.Empty;
-        txtCategoryName.Text = String.Empty;
+        lblCategoryId.Text = string.Empty;
+        txtCategoryName.Text = string.Empty;
         txtCategoryName.Enabled = true;
 
         txtCategoryName.Focus();
@@ -145,7 +141,7 @@ public partial class AdminCategories : System.Web.UI.Page
     {
         if (Page.IsValid)
         {
-            AdminController controller = new AdminController();
+            var controller = new AdminController();
 
             int id;
 
@@ -157,14 +153,13 @@ public partial class AdminCategories : System.Web.UI.Page
             {
                 id = -1;
             }
-            
+
             controller.AddOrUpdateCategory(id,
                 txtCategoryName.Text);
 
             Reload_Sidebar();
 
-            lblMessageJumboTron.Text = "SUCCESS: Category added or updated: " + txtCategoryName.Text;            
+            lblMessageJumboTron.Text = "SUCCESS: Category added or updated: " + txtCategoryName.Text;
         }
-        
     }
 }

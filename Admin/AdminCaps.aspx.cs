@@ -13,10 +13,12 @@ using SecurityLayer;
 ///     The Admin page for the Product Entity.
 ///     Change Log:
 ///     22-8-16  12:30       AskewR04   Created page and layout.
+///     20-9-16     18:06    AskewR04    Final review
 /// </summary>
 public partial class AdminCaps : Page
 {
     /// <summary>
+    ///     Reload Sidebar List of caps
     /// </summary>
     private void Reload_Sidebar()
     {

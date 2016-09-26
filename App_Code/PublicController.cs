@@ -178,7 +178,7 @@ namespace BusinessLayer
             else
             {
                 (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
-                    LoggingLevel.Info, "Could not retrieve Cap. ID:" + CapId);
+                    LoggingLevel.Error, "Could not retrieve Cap. ID:" + CapId);
             }
             return cap;
         }
@@ -230,7 +230,7 @@ namespace BusinessLayer
             else
             {
                 (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
-                    LoggingLevel.Info, "Could not retrieve Customer. ID:" + customerId);
+                    LoggingLevel.Error, "Could not retrieve Customer. ID:" + customerId);
             }
             return customer;
         }
@@ -251,7 +251,7 @@ namespace BusinessLayer
             else
             {
                 (HttpContext.Current.Application.Get(GeneralConstants.LoggerApplicationStateKey) as Logger).Log(
-                    LoggingLevel.Info, "Could not retrieve Customer. Login:" + login);
+                    LoggingLevel.Error, "Could not retrieve Customer. Login:" + login);
             }
             
             return customer;

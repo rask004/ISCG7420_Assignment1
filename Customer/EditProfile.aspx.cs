@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using BusinessLayer;
@@ -11,10 +8,9 @@ using Common;
 using CommonLogging;
 using SecurityLayer;
 
-public partial class Customer_Profile : System.Web.UI.Page
+public partial class Customer_Profile : Page
 {
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -23,7 +19,7 @@ public partial class Customer_Profile : System.Web.UI.Page
         (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
             "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
-        lblErrorMessages.Text = String.Empty;
+        lblErrorMessages.Text = string.Empty;
 
         if (!IsPostBack)
         {
@@ -51,39 +47,35 @@ public partial class Customer_Profile : System.Web.UI.Page
 
             try
             {
-                string login = Session[Security.SessionIdentifierLogin].ToString();
+                var login = Session[Security.SessionIdentifierLogin].ToString();
 
-                PublicController controller = new PublicController();
-                Customer customer = controller.GetCustomerByLogin(login);
+                var controller = new PublicController();
+                var customer = controller.GetCustomerByLogin(login);
 
                 if (customer == null)
                 {
                     // Abandon the session
                     Session.Abandon();
                     // Log Error
-                    string message = "ERROR: Was expecting a valid customer. Login used to retrieve customer: " + login;
+                    var message = "ERROR: Was expecting a valid customer. Login used to retrieve customer: " + login;
                     (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
                     throw new NullReferenceException("The customer was not found when the database was queried.");
                 }
-                else
-                {
-                    txtEmail.Text = customer.Email;
-                    txtLogin.Text = customer.Login;
-                    txtFirstName.Text = customer.FirstName;
-                    txtLastName.Text = customer.LastName;
-                    txtWorkNumber.Text = customer.WorkNumber;
-                    txtHomeNumber.Text = customer.HomeNumber;
-                    txtMobileNumber.Text = customer.MobileNumber;
-                    txtStreetAddress.Text = customer.StreetAddress;
-                    txtSuburb.Text = customer.Suburb;
-                    txtCity.Text = customer.City;
-                }
+                txtEmail.Text = customer.Email;
+                txtLogin.Text = customer.Login;
+                txtFirstName.Text = customer.FirstName;
+                txtLastName.Text = customer.LastName;
+                txtWorkNumber.Text = customer.WorkNumber;
+                txtHomeNumber.Text = customer.HomeNumber;
+                txtMobileNumber.Text = customer.MobileNumber;
+                txtStreetAddress.Text = customer.StreetAddress;
+                txtSuburb.Text = customer.Suburb;
+                txtCity.Text = customer.City;
             }
             catch (NullReferenceException nex)
             {
                 throw new Exception("Cannot identify the current customer.", nex);
             }
-            
         }
     }
 
@@ -119,7 +111,7 @@ public partial class Customer_Profile : System.Web.UI.Page
             return;
         }
 
-        PublicController controller = new PublicController();
+        var controller = new PublicController();
         // If email is unchanged
         if (controller.GetCustomerByLogin(txtLogin.Text).Email.Equals(txtEmail.Text))
         {
@@ -131,7 +123,6 @@ public partial class Customer_Profile : System.Web.UI.Page
             args.IsValid = false;
             lblErrorMessages.Text += "This Email is already in use. ";
         }
-
     }
 
     /// <summary>
@@ -159,9 +150,9 @@ public partial class Customer_Profile : System.Web.UI.Page
     /// <param name="args"></param>
     protected void ContactNumberRequired(object sender, ServerValidateEventArgs args)
     {
-        if (txtHomeNumber.Text == String.Empty &&
-            txtWorkNumber.Text == String.Empty &&
-            txtMobileNumber.Text == String.Empty)
+        if (txtHomeNumber.Text == string.Empty &&
+            txtWorkNumber.Text == string.Empty &&
+            txtMobileNumber.Text == string.Empty)
         {
             args.IsValid = false;
             lblErrorMessages.Text += "At least one contact number is required. ";
@@ -242,15 +233,15 @@ public partial class Customer_Profile : System.Web.UI.Page
     {
         if (!Page.IsValid)
         {
-            if (lblErrorMessages.Text == String.Empty)
+            if (lblErrorMessages.Text == string.Empty)
             {
                 lblErrorMessages.Text = "Please fill in the required fields. ";
             }
         }
         else
         {
-            PublicController controller = new PublicController();
-            Customer customer = controller.GetCustomerByLogin(txtLogin.Text);
+            var controller = new PublicController();
+            var customer = controller.GetCustomerByLogin(txtLogin.Text);
 
             if (customer != null)
             {
@@ -259,7 +250,7 @@ public partial class Customer_Profile : System.Web.UI.Page
                     txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
                     txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
 
-                
+
                 // update the change in password
                 if (btnUserRegeneratePassword.Enabled)
                 {
@@ -267,51 +258,38 @@ public partial class Customer_Profile : System.Web.UI.Page
                     try
                     {
                         controller.UpdatePasswordForCustomer(customer.ID, txtUserPassword.Text);
-                        Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
-                            Security.GetPasswordHash(txtUserPassword.Text));
+                        Session[Security.SessionIdentifierSecurityToken] =
+                            Security.GenerateSecurityTokenHash(customer.Login,
+                                Security.GetPasswordHash(txtUserPassword.Text));
 
-                        string ReplyToEmail = controller.GetAvailableAdminEmail();
-                        if (ReplyToEmail.Equals(String.Empty))
+                        var ReplyToEmail = controller.GetAvailableAdminEmail();
+                        if (ReplyToEmail.Equals(string.Empty))
                         {
                             ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
                         }
-
-                        // TODO: get emailing working on password change
-                        /*
+                        
                         GeneralFunctions.SendEmail(txtEmail.Text,
                             GeneralConstants.EmailPasswordChangeSubject,
                             String.Format(GeneralConstants.EmailPasswordChangeBody, txtFirstName.Text, txtLastName.Text, txtLogin.Text, txtUserPassword.Text),
                             ReplyToEmail);
-                        */
                     }
                     catch (SmtpException smtpEx)
                     {
-                        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
-                        // if emailing fails, redirect to error page, notifying customer of password update, email fail, and remedy action to take.
+                        throw new Exception("Failed to notify customer of password change by email.", smtpEx);
                     }
                 }
 
-                StringBuilder builder = new StringBuilder("~/Customer");
+                var builder = new StringBuilder("~/Customer");
                 Response.Redirect(builder.ToString());
             }
             else
             {
-                // Abandon the session
-                Session.Abandon();
-                // Log Error
-                string message = "ERROR: Customer not recognized. Login used: " + txtLogin.Text;
-                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
-                // TODO: complete this error handling
-                // Email Admin about Error
-                // Redirect to error page for unrecognized customers.
+                throw new Exception("Could not recognise or retrieve customer. Login Used: " + txtLogin.Text);
             }
-
-            
         }
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>

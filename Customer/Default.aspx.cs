@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using BusinessLayer;
@@ -9,47 +6,46 @@ using Common;
 using CommonLogging;
 using SecurityLayer;
 
-public partial class Customer_Details : System.Web.UI.Page
+public partial class Customer_Details : Page
 {
-
     /// <summary>
-    /// 
     /// </summary>
     protected void ReBind_CustomerOrders()
     {
-        PublicController controller = new PublicController();
-        string login = Session[Security.SessionIdentifierLogin].ToString();
-        List<OrderSummary> summaryOfOrders = controller.GetAllOrderSummariesByCustomer(login);
+        var controller = new PublicController();
+        var login = Session[Security.SessionIdentifierLogin].ToString();
+        var summaryOfOrders = controller.GetAllOrderSummariesByCustomer(login);
         grdvCustomerOrders.DataSource = summaryOfOrders;
         grdvCustomerOrders.DataBind();
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Bound Data Source: " + grdvCustomerOrders.ToString());
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Bound Data Source: " + grdvCustomerOrders);
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
         try
         {
-            string login = Session[Security.SessionIdentifierLogin].ToString();
-            PublicController controller = new PublicController();
-            Customer customer = controller.GetCustomerByLogin(login);
+            var login = Session[Security.SessionIdentifierLogin].ToString();
+            var controller = new PublicController();
+            var customer = controller.GetCustomerByLogin(login);
 
             if (customer == null)
             {
                 lblCustomerName.Text = "Could not retrieve the customer for this login: " + login;
-                lblCustomerEmail.Text = String.Empty;
-                lblCustomerHomeNumber.Text = String.Empty;
-                lblCustomerWorkNumber.Text = String.Empty;
-                lblCustomerMobileNumber.Text = String.Empty;
-                lblCustomerStreetAddress.Text = String.Empty;
-                lblCustomerSuburb.Text = String.Empty;
-                lblCustomerCity.Text = String.Empty;
+                lblCustomerEmail.Text = string.Empty;
+                lblCustomerHomeNumber.Text = string.Empty;
+                lblCustomerWorkNumber.Text = string.Empty;
+                lblCustomerMobileNumber.Text = string.Empty;
+                lblCustomerStreetAddress.Text = string.Empty;
+                lblCustomerSuburb.Text = string.Empty;
+                lblCustomerCity.Text = string.Empty;
 
                 grdvCustomerOrders.DataSource = null;
                 grdvCustomerOrders.DataBind();
@@ -70,13 +66,13 @@ public partial class Customer_Details : System.Web.UI.Page
 
             if (Request.QueryString[GeneralConstants.QueryStringGeneralMessageKey] != null)
             {
-                if (Request.QueryString[GeneralConstants.QueryStringGeneralMessageKey].ToString()
+                if (Request.QueryString[GeneralConstants.QueryStringGeneralMessageKey]
                     .Equals(GeneralConstants.QueryStringGeneralMessageSuccessfulProfileUpdate))
                 {
                     lblMessage.InnerText = "Your profile was successfully updated.";
                 }
-                else if (Request.QueryString[GeneralConstants.QueryStringGeneralMessageKey].ToString()
-                        .Equals(GeneralConstants.QueryStringGeneralMessageSuccessfulPlacedNewOrder))
+                else if (Request.QueryString[GeneralConstants.QueryStringGeneralMessageKey]
+                    .Equals(GeneralConstants.QueryStringGeneralMessageSuccessfulPlacedNewOrder))
                 {
                     lblMessage.InnerText = "Your new Order has been completed.";
                 }
@@ -86,13 +82,9 @@ public partial class Customer_Details : System.Web.UI.Page
         {
             throw new Exception("Cannot identify the current customer.", nex);
         }
-        
-        
-        
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>

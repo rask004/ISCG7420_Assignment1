@@ -1,29 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
+using System.Web.UI;
 using System.Web.UI.WebControls;
-using Common;
 using BusinessLayer;
+using Common;
 using CommonLogging;
-using DataLayer;
 using SecurityLayer;
 
 /// <summary>
 ///     The Admin page for the SiteUsers Entity - Customers.
-///
 ///     Change Log:
-/// 
 ///     19-8-16     22:35       AskewR04 Created Admin Page for Customers.
+///     20-9-16     18:06       AskewR04 Final review
 /// </summary>
-public partial class AdminUsers : System.Web.UI.Page
+public partial class AdminUsers : Page
 {
     /// <summary>
-    /// 
+    ///     Load sidebar with customer
     /// </summary>
     private void Reload_Sidebar()
     {
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
         dbrptSideBarItems.DataSource = controller.GetCustomers();
         dbrptSideBarItems.DataBind();
     }
@@ -35,7 +32,8 @@ public partial class AdminUsers : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
         if (!Page.IsPostBack)
         {
@@ -81,19 +79,19 @@ public partial class AdminUsers : System.Web.UI.Page
     {
         if (e.CommandName == "loadItem")
         {
-            AdminController controller = new AdminController();
-            int itemId = Convert.ToInt32(e.CommandArgument);
-            string firstName = controller.GetCustomerFirstName(itemId);
-            string lastName = controller.GetCustomerLastName(itemId);
-            string login = controller.GetCustomerLogin(itemId);
-            string email = controller.GetCustomerEmail(itemId);
-            string homeContactNumber = controller.GetCustomerHomeNumber(itemId);
-            string workContactNumber = controller.GetCustomerWorkNumber(itemId);
-            string mobileContactNumber = controller.GetCustomerMobileNumber(itemId);
-            string streetAddress = controller.GetCustomerStreetAddress(itemId);
-            string suburb = controller.GetCustomerSuburb(itemId);
-            string city = controller.GetCustomerCity(itemId);
-            bool isDisabled = controller.GetIsCustomerDisabled(itemId);
+            var controller = new AdminController();
+            var itemId = Convert.ToInt32(e.CommandArgument);
+            var firstName = controller.GetCustomerFirstName(itemId);
+            var lastName = controller.GetCustomerLastName(itemId);
+            var login = controller.GetCustomerLogin(itemId);
+            var email = controller.GetCustomerEmail(itemId);
+            var homeContactNumber = controller.GetCustomerHomeNumber(itemId);
+            var workContactNumber = controller.GetCustomerWorkNumber(itemId);
+            var mobileContactNumber = controller.GetCustomerMobileNumber(itemId);
+            var streetAddress = controller.GetCustomerStreetAddress(itemId);
+            var suburb = controller.GetCustomerSuburb(itemId);
+            var city = controller.GetCustomerCity(itemId);
+            var isDisabled = controller.GetIsCustomerDisabled(itemId);
 
             lblUsersId.Text = itemId.ToString();
             txtUserFirstName.Text = firstName;
@@ -120,7 +118,7 @@ public partial class AdminUsers : System.Web.UI.Page
             txtUserCity.Enabled = true;
 
             txtUserPassword.Enabled = false;
-            txtUserPassword.Text = String.Empty;
+            txtUserPassword.Text = string.Empty;
             btnUserRegeneratePassword.Enabled = true;
             btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
 
@@ -156,7 +154,7 @@ public partial class AdminUsers : System.Web.UI.Page
         }
         else
         {
-            txtUserPassword.Text = String.Empty;
+            txtUserPassword.Text = string.Empty;
             txtUserPassword.Enabled = false;
             btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
         }
@@ -182,7 +180,7 @@ public partial class AdminUsers : System.Web.UI.Page
 
         btnUserRegeneratePassword.Enabled = false;
         txtUserPassword.Enabled = false;
-        txtUserPassword.Text = String.Empty;
+        txtUserPassword.Text = string.Empty;
         btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
 
         btnSaveChanges.Enabled = false;
@@ -200,16 +198,7 @@ public partial class AdminUsers : System.Web.UI.Page
     /// <param name="args"></param>
     protected void GeneralNameValidation(object source, ServerValidateEventArgs args)
     {
-        foreach (char c in args.Value)
-        {
-            if (!Validation.ValidationNameGeneral.Contains(c))
-            {
-                args.IsValid = false;
-                return;
-            }
-        }
-
-        args.IsValid = true;
+        Validation.ValidateGenericName(ref args);
     }
 
     /// <summary>
@@ -239,7 +228,7 @@ public partial class AdminUsers : System.Web.UI.Page
             return;
         }
 
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
 
         foreach (var customerUser in controller.GetCustomers())
         {
@@ -269,7 +258,7 @@ public partial class AdminUsers : System.Web.UI.Page
             return;
         }
 
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
 
         foreach (var customerUser in controller.GetCustomers())
         {
@@ -290,9 +279,9 @@ public partial class AdminUsers : System.Web.UI.Page
     /// <param name="args"></param>
     protected void UserNumberRequiredValidation(object source, ServerValidateEventArgs args)
     {
-        if (txtUserHomeNumber.Text == String.Empty &&
-            txtUserWorkNumber.Text == String.Empty &&
-            txtUserMobileNumber.Text == String.Empty)
+        if (txtUserHomeNumber.Text == string.Empty &&
+            txtUserWorkNumber.Text == string.Empty &&
+            txtUserMobileNumber.Text == string.Empty)
         {
             args.IsValid = false;
             return;
@@ -361,8 +350,8 @@ public partial class AdminUsers : System.Web.UI.Page
         {
             try
             {
-                AdminController controller = new AdminController();
-                int id = Convert.ToInt32(lblUsersId.Text);
+                var controller = new AdminController();
+                var id = Convert.ToInt32(lblUsersId.Text);
                 controller.DisableCustomer(id);
                 lblUserIsDisabled.Text = true.ToString();
                 lblMessageJumboTron.Text = "SUCCESS: Customer disabled: " +
@@ -381,8 +370,6 @@ public partial class AdminUsers : System.Web.UI.Page
             }
         }
     }
-
-
 
     /// <summary>
     ///     Save Changes.
@@ -406,50 +393,68 @@ public partial class AdminUsers : System.Web.UI.Page
                 id = -1;
             }
 
-            AdminController controller = new AdminController();
+            var controller = new AdminController();
             controller.AddOrUpdateCustomer(id, txtUserFirstName.Text,
                 txtUserLastName.Text, txtUserEmail.Text, txtUserLogin.Text,
                 txtUserHomeNumber.Text,
                 txtUserWorkNumber.Text, txtUserMobileNumber.Text, txtUserStreetAddress.Text, txtUserSuburb.Text,
                 txtUserCity.Text);
 
-            Customer customer = controller.FindCustomerByLogin(txtUserLogin.Text);
+            var customer = controller.FindCustomerByLogin(txtUserLogin.Text);
 
-            // update the change in password
-            if (btnUserRegeneratePassword.Enabled)
+            if (customer == null)
             {
-                // email the Customer their new password.
-                try
-                {
-                    controller.UpdateCustomerPassword(customer.ID, txtUserPassword.Text);
-                    Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
-                        Security.GetPasswordHash(txtUserPassword.Text));
-
-                    // TODO: get emailing working on password change
-                    //GeneralFunctions.SendEmail(customer.Email,
-                    //    GeneralConstants.EmailPasswordChangeSubject,
-                    //    String.Format(GeneralConstants.EmailPasswordChangeBody, customer.FirstName, customer.LastName, customer.Login,
-                    //        customer.Password),
-                    //    GeneralConstants.AdminReplyToEmailDefault);
-                }
-                catch (SmtpException smtpEx)
-                {
-                    (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
-                        "ERROR: Unable to send email in response to change in Customer password. Exception Message: " +
-                        smtpEx.Message + "; " + smtpEx.StatusCode);
-                    // if emailing fails, redirect to error page, notifying customer of password update, email fail, and remedy action to take.
-                }
+                lblMessageJumboTron.Text = "ERROR: cannot find the customer inserted / updated. Login Used:" +
+                                           txtUserLogin.Text;
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+                    "ERROR: cannot find the customer inserted / updated. Login Used:" +
+                    txtUserLogin.Text);
             }
+            else
+            {
+                // update the change in password
+                if (btnUserRegeneratePassword.Enabled)
+                {
+                    // email the Customer their new password.
+                    try
+                    {
+                        controller.UpdateCustomerPassword(customer.ID, txtUserPassword.Text);
+                        Session[Security.SessionIdentifierSecurityToken] =
+                            Security.GenerateSecurityTokenHash(customer.Login,
+                                Security.GetPasswordHash(txtUserPassword.Text));
 
-            Reload_Sidebar();
+                        GeneralFunctions.SendEmail(customer.Email,
+                            GeneralConstants.EmailPasswordChangeSubject,
+                            string.Format(GeneralConstants.EmailPasswordChangeBody, customer.FirstName,
+                                customer.LastName, customer.Login,
+                                customer.Password),
+                            GeneralConstants.AdminReplyToEmailDefault);
 
-            btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
-            txtUserPassword.Text = String.Empty;
-            txtUserPassword.Enabled = false;
+                        lblMessageJumboTron.Text = "SUCCESS: ";
+                    }
+                    catch (SmtpException smtpEx)
+                    {
+                        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+                            "ERROR: Unable to send email in response to change in Customer password. Exception Message: " +
+                            smtpEx.Message + "; " + smtpEx.StatusCode);
+                        lblMessageJumboTron.Text =
+                            "WARNING: Changed password but could not email customer regarding this. Please manually email customer. ";
+                    }
+                }
+                else
+                {
+                    lblMessageJumboTron.Text = "SUCCESS: ";
+                }
 
-            lblMessageJumboTron.Text = "SUCCESS: User added or updated: " +
-                lblUsersId.Text + ", " + txtUserFirstName.Text + " " + txtUserLastName.Text;
+                Reload_Sidebar();
+
+                btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
+                txtUserPassword.Text = string.Empty;
+                txtUserPassword.Enabled = false;
+
+                lblMessageJumboTron.Text += "User added or updated. ID:" +
+                                            lblUsersId.Text + ", Login:" + txtUserLogin.Text;
+            }
         }
-
     }
 }

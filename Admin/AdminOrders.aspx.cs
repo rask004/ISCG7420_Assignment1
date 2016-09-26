@@ -1,29 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Common;
 using BusinessLayer;
+using Common;
 using CommonLogging;
-using DataLayer;
-using Microsoft.Ajax.Utilities;
-using SecurityLayer;
 
 /// <summary>
-/// 
 ///     The Admin page for the Orders Entity.
-///
 ///     Change Log:
-/// 
 ///     24-8-16  15:30       AskewR04 Created page and layout.
+///     20-9-16     18:06       AskewR04 Final review
 /// </summary>
-public partial class AdminOrders : System.Web.UI.Page
+public partial class AdminOrders : Page
 {
     /// <summary>
-    /// 
+    ///     Reload the sidebar list
     /// </summary>
     private void Reload_Sidebar()
     {
@@ -33,7 +26,7 @@ public partial class AdminOrders : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     Reload the list of order items
     /// </summary>
     private void Rebind_OrderItems()
     {
@@ -58,7 +51,8 @@ public partial class AdminOrders : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
         if (!Page.IsPostBack)
         {
@@ -102,7 +96,7 @@ public partial class AdminOrders : System.Web.UI.Page
 
             lblOrderId.Text = OrderId.ToString();
             lblCustomerName.Text = customerId + ", " + customerFirstName + " " + customerLastName;
-            
+
             // set list for status to correct value.
             ddlOrderStatus.Enabled = true;
             for (int i = 0; i < ddlOrderStatus.Items.Count; i++)
@@ -123,7 +117,7 @@ public partial class AdminOrders : System.Web.UI.Page
 
             foreach (var orderItem in orderItems)
             {
-                summary.SubTotalPrice += Convert.ToDouble(orderItem.Cap.Price * orderItem.Quantity);
+                summary.SubTotalPrice += Convert.ToDouble(orderItem.Cap.Price*orderItem.Quantity);
                 summary.TotalQuantity += orderItem.Quantity;
             }
 
@@ -133,16 +127,14 @@ public partial class AdminOrders : System.Web.UI.Page
 
             Rebind_OrderItems();
 
-            
 
             btnSaveChanges.Enabled = true;
             btnCancelChanges.Enabled = true;
 
             lblMessageJumboTron.Text = "Item " + lblOrderId.Text + " Loaded.";
-            
         }
     }
-    
+
     /// <summary>
     ///     Undo any uncommitted changes.
     /// </summary>
@@ -150,7 +142,6 @@ public partial class AdminOrders : System.Web.UI.Page
     /// <param name="e"></param>
     protected void CancelButton_Click(object sender, EventArgs e)
     {
-
         btnSaveChanges.Enabled = false;
         btnCancelChanges.Enabled = false;
 
@@ -161,8 +152,7 @@ public partial class AdminOrders : System.Web.UI.Page
 
     /// <summary>
     ///     Save Changes.
-    ///     If id is for an existing Colour, update the Colour.
-    ///     Else add a new Colour.
+    ///     Update any pending change in status
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -177,14 +167,13 @@ public partial class AdminOrders : System.Web.UI.Page
             // Only updating (no Inserts or Deletes), therefore sidebar contents will not change.
             Reload_Sidebar();
 
-            lblMessageJumboTron.Text = "SUCCESS: Order updated: " + 
-                lblOrderId.Text + ", " + ddlOrderStatus.Items[ddlOrderStatus.SelectedIndex].Text;
+            lblMessageJumboTron.Text = "SUCCESS: Order updated: " +
+                                       lblOrderId.Text + ", " + ddlOrderStatus.Items[ddlOrderStatus.SelectedIndex].Text;
         }
-
     }
 
     /// <summary>
-    /// 
+    ///     Manage pagination for multiple orders.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>

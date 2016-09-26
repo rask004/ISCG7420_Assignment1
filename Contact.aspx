@@ -11,8 +11,8 @@
 <asp:Content ID="ContactBody" ContentPlaceHolderID="PageContentCentre" Runat="Server">
     <div class="container PageSectionCentre">
         <div class="row">
-            <div class="DecoHeader" style="margin-left:12%">
-                <H3 style="margin-left:43%">Contact Us</H3>
+            <div class="DecoHeader" style="margin-left: 12%">
+                <H3 style="margin-left: 43%">Contact Us</H3>
             </div>
         </div>
         <div class="row">
@@ -30,8 +30,8 @@
                 <span class="ContentShiftRight">99-5555-5555</span>
             </div>
             <div class="col-md-2"></div>
-            
-            
+
+
         </div>
         <div class="row">
             <div class="col-md-2"></div>
@@ -39,10 +39,10 @@
                 <span class="ContentShiftLeft">(9am to 5:30pm)</span>
             </div>
             <div class="col-md-4">
-                
+
             </div>
             <div class="col-md-2"></div>
-           
+
         </div>
         <div class="row">
             <span class="BlankRow"></span>
@@ -56,7 +56,7 @@
                 <span class="ContentShiftRight">99-5555-6666</span>
             </div>
             <div class="col-md-2"></div>
-            
+
         </div>
         <div class="row">
             <span class="BlankRow"></span>
@@ -80,7 +80,7 @@
                 <span class="ContentShiftRight">general@QualityCaps.co.nz</span>
             </div>
             <div class="col-md-2"></div>
-            
+
         </div>
         <div class="row">
             <div class="col-md-2"></div>
@@ -91,8 +91,8 @@
                 <span class="ContentShiftRight">support@QualityCaps.co.nz</span>
             </div>
             <div class="col-md-2"></div>
-            
-            
+
+
         </div>
         <div class="row">
             <span class="BlankRow"></span>
@@ -106,40 +106,40 @@
                 <span class="ContentShiftRight">PO Box 7711</span>
             </div>
             <div class="col-md-2"></div>
-            
+
         </div>
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-4">
-                
+
             </div>
             <div class="col-md-4">
                 <span class="ContentShiftRight">44 Simon Says Street</span>
             </div>
             <div class="col-md-2"></div>
-            
+
         </div>
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-4">
-                
+
             </div>
             <div class="col-md-4">
                 <span class="ContentShiftRight">Sunny Side Suburb</span>
             </div>
             <div class="col-md-2"></div>
-            
+
         </div>
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-4">
-                
+
             </div>
             <div class="col-md-4">
                 <span class="ContentShiftRight">Auckland</span>
             </div>
             <div class="col-md-2"></div>
-            
+
         </div>
         <div class="row">
             <div class="col-md-2"></div>
@@ -150,7 +150,7 @@
                 <span class="ContentShiftRight">9999</span>
             </div>
             <div class="col-md-2"></div>
-            
+
         </div>
         <div class="row">
             <div class="col-md-2"></div>
@@ -161,11 +161,10 @@
                 <span class="ContentShiftRight">New Zealand</span>
             </div>
             <div class="col-md-2"></div>
-            
+
         </div>
         <div class="row">
             <span class="BlankRow"></span>
         </div>
     </div>
 </asp:Content>
-
