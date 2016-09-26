@@ -28,6 +28,7 @@
                     <br/>
                     <p><b><label>Error Type:</label></b> <label id="lblErrorName" runat="server"></label></p>
                     <p><b><label>HResult Code:</label></b> <label id="lblErrorHResult" runat="server"></label></p>
+                    <p><b><label>Message:</label></b> <label id="lblErrorMessage" runat="server"></label></p>
                     <br/>
                     <br/>
                     <b><label>Email Report to Admin</label></b>

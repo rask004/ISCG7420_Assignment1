@@ -9,8 +9,6 @@ using System.Web.UI.WebControls;
 using Common;
 using SecurityLayer;
 
-//TODO: complete this section addressing generic errors. An email can be sent by User to Admin.
-
 /// <summary>
 /// 
 /// </summary>
@@ -36,6 +34,7 @@ public partial class Error_Default : System.Web.UI.Page
 
             lblErrorName.InnerText = ex.GetType().ToString();
             lblErrorHResult.InnerText = ex.HResult.ToString();
+            lblErrorMessage.InnerText = ex.Message;
 
         }
     }

@@ -195,7 +195,26 @@ public partial class Customer_Checkout : System.Web.UI.Page
         PublicController controller = new PublicController();
         string login = Session[Security.SessionIdentifierLogin].ToString();
         List<OrderItem> items = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>);
-        controller.PlaceOrderForCustomer(login, items);
+        try
+        {
+            controller.PlaceOrderForCustomer(login, items);
+        }
+        catch (Exception lastEx)
+        {
+            if (lastEx is NullReferenceException)
+            {
+                Exception ex = new Exception("The login does not refer to an existing customer.", lastEx);
+                throw ex;
+            }
+            // should log person out but don't know how
+            
+            else if (lastEx is ArgumentOutOfRangeException)
+            {
+                Exception ex = new Exception("Attempted to insert new order but Encountered an Error.", lastEx);
+                throw ex;
+            }
+            throw lastEx;
+        }
         items.Clear();
         StringBuilder builder = new StringBuilder();
         builder.Append("~/Customer");
@@ -204,5 +223,14 @@ public partial class Customer_Checkout : System.Web.UI.Page
         builder.Append("=");
         builder.Append(GeneralConstants.QueryStringGeneralMessageSuccessfulPlacedNewOrder);
         Response.Redirect(builder.ToString());
+    }
+
+
+    protected override void OnError(EventArgs e)
+    {
+        Session["lastError"] = Server.GetLastError();
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+            Server.GetLastError().Message + "; " + Request.RawUrl);
+        Response.Redirect("~/Error/Default");
     }
 }

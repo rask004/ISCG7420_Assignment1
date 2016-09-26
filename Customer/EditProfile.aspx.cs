@@ -48,36 +48,42 @@ public partial class Customer_Profile : System.Web.UI.Page
             txtStreetAddress.Width = new Unit(txtStreetAddress.MaxLength, UnitType.Em);
             txtSuburb.Width = new Unit(txtSuburb.MaxLength, UnitType.Em);
             txtCity.Width = new Unit(txtCity.MaxLength, UnitType.Em);
+
+            try
+            {
+                string login = Session[Security.SessionIdentifierLogin].ToString();
+
+                PublicController controller = new PublicController();
+                Customer customer = controller.GetCustomerByLogin(login);
+
+                if (customer == null)
+                {
+                    // Abandon the session
+                    Session.Abandon();
+                    // Log Error
+                    string message = "ERROR: Was expecting a valid customer. Login used to retrieve customer: " + login;
+                    (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
+                    throw new NullReferenceException("The customer was not found when the database was queried.");
+                }
+                else
+                {
+                    txtEmail.Text = customer.Email;
+                    txtLogin.Text = customer.Login;
+                    txtFirstName.Text = customer.FirstName;
+                    txtLastName.Text = customer.LastName;
+                    txtWorkNumber.Text = customer.WorkNumber;
+                    txtHomeNumber.Text = customer.HomeNumber;
+                    txtMobileNumber.Text = customer.MobileNumber;
+                    txtStreetAddress.Text = customer.StreetAddress;
+                    txtSuburb.Text = customer.Suburb;
+                    txtCity.Text = customer.City;
+                }
+            }
+            catch (NullReferenceException nex)
+            {
+                throw new Exception("Cannot identify the current customer.", nex);
+            }
             
-            string login = Session[Security.SessionIdentifierLogin].ToString();
-
-            PublicController controller = new PublicController();
-            Customer customer = controller.GetCustomerByLogin(login);
-
-            if (customer == null)
-            {
-                // Abandon the session
-                Session.Abandon();
-                // Log Error
-                string message = "ERROR: Was expecting a valid customer. Login used to retrieve customer: " + login;
-                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, message);
-                // TODO: complete this error handling
-                // Email Admin about Error
-                // Redirect to error page for unrecognized customers.
-            }
-            else
-            {
-                txtEmail.Text = customer.Email;
-                txtLogin.Text = customer.Login;
-                txtFirstName.Text = customer.FirstName;
-                txtLastName.Text = customer.LastName;
-                txtWorkNumber.Text = customer.WorkNumber;
-                txtHomeNumber.Text = customer.HomeNumber;
-                txtMobileNumber.Text = customer.MobileNumber;
-                txtStreetAddress.Text = customer.StreetAddress;
-                txtSuburb.Text = customer.Suburb;
-                txtCity.Text = customer.City;
-            }
         }
     }
 
@@ -322,6 +328,17 @@ public partial class Customer_Profile : System.Web.UI.Page
             txtUserPassword.Enabled = false;
             txtUserPassword.Text = "";
         }
+    }
 
+    /// <summary>
+    ///     Manage errors, failure to register or send email.
+    /// </summary>
+    /// <param name="e"></param>
+    protected override void OnError(EventArgs e)
+    {
+        Session["lastError"] = Server.GetLastError();
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+            Server.GetLastError().Message + "; " + Request.RawUrl);
+        Response.Redirect("~/Error/Default");
     }
 }

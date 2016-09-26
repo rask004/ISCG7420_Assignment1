@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.UI.WebControls;
 using BusinessLayer;
+using CommonLogging;
 using SecurityLayer;
 
 /// <summary>
@@ -21,6 +22,8 @@ public partial class Customer_Login : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
         if (!IsPostBack)
         {
             var authenticationManager = Context.GetOwinContext().Authentication;
@@ -117,16 +120,6 @@ public partial class Customer_Login : System.Web.UI.Page
         }
 
 
-
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void lgnTestingSection_OnLoggedIn(object sender, EventArgs e)
-    {
 
     }
 

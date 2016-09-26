@@ -9,9 +9,11 @@ namespace BusinessLayer
     /// </summary>
     public class CustomerOrder :BaseBusinessObject
     {
+        private string _status;
+
         public CustomerOrder()
         {
-            
+            _status = "waiting";
         }
 
         /// <summary>
@@ -24,8 +26,8 @@ namespace BusinessLayer
         /// </summary>
         public string Status
         {
-            get { return Status; }
-            set { Status = value.ToLower(); }
+            get { return _status; }
+            set { _status = value.ToLower(); }
         }
 
         /// <summary>

@@ -7,8 +7,16 @@ using CommonLogging;
 using SecurityLayer;
 using BusinessLayer;
 
+/// <summary>
+/// 
+/// </summary>
 public partial class Registration : System.Web.UI.Page
 {
+    /// <summary>
+    ///     Load the page
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
         (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
@@ -234,8 +242,6 @@ public partial class Registration : System.Web.UI.Page
                     txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
                     txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
 
-                // TODO: get emailing working to notify registered user of details.
-                /*
                 GeneralFunctions.SendEmail(txtEmail.Text,
                     GeneralConstants.EmailRegisteredCustomerSubject,
                     String.Format(
@@ -243,11 +249,10 @@ public partial class Registration : System.Web.UI.Page
                         txtLogin.Text, txtPassword.Text, txtHomeNumber.Text, txtWorkNumber.Text, txtMobileNumber.Text,
                         txtStreetAddress.Text, txtSuburb.Text, txtCity.Text),
                     ReplyToEmail);
-                */
             }
             catch (SmtpException smtpEx)
             {
-                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
+                throw new Exception("Unable to send email in response to change in Customer password", smtpEx);
             }
                 
             
@@ -261,5 +266,17 @@ public partial class Registration : System.Web.UI.Page
         }
 
         
+    }
+
+    /// <summary>
+    ///     Manage errors, failure to register or send email.
+    /// </summary>
+    /// <param name="e"></param>
+    protected override void OnError(EventArgs e)
+    {
+        Session["lastError"] = Server.GetLastError();
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+            Server.GetLastError().Message + "; " + Request.RawUrl);
+        Response.Redirect("~/Error/Default");
     }
 }

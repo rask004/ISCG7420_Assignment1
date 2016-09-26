@@ -12,6 +12,8 @@ using CommonLogging;
 
 /// <summary>
 /// 
+///     
+/// 
 /// </summary>
 public partial class _Default : System.Web.UI.Page
 {
@@ -403,7 +405,7 @@ public partial class _Default : System.Web.UI.Page
             lblCurrentCapPrice.Text = cap.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 
             imgCurrentCapPicture.Src = cap.ImageUrl;
-            lblCurrentCapDescription.Text = cap.Description;
+            divCurrentCapDescription.InnerText = cap.Description;
 
             nptQuantity.Value = "1";
             ddlCapColours.SelectedIndex = 0;

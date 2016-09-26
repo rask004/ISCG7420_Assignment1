@@ -190,7 +190,7 @@
                                 </div>
                             </div>
                             
-                            <asp:Table ID="tblSingleItemDetail" CellPadding="5" CellSpacing="5" Visible="False"
+                            <asp:Table ID="tblSingleItemDetail" CssClass="table-responsive" CellPadding="5" CellSpacing="5" Visible="False"
                                 runat="server">
                                 <asp:TableRow Width="100%">
                                     <asp:TableCell Width="50%">
@@ -258,7 +258,7 @@
                                             
                                         </div>
                                         <div class="col-md-11">
-                                            <asp:Label ID="lblCurrentCapDescription" runat="server"/>
+                                            <div ID="divCurrentCapDescription" style="text-align: justify;" runat="server"></div>
                                         </div>
                                     </asp:TableCell>
                                 </asp:TableRow>
@@ -269,10 +269,10 @@
                                 </asp:TableRow>
                                 <asp:TableRow Width="100%">
                                     <asp:TableCell Width="50%">
-                                        <asp:Button ID="btnCancel" Text="Cancel" OnClick="btnCancel_OnClick" runat="server"/>
+                                        <asp:Button ID="btnCancel" Text="Cancel" CssClass="caption btn btn-primary" OnClick="btnCancel_OnClick" runat="server"/>
                                     </asp:TableCell>
                                     <asp:TableCell>
-                                        <asp:Button ID="btnAddCapToBasket" Text="Add To Basket" OnClick="btnAddCapToBasket_OnClick" Enabled="True"  runat="server"/>
+                                        <asp:Button ID="btnAddCapToBasket" Text="Add To Basket" CssClass="caption btn btn-primary" OnClick="btnAddCapToBasket_OnClick" Enabled="True"  runat="server"/>
                                     </asp:TableCell>
                                 </asp:TableRow>
                         
@@ -443,7 +443,7 @@
                             <div class="col-md-1"></div>
                             <div class="col-md-5"><H4>
                                 <asp:Button ID="btnCartClear" runat="server" Text="Clear"
-                                    OnClick="btnCartClear_OnClick" />
+                                    CssClass="caption btn btn-primary" OnClick="btnCartClear_OnClick" />
                             </H4></div>
                             <div class="col-md-5" style="text-align: right"><H4>
                                 <asp:LoginView id="lgnviewCart" runat="server">
@@ -451,7 +451,7 @@
                                         <i><span style="color:black">Login to complete order.</span></i>
                                     </AnonymousTemplate>
                                     <LoggedInTemplate>
-                                        <asp:Button ID="btnProceedToCheckout" runat="server" Text="Checkout"
+                                        <asp:Button CssClass="caption btn btn-primary" ID="btnProceedToCheckout" runat="server" Text="Checkout"
                                     OnClick="btnProceedToCheckout_OnClick" Enabled="True"/>
                                     </LoggedInTemplate>
                                 </asp:LoginView>
