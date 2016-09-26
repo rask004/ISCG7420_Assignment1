@@ -137,7 +137,7 @@
     </div>
     <div class="col-md-3">
         <span class="ContentShiftLeft">
-                    <asp:Button ID="btnUserRegeneratePassword" OnClick="btnUserRegeneratePassword_OnClick"
+                    <asp:Button ID="btnUserRegeneratePassword" OnClick="btnUserChangePassword_OnClick"
                         CausesValidation="false" Text="Change Password" runat="server"/>
                 </span>
     </div>

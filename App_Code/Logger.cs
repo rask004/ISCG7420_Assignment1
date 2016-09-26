@@ -17,7 +17,7 @@ namespace CommonLogging
         // Destination of logger
         private StreamWriter _stream;
 
-        private bool disposed = false;
+        private bool _disposed = false;
 
         /// <summary>
         ///     Limits what kind of messages are logged.
@@ -77,7 +77,7 @@ namespace CommonLogging
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed)
+            if (_disposed)
             {
                 throw new ObjectDisposedException("Logger has been disposed.");
             }
@@ -89,7 +89,7 @@ namespace CommonLogging
                 _stream.Dispose();
             }
 
-            disposed = true;
+            _disposed = true;
         }
     }
 

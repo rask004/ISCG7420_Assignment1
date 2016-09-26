@@ -9,19 +9,21 @@ using SecurityLayer;
 public partial class Customer_Details : Page
 {
     /// <summary>
+    ///     Reload the customer's orders
     /// </summary>
     protected void ReBind_CustomerOrders()
     {
         var controller = new PublicController();
         var login = Session[Security.SessionIdentifierLogin].ToString();
         var summaryOfOrders = controller.GetAllOrderSummariesByCustomer(login);
-        grdvCustomerOrders.DataSource = summaryOfOrders;
-        grdvCustomerOrders.DataBind();
+        gvCustomerOrders.DataSource = summaryOfOrders;
+        gvCustomerOrders.DataBind();
         (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
-            "Bound Data Source: " + grdvCustomerOrders);
+            "Bound Data Source: " + gvCustomerOrders);
     }
 
     /// <summary>
+    ///     load the page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -47,8 +49,8 @@ public partial class Customer_Details : Page
                 lblCustomerSuburb.Text = string.Empty;
                 lblCustomerCity.Text = string.Empty;
 
-                grdvCustomerOrders.DataSource = null;
-                grdvCustomerOrders.DataBind();
+                gvCustomerOrders.DataSource = null;
+                gvCustomerOrders.DataBind();
             }
             else
             {
@@ -85,16 +87,20 @@ public partial class Customer_Details : Page
     }
 
     /// <summary>
+    ///     handler, pagination for customer orders grid view
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void grdvCustomerOrders_OnPageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        grdvCustomerOrders.PageIndex = e.NewPageIndex;
+        gvCustomerOrders.PageIndex = e.NewPageIndex;
         ReBind_CustomerOrders();
     }
 
-
+    /// <summary>
+    ///     Handle errors
+    /// </summary>
+    /// <param name="e"></param>
     protected override void OnError(EventArgs e)
     {
         Session["lastError"] = Server.GetLastError();

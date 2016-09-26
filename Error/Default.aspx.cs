@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
-using System.Text;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Common;
 using SecurityLayer;
 
-/// <summary>
-/// 
-/// </summary>
-public partial class Error_Default : System.Web.UI.Page
+public partial class Error_Default : Page
 {
     /// <summary>
-    /// 
+    ///     Load the page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -23,7 +16,7 @@ public partial class Error_Default : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            Exception ex = Session["lastError"] as Exception;
+            var ex = Session["lastError"] as Exception;
             if (ex == null)
             {
                 KnownErrorSection.Visible = false;
@@ -35,12 +28,11 @@ public partial class Error_Default : System.Web.UI.Page
             lblErrorName.InnerText = ex.GetType().ToString();
             lblErrorHResult.InnerText = ex.HResult.ToString();
             lblErrorMessage.InnerText = ex.Message;
-
         }
     }
 
     /// <summary>
-    /// 
+    ///     click handler, send email
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -48,27 +40,27 @@ public partial class Error_Default : System.Web.UI.Page
     {
         if (Page.IsValid)
         {
-            Exception ex = Session["lastError"] as Exception;
-            string Message = "Name: " + lblErrorName.InnerText + "\nHResult: " + lblErrorHResult.InnerText + "\n\n";
-            Message += "StackTrace: " + ex.StackTrace + "\n\n\n";
+            var ex = Session["lastError"] as Exception;
+            var message = "Name: " + lblErrorName.InnerText + "\nHResult: " + lblErrorHResult.InnerText + "\n\n";
+            message += "StackTrace: " + ex.StackTrace + "\n\n\n";
             if (ex.InnerException != null)
             {
-                Message += "InnerException: " + ex.InnerException.GetType().ToString() + "\n";
-                Message += "HResult: " + ex.InnerException.HResult + "\n";
-                Message += "StackTrace: " + ex.InnerException.StackTrace + "\n\n";
+                message += "InnerException: " + ex.InnerException.GetType() + "\n";
+                message += "HResult: " + ex.InnerException.HResult + "\n";
+                message += "StackTrace: " + ex.InnerException.StackTrace + "\n\n";
             }
 
-            if (txtSenderName.Text != String.Empty)
+            if (txtSenderName.Text != string.Empty)
             {
-                Message += "Sent By: " + txtSenderName.Text;
+                message += "Sent By: " + txtSenderName.Text;
             }
 
-            string EmailMessage = string.Format(GeneralConstants.EmailErrorBody, Message, Session["pageOfLastError"]);
+            var emailMessage = string.Format(GeneralConstants.EmailErrorBody, message, Session["pageOfLastError"]);
 
             try
             {
                 GeneralFunctions.SendEmail(GeneralConstants.AdminReplyToEmailDefault,
-                    GeneralConstants.EmailErrorSubject, EmailMessage,
+                    GeneralConstants.EmailErrorSubject, emailMessage,
                     txtSenderEmail.Text);
                 litEmailResponse.Text = "The Email Has Been Sent.";
             }
@@ -79,17 +71,14 @@ public partial class Error_Default : System.Web.UI.Page
                     GeneralConstants.AdminReplyToEmailDefault + ".";
             }
         }
-        
-
-        
     }
 
     /// <summary>
-    /// 
+    ///     Validation handler, validate the email.
     /// </summary>
     /// <param name="source"></param>
     /// <param name="args"></param>
-    protected void OnServerValidate(object source, ServerValidateEventArgs args)
+    protected void ValidateEmailInput(object source, ServerValidateEventArgs args)
     {
         Validation.ValidateEmailInput(ref args);
 

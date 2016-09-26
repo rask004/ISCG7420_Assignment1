@@ -21,8 +21,8 @@ public partial class AdminOrders : Page
     private void Reload_Sidebar()
     {
         AdminController controller = new AdminController();
-        dbrptSideBarItems.DataSource = controller.GetOrders();
-        dbrptSideBarItems.DataBind();
+        repSideBarItems.DataSource = controller.GetOrders();
+        repSideBarItems.DataBind();
     }
 
     /// <summary>
@@ -40,8 +40,8 @@ public partial class AdminOrders : Page
             orderId = 0;
         }
         AdminController controller = new AdminController();
-        grdvCustomerOrders.DataSource = controller.GetItemsForOrderWithId(orderId);
-        grdvCustomerOrders.DataBind();
+        gvCustomerOrders.DataSource = controller.GetItemsForOrderWithId(orderId);
+        gvCustomerOrders.DataBind();
     }
 
     /// <summary>
@@ -63,8 +63,8 @@ public partial class AdminOrders : Page
                 ddlOrderStatus.Items.Add(new ListItem {Text = permittedOrderStatus, Value = permittedOrderStatus});
             }
 
-            grdvCustomerOrders.DataSource = new List<OrderItem>();
-            grdvCustomerOrders.DataBind();
+            gvCustomerOrders.DataSource = new List<OrderItem>();
+            gvCustomerOrders.DataBind();
 
             lblSideBarHeader.Text = "Orders";
 
@@ -77,7 +77,7 @@ public partial class AdminOrders : Page
     /// </summary>
     /// <param name="sender">The Repeater</param>
     /// <param name="e">Command Parameters</param>
-    protected void dbrptSideBarItems_ItemCommand(object sender, RepeaterCommandEventArgs e)
+    protected void repSideBarItems_ItemCommand(object sender, RepeaterCommandEventArgs e)
     {
         if (e.CommandName == "loadItem")
         {
@@ -179,7 +179,7 @@ public partial class AdminOrders : Page
     /// <param name="e"></param>
     protected void grdvCustomerOrders_OnPageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        grdvCustomerOrders.PageIndex = e.NewPageIndex;
+        gvCustomerOrders.PageIndex = e.NewPageIndex;
         Rebind_OrderItems();
     }
 }

@@ -7,6 +7,10 @@ namespace BusinessLayer
 {
     /// <summary>
     ///     Base Class for a BusinessObject
+    /// 
+    ///     Changelog:
+    /// 
+    ///     24-08-16        19:01   AskewR04    created class
     /// </summary>
     public class BaseBusinessObject
     {

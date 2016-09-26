@@ -11,6 +11,9 @@ namespace BusinessLayer
 {
     /// <summary>
     /// Business Layer controller for Adnin pages.
+    /// 
+    /// Changelog:
+    ///     18-09-16        19:01   AskewR04    created class
     /// </summary>
     public class AdminController
     {

@@ -30,7 +30,7 @@
                 <ContentTemplate>
                     <div class="col-md-12">
                         <div class="container-fluid">
-                            <asp:ListView ID="lstvCategoriesWithProducts" OnItemDataBound="LstvCategoriesWithProductsOnItemDataBound"
+                            <asp:ListView ID="lvCategoriesWithProducts" OnItemDataBound="LstvCategoriesWithProductsOnItemDataBound"
                                           OnItemCommand="LstvCategoriesWithProducts_OnItemCommand"
                                           runat="server">
 
@@ -42,7 +42,7 @@
                                     <div class="row">
                                         <div class="col-md-4"></div>
                                         <div class="col-md-4">
-                                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lstvCategoriesWithProducts" PageSize="3">
+                                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lvCategoriesWithProducts" PageSize="3">
                                                 <Fields>
                                                     <asp:NextPreviousPagerField ButtonType="Link" ShowFirstPageButton="false" ShowPreviousPageButton="true"
                                                                                 ShowNextPageButton="false"/>
@@ -60,7 +60,7 @@
                                         <div class="row">
                                             <div class="col-md-2"></div>
                                             <div class="col-md-4">
-                                                <span><H4><asp:ImageButton ID="imgCategoryPicture"
+                                                <span><H4><asp:ImageButton ID="ibtnCategoryPicture"
                                                     AlternateText='Image for <%# DataBinder.Eval(Container.DataItem, "name") %>'
                                                     Width="70%"
                                                     CommandName="loadCapsByCategory" 
@@ -137,7 +137,7 @@
                                             <div class="row">
                                                 <div class="col-md-2"></div>
                                                 <div class="col-md-4">
-                                                    <span><H4><asp:ImageButton ID="imgCapPicture"
+                                                    <span><H4><asp:ImageButton ID="ibtnCapPicture"
                                                         AlternateText='Image for <%# DataBinder.Eval(Container.DataItem, "name") %>'
                                                         ImageUrl='<%# DataBinder.Eval(Container.DataItem, "imageUrl") %>'
                                                         CommandName="loadCapDetails" 
@@ -305,7 +305,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="container" style="border: grey 1px solid; margin: 4%;">
-            <asp:ListView ID="lstvShoppingItems" Visible="True"
+            <asp:ListView ID="lvShoppingItems" Visible="True"
                           OnPagePropertiesChanging="lstvShoppingItems_OnPagePropertiesChanging"
                           OnItemCommand="lstvShoppingItems_OnItemCommand"
                           runat="server">
@@ -318,7 +318,7 @@
                     <div class="row">
                         <div class="col-md-4"></div>
                         <div class="col-md-4">
-                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lstvShoppingItems" PageSize="5">
+                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lvShoppingItems" PageSize="5">
                                 <Fields>
                                     <asp:NextPreviousPagerField ButtonType="Link" ShowFirstPageButton="false" ShowPreviousPageButton="true"
                                                                 ShowNextPageButton="false"/>

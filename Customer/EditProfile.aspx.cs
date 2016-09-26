@@ -8,9 +8,16 @@ using Common;
 using CommonLogging;
 using SecurityLayer;
 
+/// <summary>
+///     Allows customer to update their profile
+/// 
+///     Changelog:
+///     24-08-16        19:01   AskewR04    created static class
+/// </summary>
 public partial class Customer_Profile : Page
 {
     /// <summary>
+    ///     load the page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -262,16 +269,16 @@ public partial class Customer_Profile : Page
                             Security.GenerateSecurityTokenHash(customer.Login,
                                 Security.GetPasswordHash(txtUserPassword.Text));
 
-                        var ReplyToEmail = controller.GetAvailableAdminEmail();
-                        if (ReplyToEmail.Equals(string.Empty))
+                        var replyToEmail = controller.GetAvailableAdminEmail();
+                        if (replyToEmail.Equals(string.Empty))
                         {
-                            ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
+                            replyToEmail = GeneralConstants.AdminReplyToEmailDefault;
                         }
                         
                         GeneralFunctions.SendEmail(txtEmail.Text,
                             GeneralConstants.EmailPasswordChangeSubject,
                             String.Format(GeneralConstants.EmailPasswordChangeBody, txtFirstName.Text, txtLastName.Text, txtLogin.Text, txtUserPassword.Text),
-                            ReplyToEmail);
+                            replyToEmail);
                     }
                     catch (SmtpException smtpEx)
                     {
@@ -290,10 +297,11 @@ public partial class Customer_Profile : Page
     }
 
     /// <summary>
+    ///     Allow user to change password
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void btnUserRegeneratePassword_OnClick(object sender, EventArgs e)
+    protected void btnUserChangePassword_OnClick(object sender, EventArgs e)
     {
         if (btnUserRegeneratePassword.Text == "Change Password")
         {

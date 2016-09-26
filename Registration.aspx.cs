@@ -9,6 +9,8 @@ using CommonLogging;
 using SecurityLayer;
 
 /// <summary>
+/// Changelog:
+///     09-09-16        19:01   AskewR04    created page
 /// </summary>
 public partial class Registration : Page
 {
@@ -234,10 +236,10 @@ public partial class Registration : Page
             // email the Customer their new registration details.
             try
             {
-                var ReplyToEmail = controller.GetAvailableAdminEmail();
-                if (ReplyToEmail.Equals(string.Empty))
+                var replyToEmail = controller.GetAvailableAdminEmail();
+                if (replyToEmail.Equals(string.Empty))
                 {
-                    ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
+                    replyToEmail = GeneralConstants.AdminReplyToEmailDefault;
                 }
 
                 // add the registered user to the db.
@@ -251,7 +253,7 @@ public partial class Registration : Page
                         GeneralConstants.EmailRegisteredCustomerBody, txtFirstName.Text, txtLastName.Text,
                         txtLogin.Text, txtPassword.Text, txtHomeNumber.Text, txtWorkNumber.Text, txtMobileNumber.Text,
                         txtStreetAddress.Text, txtSuburb.Text, txtCity.Text),
-                    ReplyToEmail);
+                    replyToEmail);
             }
             catch (SmtpException smtpEx)
             {

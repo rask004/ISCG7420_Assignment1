@@ -9,6 +9,9 @@ namespace SecurityLayer
 {
     /// <summary>
     ///     Provides constants and helpers for data validation.
+    /// 
+    ///     Changelog:
+    ///     24-08-16        19:01   AskewR04    created static class
     /// </summary>
     public static class Validation
     {

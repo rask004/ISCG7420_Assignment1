@@ -15,6 +15,9 @@ namespace DataLayer
 
     /// <summary>
     /// DataLayer Tier Management Object
+    /// 
+    ///     Changelog:
+    ///     29-08-16        01:01   AskewR04    created class
     /// </summary>
     public class DataManager
     {

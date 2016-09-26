@@ -46,7 +46,7 @@
 <div class="container-fluid" style="border: 1px solid black; padding: 0.5%">
     <div class="row">
         <div class="col-md-12">
-            <asp:ListView ID="lstvCheckoutItems"
+            <asp:ListView ID="lvCheckoutItems"
                           OnItemDataBound="lstvCheckoutItems_OnItemDataBound"
                           OnItemCommand="lstvCheckoutItems_OnItemCommand"
                           OnPagePropertiesChanging="lstvCheckoutItems_OnPagePropertiesChanging"
@@ -60,7 +60,7 @@
                     <div class="row">
                         <div class="col-md-4"></div>
                         <div class="col-md-4">
-                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lstvCheckoutItems" PageSize="3">
+                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lvCheckoutItems" PageSize="3">
                                 <Fields>
                                     <asp:NextPreviousPagerField ButtonType="Link" ShowFirstPageButton="false" ShowPreviousPageButton="true"
                                                                 ShowNextPageButton="false"/>

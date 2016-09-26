@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace BusinessLayer
 {
     /// <summary>
@@ -41,8 +38,7 @@ namespace BusinessLayer
         /// </summary>
         public double SubTotalGst
         {
-            get { return SubTotalPrice * GstRate; }
-
+            get { return SubTotalPrice*GstRate; }
         }
 
         /// <summary>
@@ -50,7 +46,7 @@ namespace BusinessLayer
         /// </summary>
         public double TotalPrice
         {
-            get { return SubTotalPrice * GstRate + SubTotalPrice; }
+            get { return SubTotalPrice*GstRate + SubTotalPrice; }
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ using Common;
 using CommonLogging;
 
 /// <summary>
-///     Admin page for orders management
+///     Admin page for images management
 ///     Change log:
 ///     08-9-16     18:06       AskewR04 Created Page
 ///     20-9-16     18:06       AskewR04 Final review

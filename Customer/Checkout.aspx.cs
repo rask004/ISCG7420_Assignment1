@@ -14,6 +14,7 @@ using SecurityLayer;
 public partial class Customer_Checkout : Page
 {
     /// <summary>
+    ///     load the page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -39,15 +40,17 @@ public partial class Customer_Checkout : Page
     }
 
     /// <summary>
+    ///     reload the checkout items
     /// </summary>
     protected void ReBind()
     {
         var items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
-        lstvCheckoutItems.DataSource = items;
-        lstvCheckoutItems.DataBind();
+        lvCheckoutItems.DataSource = items;
+        lvCheckoutItems.DataBind();
     }
 
     /// <summary>
+    ///     recalculate the checkout totals.
     /// </summary>
     protected void RecalculateTotals()
     {
@@ -64,6 +67,7 @@ public partial class Customer_Checkout : Page
     }
 
     /// <summary>
+    ///     ItemDataBound handler, checkout listview
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -91,17 +95,19 @@ public partial class Customer_Checkout : Page
     }
 
     /// <summary>
+    ///     page change handler, checkout listview
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void lstvCheckoutItems_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
     {
-        (lstvCheckoutItems.FindControl("dpgItemPager") as DataPager).SetPageProperties(e.StartRowIndex, e.MaximumRows,
+        (lvCheckoutItems.FindControl("dpgItemPager") as DataPager).SetPageProperties(e.StartRowIndex, e.MaximumRows,
             false);
         ReBind();
     }
 
     /// <summary>
+    ///     click handler, cancel checkout
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -112,6 +118,7 @@ public partial class Customer_Checkout : Page
     }
 
     /// <summary>
+    ///     ItemCommand handler, checkout listview
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -181,6 +188,7 @@ public partial class Customer_Checkout : Page
     }
 
     /// <summary>
+    ///     click handler, do checkout 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -220,6 +228,10 @@ public partial class Customer_Checkout : Page
     }
 
 
+    /// <summary>
+    ///     manage errors
+    /// </summary>
+    /// <param name="e"></param>
     protected override void OnError(EventArgs e)
     {
         Session["lastError"] = Server.GetLastError();

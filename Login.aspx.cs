@@ -12,13 +12,13 @@ using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 /// <summary>
-///     
+///     Login page
 /// 
-/// 
-/// 
+///     Changelog:
+///     24-09-16        19:01   AskewR04    created page
 /// 
 /// </summary>
-public partial class Customer_Login : Page
+public partial class General_Login : Page
 {
     /// <summary>
     ///     load page

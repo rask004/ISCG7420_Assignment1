@@ -7,7 +7,10 @@ using System.Web.Configuration;
 namespace Common
 {
     /// <summary>
+    ///     Common constants
     /// 
+    ///     Changelog:
+    ///     22-08-16        19:01   AskewR04    created static class
     /// </summary>
     public static class GeneralConstants
     {
@@ -127,6 +130,9 @@ namespace Common
 
     /// <summary>
     ///     Support functions shared across the application.
+    /// 
+    ///     Changelog:
+    ///     24-08-16        19:01   AskewR04    created static class
     /// </summary>
     public static class GeneralFunctions
     {

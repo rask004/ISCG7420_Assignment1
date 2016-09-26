@@ -7,7 +7,7 @@ using CommonLogging;
 using SecurityLayer;
 
 /// <summary>
-///     The Admin page for the Colour Entity.
+///     The Admin page for the Supplier Entity.
 ///     Change Log:
 ///     18-8-16  14:30       AskewR04 Created page and layout.
 /// </summary>

@@ -38,7 +38,7 @@
                     <br/>
                     <label>Email: </label>
                     <asp:RequiredFieldValidator runat="server" ErrorMessage="*" ControlToValidate="txtSenderEmail"></asp:RequiredFieldValidator>
-                    <asp:CustomValidator ControlToValidate="txtSenderEmail" OnServerValidate="OnServerValidate" runat="server"></asp:CustomValidator>
+                    <asp:CustomValidator ControlToValidate="txtSenderEmail" OnServerValidate="ValidateEmailInput" runat="server"></asp:CustomValidator>
                     <asp:Textbox  type="text" ID="txtSenderEmail" AutoPostBack="False" runat="server"/> (Optional)
                     <br/>
                     <br/>

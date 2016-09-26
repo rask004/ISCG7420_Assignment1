@@ -10,6 +10,8 @@ using Common;
 using CommonLogging;
 
 /// <summary>
+///     Changelog:
+///     04-09-16    18:04   AskewR04    created page
 /// </summary>
 public partial class _Default : Page
 {
@@ -51,8 +53,8 @@ public partial class _Default : Page
     {
         var controller = new PublicController();
         var categories = controller.GetCategoriesWithCaps();
-        lstvCategoriesWithProducts.DataSource = categories;
-        lstvCategoriesWithProducts.DataBind();
+        lvCategoriesWithProducts.DataSource = categories;
+        lvCategoriesWithProducts.DataBind();
     }
 
     /// <summary>
@@ -74,6 +76,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     On no postback, load the initial set of prodicts to show
     /// </summary>
     private void LoadInitialProducts()
     {
@@ -93,6 +96,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     Load the caps for the current category
     /// </summary>
     private void Load_Caps()
     {
@@ -109,8 +113,9 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     Load the required pagination buttons
     /// </summary>
-    /// <param name="datasource"></param>
+    /// <param name="datasource">PagedDataSource, paginates the data</param>
     private void Prepare_PageButtons(PagedDataSource datasource)
     {
         btnPreviousProductPage.Enabled = !datasource.IsFirstPage;
@@ -118,6 +123,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     load in the available colours
     /// </summary>
     private void Bind_Colours()
     {
@@ -128,6 +134,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     Rebind the items in the cart
     /// </summary>
     private void Bind_CartItems()
     {
@@ -141,11 +148,12 @@ public partial class _Default : Page
             cartItems = new List<OrderItem>();
         }
 
-        lstvShoppingItems.DataSource = cartItems;
-        lstvShoppingItems.DataBind();
+        lvShoppingItems.DataSource = cartItems;
+        lvShoppingItems.DataBind();
     }
 
     /// <summary>
+    ///     Load the page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -184,6 +192,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     ItemDataBound eventhandler, listview categories
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -212,6 +221,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     OnItemCommand eventhandler, listview Categories
     /// </summary>
     /// <param name="source"></param>
     /// <param name="e"></param>
@@ -232,6 +242,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     OnItemDataBound eventhandler, datalist prodicts
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -244,6 +255,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     button click handler, checkout button
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -254,6 +266,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     click handler, clear cart
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -273,6 +286,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     support method, update the totals shown in the cart
     /// </summary>
     protected void UpdateCartTotals()
     {
@@ -302,6 +316,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     click handler, cancel the current product view
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -311,6 +326,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     click handler, add a cap to the shopping cart
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -357,6 +373,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     OnItemCommand handler, datalist products
     /// </summary>
     /// <param name="source"></param>
     /// <param name="e"></param>
@@ -383,18 +400,20 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     Page change handler, listview for cart
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void lstvShoppingItems_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
     {
-        (lstvShoppingItems.FindControl("dpgItemPager") as DataPager).SetPageProperties(e.StartRowIndex, e.MaximumRows,
+        (lvShoppingItems.FindControl("dpgItemPager") as DataPager).SetPageProperties(e.StartRowIndex, e.MaximumRows,
             false);
         Bind_CartItems();
         UpdateCartTotals();
     }
 
     /// <summary>
+    ///     OnItemCommand handler, listview for cart
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -421,6 +440,7 @@ public partial class _Default : Page
     }
 
     /// <summary>
+    ///     clikc handler, change the current product page.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
