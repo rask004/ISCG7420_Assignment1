@@ -27,7 +27,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
-<div class="container-fluid PageSectionCentre" style="border: black solid 1px;">
+<div class="container PageSection" style="border: black solid 1px;">
 <div class="row">
     <div class="DecoHeader" style="margin-left: 12%">
         <H3 style="margin-left: 39%">Checkout</H3>

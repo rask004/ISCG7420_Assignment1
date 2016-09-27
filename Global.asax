@@ -69,14 +69,7 @@
     /// <param name="e"></param>
     private void Session_End(object sender, EventArgs e)
     {
-        Session[Security.SessionIdentifierLogin] = null;
-        Session["lastError"] = null;
-        Session["pageOfLastError"] = null;
         Session[Security.SessionIdentifierSecurityToken] = null;
-        if (Session[GeneralConstants.SessionCartItems] != null)
-        {
-            (Session[GeneralConstants.SessionCartItems] as List<OrderItem>).Clear();
-        }
     }
 
 </script>

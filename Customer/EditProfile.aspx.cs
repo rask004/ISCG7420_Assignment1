@@ -259,7 +259,7 @@ public partial class Customer_Profile : Page
 
 
                 // update the change in password
-                if (btnUserRegeneratePassword.Enabled)
+                if (btnUserChangePassword.Enabled)
                 {
                     // email the Customer their new password.
                     try
@@ -303,14 +303,14 @@ public partial class Customer_Profile : Page
     /// <param name="e"></param>
     protected void btnUserChangePassword_OnClick(object sender, EventArgs e)
     {
-        if (btnUserRegeneratePassword.Text == "Change Password")
+        if (btnUserChangePassword.Text == "Change Password")
         {
-            btnUserRegeneratePassword.Text = "Cancel Changes";
+            btnUserChangePassword.Text = "Cancel Changes";
             txtUserPassword.Enabled = true;
         }
         else
         {
-            btnUserRegeneratePassword.Text = "Change Password";
+            btnUserChangePassword.Text = "Change Password";
             txtUserPassword.Enabled = false;
             txtUserPassword.Text = "";
         }

@@ -4,7 +4,8 @@
     The page for the Quality Caps Website.
     
     Change Log:
-
+    
+    27-9-16     13:00       AskewR04    Completed page.
 --%>
 <asp:Content ID="Content1" ContentPlaceHolderID="AdditionalScripts" Runat="Server">
     <script type="text/javascript" src="../Content/common.js">
@@ -15,14 +16,13 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
-<div class="container-fluid PageSectionCentre" style="border: black solid 1px;">
+<div class="container PageSection" style="border: black solid 1px;">
 <div class="row">
-    <div class="DecoHeader" style="margin-left: 12%">
-        <H3 style="margin-left: 39%">Customer Profile</H3>
-    </div>
-</div>
-<div class="row">
-    <br/>
+    <span class="DecoHeader" style="margin-left:11%">
+        <div>
+            <H3>Customer Profile</H3>
+        </div>
+    </span>
 </div>
 <div class="row">
     <div class="col-md-2"></div>
@@ -38,15 +38,58 @@
     <div class="col-md-2"></div>
     <div class="col-md-3">
         <H5>
-            <span class="ContentShiftRight">
-                        <label>Customer:</label>
-                    </span>
+                        <label for="lblCustomerName">Customer:</label>
+        </H5>
+    </div>
+    <div class="col-md-5">
+        <H5>
+            <label runat="server" ID="lblCustomerName" Text=""/>
+        </H5>
+    </div>
+
+    <div class="col-md-2"></div>
+</div>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-3">
+        <H5>
+                        <label for="lblCustomerEmail">Email:</label>
+        </H5>
+    </div>
+    <div class="col-md-5">
+        <H5>
+                        <label runat="server" ID="lblCustomerEmail" Text=""/>
+        </H5>
+    </div>
+
+    <div class="col-md-2"></div>
+</div>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-3">
+        <H5>
+                        <label for="lblCustomerHomeNumber">Home Number:</label>
+        </H5>
+    </div>
+    <div class="col-md-5">
+        <H5>
+                        <label runat="server" ID="lblCustomerHomeNumber" Text=""/>
+        </H5>
+    </div>
+
+    <div class="col-md-2"></div>
+</div>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-3">
+        <H5>
+                        <label for="lblCustomerWorkNumber">Work Number:</label>    
         </H5>
     </div>
     <div class="col-md-5">
         <H5>
             <span class="ContentShiftLeft">
-                        <asp:Label runat="server" ID="lblCustomerName" Text=""></asp:Label>
+                        <label runat="server" ID="lblCustomerWorkNumber" Text=""></label>
                     </span>
         </H5>
     </div>
@@ -57,16 +100,12 @@
     <div class="col-md-2"></div>
     <div class="col-md-3">
         <H5>
-            <span class="ContentShiftRight">
-                        <label>Email:</label>
-                    </span>
+                        <label for="lblCustomerMobileNumber">Mobile Number:</label>
         </H5>
     </div>
     <div class="col-md-5">
         <H5>
-            <span class="ContentShiftLeft">
-                        <asp:Label runat="server" ID="lblCustomerEmail" Text=""></asp:Label>
-                    </span>
+                        <label runat="server" ID="lblCustomerMobileNumber" Text=""></label>
         </H5>
     </div>
 
@@ -76,73 +115,12 @@
     <div class="col-md-2"></div>
     <div class="col-md-3">
         <H5>
-            <span class="ContentShiftRight">
-                        <label>Home Number:</label>
-                    </span>
+                        <label for="lblCustomerStreetAddress">Address:</label>
         </H5>
     </div>
     <div class="col-md-5">
         <H5>
-            <span class="ContentShiftLeft">
-                        <asp:Label runat="server" ID="lblCustomerHomeNumber" Text=""></asp:Label>
-                    </span>
-        </H5>
-    </div>
-
-    <div class="col-md-2"></div>
-</div>
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
-        <H5>
-            <span class="ContentShiftRight">
-                        <label>Work Number:</label>    
-                    </span>
-        </H5>
-    </div>
-    <div class="col-md-5">
-        <H5>
-            <span class="ContentShiftLeft">
-                        <asp:Label runat="server" ID="lblCustomerWorkNumber" Text=""></asp:Label>
-                    </span>
-        </H5>
-    </div>
-
-    <div class="col-md-2"></div>
-</div>
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
-        <H5>
-            <span class="ContentShiftRight">
-                        <label>Mobile Number:</label>
-                    </span>
-        </H5>
-    </div>
-    <div class="col-md-5">
-        <H5>
-            <span class="ContentShiftLeft">
-                        <asp:Label runat="server" ID="lblCustomerMobileNumber" Text=""></asp:Label>
-                    </span>
-        </H5>
-    </div>
-
-    <div class="col-md-2"></div>
-</div>
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
-        <H5>
-            <span class="ContentShiftRight">
-                        <label>Address:</label>
-                    </span>
-        </H5>
-    </div>
-    <div class="col-md-5">
-        <H5>
-            <span class="ContentShiftLeft">
-                        <asp:Label runat="server" ID="lblCustomerStreetAddress" Text=""></asp:Label>
-                    </span>
+                        <label runat="server" ID="lblCustomerStreetAddress" Text=""></label>
         </H5>
     </div>
     <div class="col-md-2"></div>
@@ -153,16 +131,12 @@
     </div>
     <div class="col-md-3">
         <H5>
-            <span class="ContentShiftLeft">
-                        <asp:Label runat="server" ID="lblCustomerSuburb" Text=""></asp:Label>
-                    </span>
+                        <label runat="server" ID="lblCustomerSuburb" Text=""></label>
         </H5>
     </div>
     <div class="col-md-2">
         <H5>
-            <span class="ContentShiftLeft">
-                        <asp:Label runat="server" ID="lblCustomerCity" Text=""></asp:Label>
-                    </span>
+                        <label runat="server" ID="lblCustomerCity" Text=""></label>
         </H5>
     </div>
     <div class="col-md-2"></div>
@@ -174,16 +148,15 @@
     <span class="BlankRow"></span>
 </div>
 <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        <span class="ContentStretchHorizontal DecoHeader"><H4>
-                    <a style="margin-left: 12%" href="EditProfile.aspx">Update Customer Details</a>
-                </H4></span>
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <span class="DecoSubHeader" style="margin-left:25%">
+                <div><H4>
+                    <a href="EditProfile.aspx">Update Customer Details</a>
+                </H4></div>
+</span>
     </div>
-    <div class="col-md-4"></div>
-</div>
-<div class="row">
-    <span class="BlankRow"></span>
+    <div class="col-md-2"></div>
 </div>
 <div class="row">
     <span class="BlankRow"></span>

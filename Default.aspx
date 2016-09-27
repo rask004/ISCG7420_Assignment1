@@ -11,6 +11,7 @@
     8-9-16      20:00   AskewR04    Updated page with data controls.
     14-9-16     20:00   AskewR04    Updated page, interaction with mock session, showing categories and products, product details.
     15-9-16     20:00   AskewR04    Updated page, functional Shopping Cart, pagination (except for Products Datalist.)
+    27-9-16     20:00   AskewR04    Updated page, css
 
 --%>
 
@@ -19,8 +20,8 @@
         <div class="row">
             <div class="col-md-12">
                 <span class="DecoHeader" style="margin-left: 11%;">
-                    <div style="text-align: center">
-                        <H3 style="margin: 20px auto"><asp:Label ID="lblLeftHeader" Text="Categories" runat="server" /></H3>  
+                    <div>
+                        <H3><asp:Label ID="lblLeftHeader" Text="Categories" runat="server" /></H3>  
                     </div>
                 </span>
             </div>
@@ -116,11 +117,14 @@
                 <div class="row">
                     <div class="col-md-12">
                         <span class="DecoHeader" style="margin-left: 11%;">
-                            <div style="text-align: center">
-                                <H3 style="margin: 20px auto"><asp:Label ID="lblCentreHeader" Text="Caps" runat="server" /></H3>  
+                            <div>
+                                <H3><asp:Label ID="lblCentreHeader" Text="Caps" runat="server" /></H3>  
                             </div>
                         </span>
                     </div>
+                </div>
+                <div class="row">
+                    <span class="BlankRow"></span>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -295,8 +299,8 @@
 <div class="row">
     <div class="col-md-12">
         <span class="DecoHeader" style="margin-left: 11%;">
-                            <div style="text-align: center">
-                                <H3 style="margin: 20px auto"><asp:Label ID="lblRightHeader" Text="Shopping Cart" runat="server" /></H3> 
+                            <div>
+                                <H3><asp:Label ID="lblRightHeader" Text="Shopping Cart" runat="server" /></H3> 
                             </div> 
                         </span>
     </div>
@@ -383,25 +387,15 @@
                     <label>SubTotal</label>
                 </H4>
             </div>
-            <div class="col-md-1">
-                <label>$</label>
-            </div>
-            <div class="col-md-3" style="text-align: right">
-                <H4>
-                    <asp:Label ID="lblSubtotal" Text="0.00" runat="server"/>
+            <div class="col-md-4">
+                <H4><label>$</label>
+                    <label ID="lblSubtotal" Text="0.00" runat="server"/>
                 </H4>
             </div>
             <div class="col-md-1"></div>
         </div>
         <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-5">
-
-            </div>
-            <div class="col-md-5">
-
-            </div>
-            <div class="col-md-1"></div>
+            <div class="col-md-12"></div>
         </div>
         <div class="row">
             <div class="col-md-1"></div>
@@ -410,12 +404,9 @@
                     <label>GST</label>
                 </H4>
             </div>
-            <div class="col-md-1">
-                <label>$</label>
-            </div>
-            <div class="col-md-3" style="text-align: right">
-                <H4>
-                    <asp:Label ID="lblGst" Text="0.00" runat="server"/>
+            <div class="col-md-4">
+                <H4><label>$</label>
+                    <label ID="lblGst" Text="0.00" runat="server"/>
                 </H4>
             </div>
             <div class="col-md-1"></div>
@@ -437,12 +428,9 @@
                     <label>TOTAL</label>
                 </H4>
             </div>
-            <div class="col-md-1">
-                <label>$</label>
-            </div>
-            <div class="col-md-3" style="text-align: right">
-                <H4>
-                    <asp:Label ID="lblTotalCost" Text="0.00" runat="server"/>
+            <div class="col-md-4">
+                <H4><label>$</label>
+                    <label ID="lblTotalCost" Text="0.00" runat="server"/>
                 </H4>
             </div>
             <div class="col-md-1"></div>

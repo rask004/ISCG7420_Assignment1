@@ -11,7 +11,6 @@
 .DecoHeader {
     border-top: 2px black solid;
     border-bottom: 2px black solid;
-    margin: 0.5%;
     width: 75%;
     display:  block;
 }
@@ -23,10 +22,26 @@
     display:  block;
 }
 
-.DecoHeader H3 {
+.DecoHeader div {
+    text-align: center;
+}
+
+.DecoHeader H1 H2 H3 H4 H5 H6 {
     vertical-align: middle;
     font-family: "Arial", sans-serif, monospace;
     justify-content: center;
+    margin: 20px auto;
+}
+
+.DecoSubHeader div {
+    text-align: center;
+}
+
+.DecoSubHeader H1 H2 H3 H4 H5 H6 {
+    vertical-align: middle;
+    font-family: "Arial", sans-serif, monospace;
+    justify-content: center;
+    margin: 20px auto;
 }
 
 .PageSection {
@@ -36,27 +51,6 @@
     margin: 4px;
     padding: 1%;
 }
-
-.PageSectionCentre {
-    background-color: whitesmoke;
-    border: black solid 1px; 
-    height: 86%;
-    margin: 4px;
-    padding: 1%;
-    position: fixed;
-    width: 48.8%;
-}
-
-.PageSectionSide {
-    background-color: whitesmoke;
-    border: black solid 1px; 
-    height: 86%;
-    margin: 4px;
-    padding: 1%;
-    position: fixed;
-    width: 23.3%;
-}
-
 
 .AdminSection {
     background-color: mintcream;
@@ -120,7 +114,7 @@
 
 
 .BlankRow {
-    margin: 1%;
+    margin: auto 20px;
 }
 
 .AdminRowColour {
@@ -150,3 +144,4 @@
     margin: 1%;
     width:100%
 }
+

@@ -39,18 +39,6 @@ public partial class Registration : Page
             txtStreetAddress.MaxLength = GeneralConstants.StreetAddressMaxLength;
             txtSuburb.MaxLength = GeneralConstants.SuburbMaxLength;
             txtCity.MaxLength = GeneralConstants.CityMaxLength;
-
-            txtEmail.Width = new Unit(txtEmail.MaxLength, UnitType.Em);
-            txtLogin.Width = new Unit(txtLogin.MaxLength, UnitType.Em);
-            txtPassword.Width = new Unit(txtPassword.MaxLength, UnitType.Em);
-            txtHomeNumber.Width = new Unit(txtHomeNumber.MaxLength, UnitType.Em);
-            txtWorkNumber.Width = new Unit(txtWorkNumber.MaxLength, UnitType.Em);
-            txtMobileNumber.Width = new Unit(txtMobileNumber.MaxLength, UnitType.Em);
-            txtFirstName.Width = new Unit(txtFirstName.MaxLength, UnitType.Em);
-            txtLastName.Width = new Unit(txtLastName.MaxLength, UnitType.Em);
-            txtStreetAddress.Width = new Unit(txtStreetAddress.MaxLength, UnitType.Em);
-            txtSuburb.Width = new Unit(txtSuburb.MaxLength, UnitType.Em);
-            txtCity.Width = new Unit(txtCity.MaxLength, UnitType.Em);
         }
     }
 

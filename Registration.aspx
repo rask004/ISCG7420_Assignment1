@@ -7,14 +7,17 @@
 
 --%>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
-<div class="container PageSectionCentre">
+<div class="container PageSection">
 <div class="row">
-    <div class="DecoHeader" style="margin-left: 12%">
-        <H3 style="margin-left: 41%">Registration</H3>
-    </div>
+    <span class="DecoHeader" style="margin-left: 11%;">
+        <div>
+            <H3>Registration</H3>
+        </div>
+    </span>
 </div>
 <div class="row">
-    <span class="BlankRow"></span></div>
+    <span class="BlankRow"></span>
+</div>
 <div class="row">
     <div class="col-md-2">
 
@@ -33,9 +36,7 @@
                              OnServerValidate="FirstLastNameValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtFirstName" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtFirstName" runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -61,9 +62,7 @@
                              OnServerValidate="FirstLastNameValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtLastName" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtLastName" runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -90,9 +89,7 @@
                              OnServerValidate="EmailValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtEmail" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtEmail" runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -119,9 +116,7 @@
                              OnServerValidate="LoginValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtLogin" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtLogin" runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -147,9 +142,7 @@
                              OnServerValidate="PasswordValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtPassword" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtPassword" runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -176,9 +169,7 @@
                              OnServerValidate="LandlineNumberValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtHomeNumber" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtHomeNumber" runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -201,9 +192,7 @@
                              OnServerValidate="LandlineNumberValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtWorkNumber" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtWorkNumber" runat="server" />
     </div>
     <div class="col-md-2">
     </div>
@@ -225,9 +214,7 @@
                              OnServerValidate="MobileNumberValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtMobileNumber" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtMobileNumber" runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -255,9 +242,7 @@
                              OnServerValidate="StreetAddressValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtStreetAddress"  runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtStreetAddress"  runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -283,9 +268,7 @@
                              OnServerValidate="SuburbCityValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtSuburb" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtSuburb" runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -311,9 +294,7 @@
                              OnServerValidate="SuburbCityValidation"/>
     </div>
     <div class="col-md-4">
-        <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtCity" runat="server" />
-                </span>
+                    <asp:TextBox CssClass="form-control input-sm" id="txtCity" runat="server" />
     </div>
     <div class="col-md-2">
 
@@ -342,26 +323,31 @@
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-md-1">
+            <div class="col-md-2">
 
             </div>
-            <div class="col-md-5">
-                <span class="ContentShiftLeft DecoSubHeader">
-                            <H5 style="margin-left: 33.3%"><b>
-                                <input ID="btnResetRegistration" type="reset" value="Reset" 
-                                    onclick="this.form.reset(); return false;"/>
-                            </b></H5>
-                        </span>
+            <div class="col-md-3">
+                <span class="DecoSubHeader">
+                    <div>
+                        <H5><b>
+                            <input ID="btnResetRegistration" type="reset" value="Reset" 
+                                onclick="this.form.reset(); return false;"/>
+                        </b></H5>
+                    </div>
+                </span>
             </div>
-            <div class="col-md-5">
-                <span class="ContentShiftRight DecoSubHeader">
-                            <H5 style="margin-left: 33.3%"><b>
-                                <input ID="btnSubmitRegistration" name="submitRegistration" 
-                                    type="submit" value="Register"  OnServerClick="Register_Click" runat="server"/>
-                            </b></H5>
-                        </span>
+            <div class="col-md-2"></div>
+            <div class="col-md-3">
+                <span class="DecoSubHeader ContentShiftRight">
+                    <div>
+                        <H5><b>
+                            <input ID="btnSubmitRegistration" name="submitRegistration" 
+                                type="submit" value="Register"  OnServerClick="Register_Click" runat="server"/>
+                        </b></H5>
+                    </div>
+                </span>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
 
             </div>
         </div>

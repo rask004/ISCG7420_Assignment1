@@ -40,28 +40,28 @@ public partial class Customer_Details : Page
 
             if (customer == null)
             {
-                lblCustomerName.Text = "Could not retrieve the customer for this login: " + login;
-                lblCustomerEmail.Text = string.Empty;
-                lblCustomerHomeNumber.Text = string.Empty;
-                lblCustomerWorkNumber.Text = string.Empty;
-                lblCustomerMobileNumber.Text = string.Empty;
-                lblCustomerStreetAddress.Text = string.Empty;
-                lblCustomerSuburb.Text = string.Empty;
-                lblCustomerCity.Text = string.Empty;
+                lblCustomerName.InnerText = "Could not retrieve the customer for this login: " + login;
+                lblCustomerEmail.InnerText = string.Empty;
+                lblCustomerHomeNumber.InnerText = string.Empty;
+                lblCustomerWorkNumber.InnerText = string.Empty;
+                lblCustomerMobileNumber.InnerText = string.Empty;
+                lblCustomerStreetAddress.InnerText = string.Empty;
+                lblCustomerSuburb.InnerText = string.Empty;
+                lblCustomerCity.InnerText = string.Empty;
 
                 gvCustomerOrders.DataSource = null;
                 gvCustomerOrders.DataBind();
             }
             else
             {
-                lblCustomerName.Text = customer.FirstName + " " + customer.LastName;
-                lblCustomerEmail.Text = customer.Email;
-                lblCustomerHomeNumber.Text = customer.HomeNumber;
-                lblCustomerWorkNumber.Text = customer.WorkNumber;
-                lblCustomerMobileNumber.Text = customer.MobileNumber;
-                lblCustomerStreetAddress.Text = customer.StreetAddress;
-                lblCustomerSuburb.Text = customer.Suburb;
-                lblCustomerCity.Text = customer.City;
+                lblCustomerName.InnerText = customer.FirstName + " " + customer.LastName;
+                lblCustomerEmail.InnerText = customer.Email;
+                lblCustomerHomeNumber.InnerText = customer.HomeNumber;
+                lblCustomerWorkNumber.InnerText = customer.WorkNumber;
+                lblCustomerMobileNumber.InnerText = customer.MobileNumber;
+                lblCustomerStreetAddress.InnerText = customer.StreetAddress;
+                lblCustomerSuburb.InnerText = customer.Suburb;
+                lblCustomerCity.InnerText = customer.City;
 
                 ReBind_CustomerOrders();
             }

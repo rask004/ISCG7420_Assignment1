@@ -7,11 +7,13 @@
 
 --%>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
-    <div class="container PageSectionCentre">
+    <div class="container PageSection">
         <div class="row">
-            <div class="DecoHeader" style="margin-left: 12%">
-                <H3 style="margin-left: 50%">Login</H3>
-            </div>
+            <span class="DecoHeader" style="margin-left:11%">
+                <div>
+                    <H3>Login</H3>
+                </div>
+            </span>
         </div>
         <div class="row">
             <span class="BlankRow"></span></div>

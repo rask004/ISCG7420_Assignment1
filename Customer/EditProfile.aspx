@@ -15,11 +15,13 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
-<div class="container PageSectionCentre">
+<div class="container PageSection">
 <div class="row">
-    <div class="DecoHeader" style="margin-left: 12%">
-        <H3 style="margin-left: 40%">Edit Profile</H3>
+    <span class="DecoHeader" style="margin-left:12%">
+    <div >
+        <H3 >Edit Profile</H3>
     </div>
+    </span>
 </div>
 <div class="row">
     <span class="BlankRow"></span></div>
@@ -42,15 +44,13 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtFirstName" runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtFirstName" runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
 
     </div>
 </div>
-<div class="row">
-    <span class="BlankRow"></span></div>
 <div class="row">
     <div class="col-md-2">
 
@@ -70,7 +70,7 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtLastName" runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtLastName" runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
@@ -78,8 +78,6 @@
     </div>
 </div>
 
-<div class="row">
-    <span class="BlankRow"></span></div>
 <div class="row">
     <div class="col-md-2">
 
@@ -99,7 +97,7 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtEmail" runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtEmail" runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
@@ -122,13 +120,14 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtLogin" Enabled="False" runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtLogin" Enabled="False" runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
 
     </div>
 </div>
+
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
@@ -137,7 +136,7 @@
     </div>
     <div class="col-md-3">
         <span class="ContentShiftLeft">
-                    <asp:Button ID="btnUserRegeneratePassword" OnClick="btnUserChangePassword_OnClick"
+                    <asp:Button CssClass="btn btn-danger" ID="btnUserChangePassword" OnClick="btnUserChangePassword_OnClick"
                         CausesValidation="false" Text="Change Password" runat="server"/>
                 </span>
     </div>
@@ -148,7 +147,7 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight">
-                    <asp:TextBox ID="txtUserPassword" Text=""
+                    <asp:TextBox CssClass="form-control input-sm" ID="txtUserPassword" Text=""
                         Enabled="false" runat="server" />
                 </span>
     </div>
@@ -156,6 +155,7 @@
         <span class="BlankRow"></span>
     </div>
 </div>
+
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
@@ -176,15 +176,13 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtHomeNumber" runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtHomeNumber" runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
 
     </div>
 </div>
-<div class="row">
-    <span class="BlankRow"></span></div>
 <div class="row">
     <div class="col-md-2">
 
@@ -201,14 +199,12 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtWorkNumber" runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtWorkNumber" runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
     </div>
 </div>
-<div class="row">
-    <span class="BlankRow"></span></div>
 <div class="row">
     <div class="col-md-2">
 
@@ -225,14 +221,13 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtMobileNumber" runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtMobileNumber" runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
 
     </div>
 </div>
-
 
 <div class="row">
     <span class="BlankRow"></span></div>
@@ -255,15 +250,13 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtStreetAddress"  runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtStreetAddress"  runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
 
     </div>
 </div>
-<div class="row">
-    <span class="BlankRow"></span></div>
 <div class="row">
     <div class="col-md-2">
 
@@ -283,15 +276,13 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtSuburb" runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtSuburb" runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
 
     </div>
 </div>
-<div class="row">
-    <span class="BlankRow"></span></div>
 <div class="row">
     <div class="col-md-2">
 
@@ -311,7 +302,7 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight ">
-                    <asp:TextBox id="txtCity" runat="server" />
+                    <asp:TextBox CssClass="form-control input-sm" id="txtCity" runat="server" />
                 </span>
     </div>
     <div class="col-md-2">
@@ -321,6 +312,7 @@
 
 <div class="row">
     <span class="BlankRow"></span></div>
+
 <div class="row">
     <div class="col-md-1">
 
@@ -334,6 +326,7 @@
 
     </div>
 </div>
+
 <div class="row">
     <span class="BlankRow"></span></div>
 
@@ -347,7 +340,7 @@
             <div class="col-md-5">
                 <span class="ContentShiftLeft DecoSubHeader">
                             <H5 style="margin-left: 33.3%"><b>
-                                <input ID="btnResetRegistration" type="reset" value="Reset" 
+                                <input class="btn btn-primary" ID="btnResetRegistration" type="reset" value="Reset" 
                                     onclick="this.form.reset(); return false;"/>
                             </b></H5>
                         </span>
@@ -355,7 +348,7 @@
             <div class="col-md-5">
                 <span class="ContentShiftRight DecoSubHeader">
                             <H5 style="margin-left: 33.3%"><b>
-                                <input ID="btnSubmitRegistration" name="submitRegistration" 
+                                <input class="btn btn-primary" ID="btnSubmitRegistration" name="submitRegistration" 
                                     type="submit" value="Update"  OnServerClick="Update_Click" runat="server"/>
                             </b></H5>
                         </span>

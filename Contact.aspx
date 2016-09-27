@@ -9,11 +9,13 @@
 
 --%>
 <asp:Content ID="ContactBody" ContentPlaceHolderID="PageContentCentre" Runat="Server">
-    <div class="container PageSectionCentre">
+    <div class="container PageSection">
         <div class="row">
-            <div class="DecoHeader" style="margin-left: 12%">
-                <H3 style="margin-left: 43%">Contact Us</H3>
-            </div>
+            <span class="DecoHeader" style="margin-left: 11%;">
+                <div>
+                    <H3>Contact Us</H3>
+                </div>
+            </span>
         </div>
         <div class="row">
             <span class="BlankRow"></span>

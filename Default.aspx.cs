@@ -198,14 +198,14 @@ public partial class _Default : Page
     /// <param name="e"></param>
     protected void LstvCategoriesWithProductsOnItemDataBound(object sender, ListViewItemEventArgs e)
     {
-        var img = e.Item.FindControl("imgCategoryPicture") as ImageButton;
+        var imgButton = e.Item.FindControl("ibtnCategoryPicture") as ImageButton;
         try
         {
             var id = Convert.ToInt32((e.Item.FindControl("lblCategoryId") as Label).Text);
             var controller = new PublicController();
-            if (img != null)
+            if (imgButton != null)
             {
-                img.ImageUrl = controller.GetFirstCapImageByCategoryId(id);
+                imgButton.ImageUrl = controller.GetFirstCapImageByCategoryId(id);
             }
         }
         catch (NullReferenceException ex)
@@ -213,9 +213,9 @@ public partial class _Default : Page
             (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
                 "NullReferenceException, Could not reference a control. Method:" + ex.TargetSite + "; message:" +
                 ex.Message);
-            if (img != null)
+            if (imgButton != null)
             {
-                img.ImageUrl = GeneralConstants.CapImageDefaultFileName;
+                imgButton.ImageUrl = GeneralConstants.CapImageDefaultFileName;
             }
         }
     }
@@ -302,15 +302,15 @@ public partial class _Default : Page
                 }
                 var gst = subtotal*GeneralConstants.MoneyGstRate;
 
-                lblSubtotal.Text = subtotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
-                lblGst.Text = gst.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
-                lblTotalCost.Text = (subtotal + gst).ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                lblSubtotal.InnerText = subtotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                lblGst.InnerText = gst.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                lblTotalCost.InnerText = (subtotal + gst).ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
             }
             else
             {
-                lblSubtotal.Text = "0.00";
-                lblGst.Text = "0.00";
-                lblTotalCost.Text = "0.00";
+                lblSubtotal.InnerText = "0.00";
+                lblGst.InnerText = "0.00";
+                lblTotalCost.InnerText = "0.00";
             }
         }
     }
