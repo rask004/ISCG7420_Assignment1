@@ -322,7 +322,7 @@
                     <div class="row">
                         <div class="col-md-4"></div>
                         <div class="col-md-4">
-                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lvShoppingItems" PageSize="5">
+                            <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lvShoppingItems" PageSize="4">
                                 <Fields>
                                     <asp:NextPreviousPagerField ButtonType="Link" ShowFirstPageButton="false" ShowPreviousPageButton="true"
                                                                 ShowNextPageButton="false"/>

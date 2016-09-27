@@ -78,8 +78,6 @@ namespace Master
         protected void lgnStatusCustomer_OnLoggingOut(object sender, LoginCancelEventArgs e)
         {
             Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            Session[Security.SessionIdentifierLogin] = null;
-            Session[Security.SessionIdentifierSecurityToken] = null;
             Session.Abandon();
         }
 

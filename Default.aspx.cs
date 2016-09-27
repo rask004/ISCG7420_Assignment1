@@ -302,9 +302,9 @@ public partial class _Default : Page
                 }
                 var gst = subtotal*GeneralConstants.MoneyGstRate;
 
-                lblSubtotal.InnerText = subtotal.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
-                lblGst.InnerText = gst.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
-                lblTotalCost.InnerText = (subtotal + gst).ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                lblSubtotal.InnerText = subtotal.ToString("F2");
+                lblGst.InnerText = gst.ToString("F2");
+                lblTotalCost.InnerText = (subtotal + gst).ToString("F2");
             }
             else
             {

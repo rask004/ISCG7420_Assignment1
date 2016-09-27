@@ -29,9 +29,11 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
 <div class="container PageSection" style="border: black solid 1px;">
 <div class="row">
-    <div class="DecoHeader" style="margin-left: 12%">
-        <H3 style="margin-left: 39%">Checkout</H3>
+    <span class="DecoHeader" style="margin-left: 12%">
+    <div >
+        <H3>Checkout</H3>
     </div>
+    </span>
 </div>
 <div class="row">
     <span class="BlankRow"></span>
@@ -120,24 +122,18 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-5">
                                             <label>Quantity:</label>
+                                            <span class="ContentShiftRight"><input type="number" disabled id="nptQuantity" min="1" max="99" name="nptQuantity" value='<%# DataBinder.Eval(Container.DataItem, "Quantity") %>'
+                                                   runat="server" onchange="updateTotal();"/></span>
                                         </div>
-                                        <div class="col-md-2">
-                                            <input type="number" disabled id="nptQuantity" min="1" max="99" name="nptQuantity" value='<%# DataBinder.Eval(Container.DataItem, "Quantity") %>'
-                                                   runat="server" onchange="updateTotal();"/>
-                                        </div>
-                                        <div class="col-md-1">
+                                        <div class="col-md-3">
                                             <label>X </label>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label><%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.Price")).ToString("C", CultureInfo.CreateSpecificCulture("en-US")) %></label>
+                                            <span class="ContentShiftRight"><label><%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.Price")).ToString("C", CultureInfo.CreateSpecificCulture("en-US")) %></label></span>
                                             <label id="lblCapPrice" hidden><%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.Price")) %></label>
                                         </div>
-                                        <div class="col-md-1">
+                                        <div class="col-md-3">
                                             <label>=</label>
-                                        </div>
-                                        <div class="col-md-2">
                                             <span class="ContentShiftRight"><label id="lblTotalPrice"><%# (Convert.ToInt32(DataBinder.Eval(Container.DataItem, "Quantity"))*Convert.ToDouble(DataBinder.Eval(Container.DataItem, "Cap.Price"))).ToString("C", CultureInfo.CreateSpecificCulture("en-US")) %></label></span>
                                         </div>
                                         <div class="col-md-1">
@@ -153,7 +149,7 @@
                     <div class="row">
                         <br/>
                         <div class="col-md-1"></div>
-                        <div class="col-md-10" style="border-bottom: black solid 1px"></div>
+                        <div class="col-md-10" style="border-bottom: darkgrey solid 1px"></div>
                         <div class="col-md-1"></div>
                     </div>
                 </ItemTemplate>
@@ -197,7 +193,7 @@
                     <br/>
                 </div>
             </div>
-            <div class="row" style="border-top: 1px black solid">
+            <div class="row" style="border-top: 1px darkgrey solid">
                 <div class="col-md-12">
                     <br/>
                 </div>

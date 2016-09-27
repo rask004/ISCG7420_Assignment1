@@ -10,6 +10,8 @@
 <script runat="server">
 
     /// <summary>
+    ///     Manage start of application
+    ///     Setup logger.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -29,6 +31,9 @@
     }
 
     /// <summary>
+    ///     Manage errors, globally
+    ///     Manage failure to connect to database
+    ///     Otherwise use default error page.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -51,6 +56,8 @@
     }
 
     /// <summary>
+    ///     Manage session start
+    ///     Set for not logged in, no security tokens, empty shopping cart, no previous errors.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -64,12 +71,16 @@
     }
 
     /// <summary>
+    ///     End session or abandon session
+    ///     clear any security or authentication tokens, log the customer out, send to default page.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void Session_End(object sender, EventArgs e)
     {
         Session[Security.SessionIdentifierSecurityToken] = null;
+        Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+        Response.Redirect("~/Default");
     }
 
 </script>
