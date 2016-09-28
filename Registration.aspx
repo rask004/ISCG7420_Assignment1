@@ -19,15 +19,15 @@
     <span class="BlankRow"></span>
 </div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>First Name:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:RequiredFieldValidator runat="server"
                                     ControlToValidate="txtFirstName"
                                     ErrorMessage="*" ForeColor="red"/>
@@ -35,25 +35,25 @@
                              ControlToValidate="txtFirstName"
                              OnServerValidate="FirstLastNameValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtFirstName" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>Last Name:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:RequiredFieldValidator runat="server"
                                     ControlToValidate="txtLastName"
                                     ErrorMessage="*" ForeColor="red"/>
@@ -61,10 +61,10 @@
                              ControlToValidate="txtLastName"
                              OnServerValidate="FirstLastNameValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtLastName" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
@@ -72,15 +72,15 @@
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>Email:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:RequiredFieldValidator runat="server"
                                     ControlToValidate="txtEmail"
                                     ErrorMessage="*" ForeColor="red"/>
@@ -88,10 +88,10 @@
                              ControlToValidate="txtEmail"
                              OnServerValidate="EmailValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtEmail" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
@@ -99,15 +99,15 @@
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>Login:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:RequiredFieldValidator runat="server"
                                     ControlToValidate="txtLogin"
                                     ErrorMessage="*" ForeColor="red"/>
@@ -115,25 +115,25 @@
                              ControlToValidate="txtLogin"
                              OnServerValidate="LoginValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtLogin" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>Password:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:RequiredFieldValidator runat="server"
                                     ControlToValidate="txtPassword"
                                     ErrorMessage="*" ForeColor="red"/>
@@ -141,10 +141,10 @@
                              ControlToValidate="txtPassword"
                              OnServerValidate="PasswordValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtPassword" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
@@ -153,70 +153,70 @@
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>Home Contact Number:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:CustomValidator runat="server"
                              OnServerValidate="ContactNumberRequired"/>
         <asp:CustomValidator runat="server"
                              ControlToValidate="txtHomeNumber"
                              OnServerValidate="LandlineNumberValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtHomeNumber" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>Work Contact Number:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:CustomValidator runat="server"
                              ControlToValidate="txtWorkNumber"
                              OnServerValidate="LandlineNumberValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtWorkNumber" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
     </div>
 </div>
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>Mobile Contact Number:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:CustomValidator runat="server"
                              ControlToValidate="txtMobileNumber"
                              OnServerValidate="MobileNumberValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtMobileNumber" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
@@ -225,15 +225,15 @@
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>Street Address:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:RequiredFieldValidator runat="server"
                                     ControlToValidate="txtStreetAddress"
                                     ErrorMessage="*" ForeColor="red"/>
@@ -241,25 +241,25 @@
                              ControlToValidate="txtStreetAddress"
                              OnServerValidate="StreetAddressValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtStreetAddress"  runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>Suburb:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:RequiredFieldValidator runat="server"
                                     ControlToValidate="txtSuburb"
                                     ErrorMessage="*" ForeColor="red"/>
@@ -267,25 +267,25 @@
                              ControlToValidate="txtSuburb"
                              OnServerValidate="SuburbCityValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtSuburb" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-0 col-sm-1 col-md-2">
 
     </div>
-    <div class="col-md-3">
-        <span class="ContentShiftLeft">
+    <div class="col-xs-12 col-sm-4 col-md-3">
+        <span>
                     <label>City:</label>
                 </span>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
         <asp:RequiredFieldValidator runat="server"
                                     ControlToValidate="txtCity"
                                     ErrorMessage="*" ForeColor="red"/>
@@ -293,10 +293,10 @@
                              ControlToValidate="txtCity"
                              OnServerValidate="SuburbCityValidation"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtCity" runat="server" />
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-1 col-md-2">
 
     </div>
 </div>
@@ -304,15 +304,15 @@
 <div class="row">
     <span class="BlankRow"></span></div>
 <div class="row">
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
 
     </div>
-    <div class="col-md-10">
+    <div class="col-xs-8 col-sm-10 col-md-10">
         <b>
             <asp:Label Text="" ForeColor="red" ID="lblErrorMessages" runat="server"/>
         </b>
     </div>
-    <div class="col-md-1">
+    <div class="col-xs-2 col-sm-1 col-md-1">
 
     </div>
 </div>
@@ -323,31 +323,31 @@
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-xs-4 col-sm-1 col-md-2">
 
             </div>
-            <div class="col-md-3">
-                <span class="DecoSubHeader">
+            <div class="col-xs-8 col-sm-3 col-md-3">
+                <span>
                     <div>
-                        <H5><b>
+                        <H5>
                             <input ID="btnResetRegistration" type="reset" value="Reset" 
                                 onclick="this.form.reset(); return false;"/>
-                        </b></H5>
+                        </H5>
                     </div>
                 </span>
             </div>
-            <div class="col-md-2"></div>
-            <div class="col-md-3">
-                <span class="DecoSubHeader ContentShiftRight">
+            <div class="col-xs-4 col-sm-5 col-md-3"></div>
+            <div class="col-xs-8 col-sm-2 col-md-3">
+                <span>
                     <div>
-                        <H5><b>
+                        <H5>
                             <input ID="btnSubmitRegistration" name="submitRegistration" 
                                 type="submit" value="Register"  OnServerClick="Register_Click" runat="server"/>
-                        </b></H5>
+                        </H5>
                     </div>
                 </span>
             </div>
-            <div class="col-md-2">
+            <div class="col-xs-0 col-sm-1 col-md-2">
 
             </div>
         </div>
