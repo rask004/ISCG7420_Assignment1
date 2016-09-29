@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Web;
 using System.Web.UI;
+using Microsoft.AspNet.Identity;
+using SecurityLayer;
 
 /// <summary>
 /// Changelog:
@@ -14,5 +17,13 @@ public partial class Admin_Default : Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
+        }
     }
 }

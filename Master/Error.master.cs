@@ -11,4 +11,9 @@ public partial class Master_Error : System.Web.UI.MasterPage
     {
 
     }
+
+    protected void HomePage_OnClick(object sender, EventArgs e)
+    {
+        Response.Redirect("~/Default");
+    }
 }

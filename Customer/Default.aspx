@@ -25,68 +25,68 @@
     </span>
 </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8">
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
+    <div class="col-xs-12 col-sm-10 col-md-8">
         <label ID="lblMessage" runat="server" style="background-color: #DDDDDD; font-size: 1.5em"></label>
     </div>
-    <div class="col-md-2"></div>
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
 </div>
 <div class="row">
     <br/>
 </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
+    <div class="col-xs-12 col-sm-5 col-md-3">
         <H5>
                         <label for="lblCustomerName">Customer:</label>
         </H5>
     </div>
-    <div class="col-md-5">
+    <div class="col-xs-12 col-sm-5 col-md-5">
         <H5>
-            <label runat="server" ID="lblCustomerName" Text=""/>
+            <label runat="server" ID="lblCustomerName" Text=""></label>
         </H5>
     </div>
 
-    <div class="col-md-2"></div>
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
 </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
+    <div class="col-xs-12 col-sm-5 col-md-3">
         <H5>
                         <label for="lblCustomerEmail">Email:</label>
         </H5>
     </div>
-    <div class="col-md-5">
+    <div class="col-xs-12 col-sm-5 col-md-5">
         <H5>
-                        <label runat="server" ID="lblCustomerEmail" Text=""/>
+                        <label runat="server" ID="lblCustomerEmail" Text=""></label>
         </H5>
     </div>
 
-    <div class="col-md-2"></div>
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
 </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
+    <div class="col-xs-12 col-sm-5 col-md-3">
         <H5>
                         <label for="lblCustomerHomeNumber">Home Number:</label>
         </H5>
     </div>
-    <div class="col-md-5">
+    <div class="col-xs-12 col-sm-5 col-md-5">
         <H5>
-                        <label runat="server" ID="lblCustomerHomeNumber" Text=""/>
+                        <label runat="server" ID="lblCustomerHomeNumber" Text=""></label>
         </H5>
     </div>
 
-    <div class="col-md-2"></div>
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
 </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
+    <div class="col-xs-12 col-sm-5 col-md-3">
         <H5>
                         <label for="lblCustomerWorkNumber">Work Number:</label>    
         </H5>
     </div>
-    <div class="col-md-5">
+    <div class="col-xs-12 col-sm-5 col-md-5">
         <H5>
             <span class="ContentShiftLeft">
                         <label runat="server" ID="lblCustomerWorkNumber" Text=""></label>
@@ -94,52 +94,52 @@
         </H5>
     </div>
 
-    <div class="col-md-2"></div>
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
 </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
+    <div class="col-xs-12 col-sm-5 col-md-3">
         <H5>
                         <label for="lblCustomerMobileNumber">Mobile Number:</label>
         </H5>
     </div>
-    <div class="col-md-5">
+    <div class="col-xs-12 col-sm-5 col-md-5">
         <H5>
                         <label runat="server" ID="lblCustomerMobileNumber" Text=""></label>
         </H5>
     </div>
 
-    <div class="col-md-2"></div>
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
 </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
+    <div class="col-xs-12 col-sm-5 col-md-3">
         <H5>
                         <label for="lblCustomerStreetAddress">Address:</label>
         </H5>
     </div>
-    <div class="col-md-5">
+    <div class="col-xs-12 col-sm-5 col-md-5">
         <H5>
                         <label runat="server" ID="lblCustomerStreetAddress" Text=""></label>
         </H5>
     </div>
-    <div class="col-md-2"></div>
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
 </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-3">
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
+    <div class="col-xs-0 col-sm-3 col-md-3">
     </div>
-    <div class="col-md-3">
+    <div class="col-xs-12 col-sm-2 col-md-3">
         <H5>
                         <label runat="server" ID="lblCustomerSuburb" Text=""></label>
         </H5>
     </div>
-    <div class="col-md-2">
+    <div class="col-xs-12 col-sm-3 col-md-2">
         <H5>
                         <label runat="server" ID="lblCustomerCity" Text=""></label>
         </H5>
     </div>
-    <div class="col-md-2"></div>
+    <div class="col-xs-0 col-sm-1 col-md-2"></div>
 </div>
 <div class="row">
     <span class="BlankRow"></span>
@@ -148,23 +148,22 @@
     <span class="BlankRow"></span>
 </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8">
+    <div class="col-xs-2 col-sm-2 col-md-2"></div>
+    <div class="col-xs-8 col-sm-8 col-md-8">
         <span class="DecoSubHeader" style="margin-left:25%">
                 <div><H4>
                     <a href="EditProfile.aspx">Update Customer Details</a>
                 </H4></div>
 </span>
     </div>
-    <div class="col-md-2"></div>
+    <div class="col-xs-2 col-sm-2 col-md-2"></div>
 </div>
 <div class="row">
     <span class="BlankRow"></span>
 </div>
 <div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-        <div class="container" style="border: solid 1px black; padding: 1%;">
+    <div class="col-xs-0 col-sm-1 col-md-1"></div>
+    <div class="col-xs-12 col-sm-10 col-md-10">
 
             <asp:GridView Width="100%" ID="gvCustomerOrders" AllowSorting="False" CellPadding="5"
                           CellSpacing="5" AutoGenerateDeleteButton="False" AutoGenerateEditButton="False"
@@ -173,12 +172,12 @@
                           OnPageIndexChanging="grdvCustomerOrders_OnPageIndexChanging">
 
                 <Columns>
-                    <asp:BoundField DataField="OrderId" HeaderText="Order ID" ReadOnly="True"/>
+                    <asp:BoundField DataField="OrderId" HeaderText="ID" ReadOnly="True"/>
                     <asp:BoundField DataField="CustomerOrder.DatePlaced" DataFormatString="{0:d}"
-                                    HeaderText="Date" ReadOnly="True" NullDisplayText="Not Recorded"/>
+                                    HeaderText="Date" ReadOnly="True" NullDisplayText=""/>
                     <asp:BoundField DataField="CustomerOrder.Status" HeaderText="Status" ReadOnly="True"/>
-                    <asp:BoundField DataField="TotalQuantity" HeaderText="Total Quantity" ReadOnly="True"/>
-                    <asp:BoundField DataField="TotalPrice" HeaderText="Total Price" ReadOnly="True"
+                    <asp:BoundField DataField="TotalQuantity" HeaderText="Qty" ReadOnly="True"/>
+                    <asp:BoundField DataField="TotalPrice" HeaderText="Cost" ReadOnly="True"
                                     DataFormatString="{0:c}"/>
 
                 </Columns>
@@ -189,9 +188,8 @@
                 </EmptyDataTemplate>
 
             </asp:GridView>
-        </div>
     </div>
-    <div class="col-md-1"></div>
+    <div class="col-xs-0 col-sm-1 col-md-1"></div>
 </div>
 
 </div>

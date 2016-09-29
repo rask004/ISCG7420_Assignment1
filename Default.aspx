@@ -139,8 +139,8 @@
                                     <ItemTemplate>
                                         <div class="container-fluid">
                                             <div class="row">
-                                                <div class="col-xs-0 col-sm-1 col-md-2"></div>
-                                                <div class="col-xs-12 col-sm-7 col-md-4">
+                                                <div class="col-xs-0 col-sm-1 col-md-1"></div>
+                                                <div class="col-xs-12 col-sm-5 col-md-4">
                                                     <span><H4><asp:ImageButton ID="ibtnCapPicture"
                                                         AlternateText='Image for <%# DataBinder.Eval(Container.DataItem, "name") %>'
                                                         ImageUrl='<%# DataBinder.Eval(Container.DataItem, "imageUrl") %>'
@@ -149,29 +149,29 @@
                                                         Width="100%"
                                                         runat="server"/></H4></span>
                                                 </div>
-                                                <div class="col-xs-0 col-sm-4 col-md-6"></div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-0 col-sm-1 col-md-2"></div>
-                                                <div class="col-xs-12 col-sm-10 col-md-8">
-                                                    <span><H4><asp:Label ID="lblCapName" 
-                                                        Text='<%# DataBinder.Eval(Container.DataItem, "name") %>'
-                                                        runat="server"/></H4></span>
-                                                </div>
-                                                <div class="col-xs-0 col-sm-1 col-md-2">
-                                                    <asp:Label Visible="False" ID="lblCapId"
-                                                               Text='<%# DataBinder.Eval(Container.DataItem, "id") %>'
-                                                               runat="server"/>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-2 col-sm-1 col-md-2"></div>
-                                                <div class="col-xs-8 col-sm-10 col-md-8">
-                                                    <span><H4><asp:Label ID="lblCapPrice" 
-                                                        Text='<%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "price")).ToString("C", CultureInfo.CreateSpecificCulture("en-US")) %>'
-                                                        runat="server"/></H4></span>
-                                                </div>
-                                                <div class="col-xs-2 col-sm-1 col-md-2">
+                                                <div class="col-xs-12 col-sm-6 col-md-7">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-12">
+                                                            <span><H4><asp:Label ID="lblCapName" 
+                                                                Text='<%# DataBinder.Eval(Container.DataItem, "name") %>'
+                                                                runat="server"/></H4></span>
+                                                        </div>
+                                                        <div class="col-xs-0 col-sm-0 col-md-0">
+                                                            <asp:Label Visible="False" ID="lblCapId"
+                                                                       Text='<%# DataBinder.Eval(Container.DataItem, "id") %>'
+                                                                       runat="server"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-2 col-sm-0 col-md-0"></div>
+                                                        <div class="col-xs-8 col-sm-12 col-md-12">
+                                                            <span><H4><asp:Label ID="lblCapPrice" 
+                                                                Text='<%# Convert.ToDouble(DataBinder.Eval(Container.DataItem, "price")).ToString("C", CultureInfo.CreateSpecificCulture("en-US")) %>'
+                                                                runat="server"/></H4></span>
+                                                        </div>
+                                                        <div class="col-xs-2 col-sm-0 col-md-0">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Text;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using BusinessLayer;
 using Common;
 using CommonLogging;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 /// <summary>
@@ -23,6 +25,15 @@ public partial class Customer_Profile : Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
+        }
+
         (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
             "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
@@ -40,17 +51,6 @@ public partial class Customer_Profile : Page
             txtStreetAddress.MaxLength = GeneralConstants.StreetAddressMaxLength;
             txtSuburb.MaxLength = GeneralConstants.SuburbMaxLength;
             txtCity.MaxLength = GeneralConstants.CityMaxLength;
-
-            txtEmail.Width = new Unit(txtEmail.MaxLength, UnitType.Em);
-            txtLogin.Width = new Unit(txtLogin.MaxLength, UnitType.Em);
-            txtHomeNumber.Width = new Unit(txtHomeNumber.MaxLength, UnitType.Em);
-            txtWorkNumber.Width = new Unit(txtWorkNumber.MaxLength, UnitType.Em);
-            txtMobileNumber.Width = new Unit(txtMobileNumber.MaxLength, UnitType.Em);
-            txtFirstName.Width = new Unit(txtFirstName.MaxLength, UnitType.Em);
-            txtLastName.Width = new Unit(txtLastName.MaxLength, UnitType.Em);
-            txtStreetAddress.Width = new Unit(txtStreetAddress.MaxLength, UnitType.Em);
-            txtSuburb.Width = new Unit(txtSuburb.MaxLength, UnitType.Em);
-            txtCity.Width = new Unit(txtCity.MaxLength, UnitType.Em);
 
             try
             {

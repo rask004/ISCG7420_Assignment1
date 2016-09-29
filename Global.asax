@@ -66,7 +66,6 @@
         Session["lastError"] = null;
         Session["pageOfLastError"] = null;
         Session[GeneralConstants.SessionCartItems] = new List<OrderItem>();
-        Session[Security.SessionIdentifierLogin] = null;
         Session[Security.SessionIdentifierSecurityToken] = null;
     }
 
@@ -78,9 +77,9 @@
     /// <param name="e"></param>
     private void Session_End(object sender, EventArgs e)
     {
+        Session["lastError"] = null;
+        Session["pageOfLastError"] = null;
         Session[Security.SessionIdentifierSecurityToken] = null;
-        Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-        Response.Redirect("~/Default");
     }
 
 </script>
