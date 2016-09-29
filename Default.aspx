@@ -41,18 +41,19 @@
                                     </asp:PlaceHolder>
                                     <br/>
                                     <div class="row">
-                                        <div class="col-xs-2 col-sm-3 col-md-4"></div>
-                                        <div class="col-xs-10 col-sm-6 col-md-4">
+                                        <div class="col-xs-2 col-sm-2 col-md-2"></div>
+                                        <div class="col-xs-10 col-sm-8 col-md-8">
                                             <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lvCategoriesWithProducts" PageSize="3">
                                                 <Fields>
                                                     <asp:NextPreviousPagerField ButtonType="Link" ShowFirstPageButton="false" ShowPreviousPageButton="true"
-                                                                                ShowNextPageButton="false"/>
+                                                                                ShowNextPageButton="false" ButtonCssClass="btn btn-info btn-xs"/>
                                                     <asp:NumericPagerField ButtonType="Link"/>
-                                                    <asp:NextPreviousPagerField ButtonType="Link" ShowNextPageButton="true" ShowLastPageButton="false" ShowPreviousPageButton="false"/>
+                                                    <asp:NextPreviousPagerField ButtonType="Link" ShowNextPageButton="true" ShowLastPageButton="false" 
+                                                                                ShowPreviousPageButton="false" ButtonCssClass="btn btn-info btn-xs"/>
                                                 </Fields>
                                             </asp:DataPager>
                                         </div>
-                                        <div class="col-xs-0 col-sm-3 col-md-4"></div>
+                                        <div class="col-xs-0 col-sm-2 col-md-2"></div>
                                     </div>
                                 </LayoutTemplate>
 
@@ -179,20 +180,20 @@
                                 </asp:DataList>
 
                                 <div class="row">
-                                    <div class="col-xs-0 col-sm-3 col-md-3"></div>
-                                    <div class="col-xs-3 col-sm-2 col-md-2">
+                                    <div class="col-xs-0 col-sm-3 col-md-2"></div>
+                                    <div class="col-xs-3 col-sm-2 col-md-3">
                                         <asp:LinkButton runat="server" ID="btnPreviousProductPage" OnClick="btnChangeProductPage_OnClick"
-                                                        Text="Previous"/>
+                                                        Text="Previous" CssClass="btn btn-info btn-xs"/>
                                     </div>
                                     <div class="col-xs-6 col-sm-2 col-md-2">
-                                        <asp:Label runat="server" ID="lblCurrentProductPage"/>
+                                        Page: <asp:Label runat="server" ID="lblCurrentProductPage"/>
                                     </div>
-                                    <div class="col-xs-3 col-sm-2 col-md-2">
+                                    <div class="col-xs-3 col-sm-2 col-md-3">
                                         <span class="ContentShiftRight">
                                         <asp:LinkButton runat="server" ID="btnNextProductPage" OnClick="btnChangeProductPage_OnClick"
-                                            Text="Next"/>
+                                            Text="Next" CssClass="btn btn-info btn-xs"/>
                                     </span></div>
-                                    <div class="col-xs-0 col-sm-3 col-md-3"></div>
+                                    <div class="col-xs-0 col-sm-3 col-md-2"></div>
                                 </div>
                             </div>
 
@@ -318,19 +319,21 @@
                     </asp:PlaceHolder>
                     <br/>
                     <div class="row">
-                        <div class="col-xs-2 col-sm-4 col-md-4"></div>
-                        <div class="col-xs-8 col-sm-4 col-md-4">
+                        <div class="col-xs-2 col-sm-3 col-md-3"></div>
+                        <div class="col-xs-10 col-sm-6 col-md-6">
                             <asp:DataPager ID="dpgItemPager" runat="server" PagedControlID="lvShoppingItems" PageSize="4">
                                 <Fields>
                                     <asp:NextPreviousPagerField ButtonType="Link" ShowFirstPageButton="false" ShowPreviousPageButton="true"
-                                                                ShowNextPageButton="false"/>
+                                                                ShowNextPageButton="false" ButtonCssClass="btn btn-info btn-xs" />
                                     <asp:NumericPagerField ButtonType="Link"/>
-                                    <asp:NextPreviousPagerField ButtonType="Link" ShowNextPageButton="true" ShowLastPageButton="false" ShowPreviousPageButton="false"/>
+                                    <asp:NextPreviousPagerField ButtonType="Link" ShowNextPageButton="true" ShowLastPageButton="false" 
+                                                                ShowPreviousPageButton="false" ButtonCssClass="btn btn-info btn-xs" />
                                 </Fields>
                             </asp:DataPager>
                         </div>
-                        <div class="col-xs-2 col-sm-4 col-md-4"></div>
+                        <div class="col-xs-0 col-sm-3 col-md-3"></div>
                     </div>
+                    <br/>
                 </LayoutTemplate>
 
                 <ItemTemplate>
@@ -437,7 +440,7 @@
             <div class="col-xs-12 col-sm-7 col-md-5">
                 <H4>
                     <asp:Button ID="btnCartClear" runat="server" Text="Clear"
-                                CssClass="caption btn btn-primary" OnClick="btnCartClear_OnClick"/>
+                                CssClass="btn btn-primary" OnClick="btnCartClear_OnClick"/>
                 </H4>
             </div>
             <div class="col-xs-12 col-sm-3 col-md-5" style="text-align: right">
@@ -448,7 +451,7 @@
                                 <span style="color: black">Login to complete order.</span></i>
                         </AnonymousTemplate>
                         <LoggedInTemplate>
-                            <asp:Button CssClass="caption btn btn-primary" ID="btnProceedToCheckout" runat="server" Text="Checkout"
+                            <asp:Button CssClass="btn btn-primary" ID="btnProceedToCheckout" runat="server" Text="Checkout"
                                         OnClick="btnProceedToCheckout_OnClick" Enabled="True"/>
                         </LoggedInTemplate>
                     </asp:LoginView>

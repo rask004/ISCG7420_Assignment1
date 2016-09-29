@@ -192,6 +192,12 @@ public partial class Customer_Checkout : Page
 
         if (cartContentsChanged)
         {
+            if (!(Session[GeneralConstants.SessionCartItems] as List<OrderItem>).Any())
+            {
+                btnPlaceOrder.Enabled = false;
+                btnPlaceOrder.CssClass += " disabled";
+            }
+
             ReBind();
 
             RecalculateTotals();

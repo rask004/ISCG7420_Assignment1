@@ -96,12 +96,12 @@
                                                         CommandArgument=<%# new[] {Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")), Convert.ToInt32(DataBinder.Eval(Container.DataItem, "colourId"))} %>/>
                                         </div>
                                         <div class="col-xs-4 col-sm-4 col-md-3">
-                                            <asp:Button runat="server" Text="Undo" CssClass="btn btn-info"
+                                            <asp:Button runat="server" Text="Undo" CssClass="btn btn-info" 
                                                         CommandName="undoItem"
                                                         CommandArgument=<%# new[] {Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")), Convert.ToInt32(DataBinder.Eval(Container.DataItem, "colourId"))} %>/>
                                         </div>
                                         <div class="col-xs-4 col-sm-2 col-md-1">
-                                            <asp:Button runat="server" Text="X" CssClass="btn btn-danger"
+                                            <asp:Button runat="server" Text="X" CssClass="btn btn-danger" OnClientClick="setTimeout('window.location.reload()', 5000);"
                                                         CommandName="deleteItem"
                                                         CommandArgument=<%# new[] {Convert.ToInt32(DataBinder.Eval(Container.DataItem, "capId")), Convert.ToInt32(DataBinder.Eval(Container.DataItem, "colourId"))} %>/>
                                         </div>
@@ -158,6 +158,12 @@
                 <ItemSeparatorTemplate>
                     <br/>
                 </ItemSeparatorTemplate>
+                
+                <EmptyDataTemplate>
+                    <div style="text-align: center">
+                        Your shopping cart is now empty.
+                    </div>
+                </EmptyDataTemplate>
             </asp:ListView>
 
         </div>
@@ -241,7 +247,7 @@
             
             <H4>
                 <span>
-                    <asp:LinkButton Text="Complete Order" CssClass="btn btn-primary" OnClick="CompleteOrder_OnClick" runat="server"/>
+                    <asp:LinkButton ID="btnPlaceOrder" Text="Complete Order" CssClass="btn btn-primary" OnClick="CompleteOrder_OnClick" runat="server"/>
                 </span>
             </H4>
         </div>

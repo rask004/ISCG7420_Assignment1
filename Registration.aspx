@@ -330,7 +330,7 @@
                 <span>
                     <div>
                         <H5>
-                            <input ID="btnResetRegistration" type="reset" value="Reset" 
+                            <input ID="btnResetRegistration" type="reset" value="Reset"  class="btn btn-primary"
                                 onclick="this.form.reset(); return false;"/>
                         </H5>
                     </div>
@@ -341,7 +341,7 @@
                 <span>
                     <div>
                         <H5>
-                            <input ID="btnSubmitRegistration" name="submitRegistration" 
+                            <input ID="btnSubmitRegistration" name="submitRegistration" class="btn btn-primary"
                                 type="submit" value="Register"  OnServerClick="Register_Click" runat="server"/>
                         </H5>
                     </div>

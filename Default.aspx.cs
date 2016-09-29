@@ -91,7 +91,6 @@ public partial class _Default : Page
             Load_Caps();
             lblCentreHeader.Text = categoryName;
 
-            lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
         }
     }
 
@@ -106,7 +105,7 @@ public partial class _Default : Page
         pagedData.DataSource = caps;
         pagedData.CurrentPageIndex = AvailableProductsCurrentPageIndex;
         pagedData.AllowPaging = true;
-        pagedData.PageSize = 9;
+        pagedData.PageSize = 6;
         dlstAvailableProducts.DataSource = pagedData;
         Prepare_PageButtons(pagedData);
         dlstAvailableProducts.DataBind();
@@ -118,8 +117,19 @@ public partial class _Default : Page
     /// <param name="datasource">PagedDataSource, paginates the data</param>
     private void Prepare_PageButtons(PagedDataSource datasource)
     {
-        btnPreviousProductPage.Enabled = !datasource.IsFirstPage;
-        btnNextProductPage.Enabled = !datasource.IsLastPage;
+        if (datasource.PageCount == 0)
+        {
+            btnPreviousProductPage.Visible = false;
+            btnNextProductPage.Visible = false;
+            lblCurrentProductPage.Visible = false;
+        }
+        else
+        {
+            lblCurrentProductPage.Visible = true;
+            lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
+            btnPreviousProductPage.Visible = !datasource.IsFirstPage;
+            btnNextProductPage.Visible = !datasource.IsLastPage;
+        }
     }
 
     /// <summary>
@@ -186,6 +196,7 @@ public partial class _Default : Page
                 if (btnCheckout != null)
                 {
                     btnCheckout.Enabled = false;
+                    btnCheckout.CssClass += " disabled";
                 }
             }
         }
@@ -369,6 +380,7 @@ public partial class _Default : Page
         if (btnCheckout != null)
         {
             btnCheckout.Enabled = true;
+            btnCheckout.CssClass = "btn btn-primary";
         }
     }
 
