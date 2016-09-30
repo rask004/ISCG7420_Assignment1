@@ -14,12 +14,19 @@ namespace CommonLogging
     /// </summary>
     public class Logger : IDisposable
     {
+        // Destination of logger
         private StreamWriter _stream;
 
-        private bool disposed = false;
+        private bool _disposed = false;
 
+        /// <summary>
+        ///     Limits what kind of messages are logged.
+        /// </summary>
         private LoggingLevel _minimumLevel;
 
+        /// <summary>
+        ///     Whether or not to add date time info in logged messages
+        /// </summary>
         public bool AppendDateTime { get; set; }
 
         /// <summary>
@@ -34,10 +41,10 @@ namespace CommonLogging
         }
 
         /// <summary>
-        /// 
+        ///     Log a message, if it meets the logging level requirement
         /// </summary>
-        /// <param name="level"></param>
-        /// <param name="message"></param>
+        /// <param name="level">Log Level of message. Message is only logged if this meets the minimum level requirement.</param>
+        /// <param name="message">Message to log.</param>
         public void Log(LoggingLevel level, string message)
         {
             if (level >= _minimumLevel)
@@ -59,7 +66,10 @@ namespace CommonLogging
         }
 
 
-
+        /// <summary>
+        ///     Disposal routines
+        /// </summary>
+        
         public void Dispose()
         {
             Dispose(true);
@@ -67,7 +77,7 @@ namespace CommonLogging
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed)
+            if (_disposed)
             {
                 throw new ObjectDisposedException("Logger has been disposed.");
             }
@@ -79,7 +89,7 @@ namespace CommonLogging
                 _stream.Dispose();
             }
 
-            disposed = true;
+            _disposed = true;
         }
     }
 

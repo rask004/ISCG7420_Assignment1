@@ -1,33 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Common;
 using BusinessLayer;
+using Common;
 using CommonLogging;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 /// <summary>
-/// 
-///     The Admin page for the Colour Entity.
-/// 
+///     The Admin page for the Supplier Entity.
 ///     Change Log:
-/// 
 ///     18-8-16  14:30       AskewR04 Created page and layout.
-/// 
 /// </summary>
-public partial class AdminSupplier : System.Web.UI.Page
+public partial class AdminSupplier : Page
 {
     /// <summary>
-    /// 
+    ///     Reload list of suppliers.
     /// </summary>
     private void Reload_Sidebar()
     {
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
         dbrptSideBarItems.DataSource = controller.GetSuppliers();
         dbrptSideBarItems.DataBind();
     }
@@ -39,7 +32,17 @@ public partial class AdminSupplier : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
+        }
+
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
         if (!Page.IsPostBack)
         {
@@ -72,19 +75,19 @@ public partial class AdminSupplier : System.Web.UI.Page
     {
         if (e.CommandName == "loadItem")
         {
-            AdminController controller = new AdminController();
-            int itemId = Convert.ToInt32(e.CommandArgument);
-            string name = controller.GetSupplierName(itemId);
-            string homeContact = controller.GetSupplierHomeNumber(itemId);
-            string workContact = controller.GetSupplierWorkNumber(itemId);
-            string mobileContact = controller.GetSupplierMobileNumber(itemId);
-            string email = controller.GetSupplierEmail(itemId);
+            var controller = new AdminController();
+            var itemId = Convert.ToInt32(e.CommandArgument);
+            var name = controller.GetSupplierName(itemId);
+            var homeContact = controller.GetSupplierHomeNumber(itemId);
+            var workContact = controller.GetSupplierWorkNumber(itemId);
+            var mobileContact = controller.GetSupplierMobileNumber(itemId);
+            var email = controller.GetSupplierEmail(itemId);
             if (name == null)
             {
-                lblSupplierId.Text = String.Empty;
-                txtSupplierName.Text = String.Empty;
-                txtSupplierHomeNumber.Text = String.Empty;
-                txtSupplierEmail.Text = String.Empty;
+                lblSupplierId.Text = string.Empty;
+                txtSupplierName.Text = string.Empty;
+                txtSupplierHomeNumber.Text = string.Empty;
+                txtSupplierEmail.Text = string.Empty;
                 lblMessageJumboTron.Text = "could not load item " + itemId;
             }
             else
@@ -117,20 +120,20 @@ public partial class AdminSupplier : System.Web.UI.Page
     /// <param name="e"></param>
     protected void AddButton_Click(object sender, EventArgs e)
     {
-        lblSupplierId.Text = String.Empty;
-        txtSupplierName.Text = String.Empty;
+        lblSupplierId.Text = string.Empty;
+        txtSupplierName.Text = string.Empty;
         txtSupplierName.Enabled = true;
 
-        txtSupplierHomeNumber.Text = String.Empty;
+        txtSupplierHomeNumber.Text = string.Empty;
         txtSupplierHomeNumber.Enabled = true;
 
-        txtSupplierWorkNumber.Text = String.Empty;
+        txtSupplierWorkNumber.Text = string.Empty;
         txtSupplierWorkNumber.Enabled = true;
 
-        txtSupplierMobileNumber.Text = String.Empty;
+        txtSupplierMobileNumber.Text = string.Empty;
         txtSupplierMobileNumber.Enabled = true;
 
-        txtSupplierEmail.Text = String.Empty;
+        txtSupplierEmail.Text = string.Empty;
         txtSupplierEmail.Enabled = true;
 
         txtSupplierName.Focus();
@@ -188,9 +191,9 @@ public partial class AdminSupplier : System.Web.UI.Page
     /// <param name="args"></param>
     protected void NumberRequiredValidation(object source, ServerValidateEventArgs args)
     {
-        if (txtSupplierHomeNumber.Text == String.Empty &&
-            txtSupplierWorkNumber.Text == String.Empty &&
-            txtSupplierMobileNumber.Text == String.Empty)
+        if (txtSupplierHomeNumber.Text == string.Empty &&
+            txtSupplierWorkNumber.Text == string.Empty &&
+            txtSupplierMobileNumber.Text == string.Empty)
         {
             args.IsValid = false;
             return;
@@ -240,7 +243,7 @@ public partial class AdminSupplier : System.Web.UI.Page
     {
         if (Page.IsValid)
         {
-            AdminController controller = new AdminController();
+            var controller = new AdminController();
 
             int id;
 
@@ -258,8 +261,8 @@ public partial class AdminSupplier : System.Web.UI.Page
 
             Reload_Sidebar();
 
-            lblMessageJumboTron.Text = "SUCCESS: Supplier added or updated: " + lblSupplierId.Text + ", " + txtSupplierName.Text;
+            lblMessageJumboTron.Text = "SUCCESS: Supplier added or updated: " + lblSupplierId.Text + ", " +
+                                       txtSupplierName.Text;
         }
-
     }
 }

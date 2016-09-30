@@ -6,12 +6,15 @@
 <head runat="server">
     <title><%= Page.Title %></title>
     <script type="text/javascript" src="../Content/common.js">
-        </script>
-        <script type="text/javascript" src="../Content/Validation.js">
-        </script>
+    </script>
+    <script type="text/javascript" src="../Content/Validation.js">
+    </script>
     <asp:ContentPlaceHolder runat="server" ID="MetaPlaceholder"></asp:ContentPlaceHolder>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%--Bootstrap CSS code--%>
+    <webopt:BundleReference runat="server" path="~/Content/css" />
 </head>
-<body>
+<body style="background-color: lightgoldenrodyellow">
     <form id="frmError" runat="server">
         <asp:ScriptManager runat="server">
             <Scripts>
@@ -21,46 +24,39 @@
                 <asp:ScriptReference Name="bootstrap" />
             </Scripts>
         </asp:ScriptManager>
-        <div class="container-fluid" style="position: fixed; width: 100%; 
-                height: 92%; overflow: hidden">
+        <div class="container-fluid" style="position: absolute; width: 100%; height: 92%;">
             <%--Content area--%>
             <br/>
             <div class="row">
-                <div class="col-md-1"></div>
-                <div class="col-md-10" style="background-color: lightgoldenrodyellow; color: red; font-size: 2em">
+                <div class="col-xs-2 col-sm-1 col-md-1"></div>
+                <div class="col-xs-10 col-sm-10 col-md-10" style="color: red; font-size: 2em">
                     <H3><label><asp:ContentPlaceHolder ID="ErrorTitle" runat="server">
                     </asp:ContentPlaceHolder></label></H3>
                 </div>
-                <div class="col-md-1"></div> 
+                <div class="col-xs-0 col-sm-1 col-md-1"></div> 
             </div>
             <div class="row"><br/></div>
             <div class="row"><br/></div>
             <div class="row">
-                <div class="col-md-1"></div> 
-                <div class="col-md-10">
+                <div class="col-xs-2 col-sm-1 col-md-1"></div> 
+                <div class="col-xs-10 col-sm-10 col-md-10">
                     <asp:ContentPlaceHolder ID="ErrorBody" runat="server">
                     </asp:ContentPlaceHolder>
                 </div>
-                <div class="col-md-1"></div> 
+                <div class="col-xs-0 col-sm-1 col-md-1">
+                    
+                </div> 
             </div>
-        </div> <!-- Close container --> 
+            <div class="row">
+                <br/><br/>
+            </div>
+            <div class="row">
+                <div class="col-xs-2 col-sm-1 col-md-1"></div>
+                <div class="col-xs-6 col-sm-4 col-md-4">
+                <asp:Button CssClass="btn btn-lg btn-info" runat="server" Text="Return to Home Page" OnClick="HomePage_OnClick" />
+                </div>
+            </div>
+        </div>
     </form>
-    
-    <!-- Footer -->
-    <div id="AdminFooter" class="navbar-fixed-bottom navbar-inverse">
-        <div class="col-md-3 col-sm-3" style="color: white">
-            <span id="footerCurrentTime" style="float:left">
-            <!-- Call javascript function -->
-                <script type="text/javascript">
-                    update_time();
-                </script>
-            </span>
-        </div>
-        
-        <div class="col-md-6 col-sm-6" style="color: white">
-        </div>
-
-        <div class="col-md-3 col-sm-3" style="color: white"><span style="float:right">&copy;Quality Caps LTD.</span></div>
-    </div>
 </body>
 </html>

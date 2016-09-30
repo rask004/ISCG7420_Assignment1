@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Activities.Statements;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.OleDb;
-using System.Linq;
-using System.Web;
 using BusinessLayer;
 using Common;
 
@@ -16,12 +12,15 @@ namespace DataLayer
     /// <summary>
     /// DataLayer Tier Management Object
     /// 
-    /// Uses a generic pattern for all methods. The Entity Type must be specified for each method.
+    ///     Changelog:
+    ///     29-08-16        01:01   AskewR04    created class
     /// </summary>
     public class DataManager
     {
+        // database connection.
         private readonly OleDbConnection _connection;
 
+        // Stored SQL queries.
         private readonly string _buildSiteUserTable = "if OBJECT_ID(N'dbo.SiteUser', N'U') is NULL BEGIN " +
                                                      "create table dbo.SiteUser(id   int   IDENTITY(1, 1)   primary key, login   nvarchar(64)    not null, " +
                                                      "password    nvarchar(64)    not null, userType    char(1)     not null, emailAddress    nvarchar(100)   not null, " +
@@ -59,7 +58,7 @@ namespace DataLayer
 
         private readonly string _insertDefaultUserAdmin = "if (select count(id) from dbo.SiteUser) = 0 BEGIN " +
                                                           "insert into SiteUser (login, password, userType, emailAddress) Values('AdminRolandAskew2016', " +
-                                                          "'BB51AD0AAB66C70D3B26CEC4EFCC224273AF5E18', 'A', 'AskewR04@myunitec.ac.nz'); " +
+                                                          "'001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'A', 'AskewR04@myunitec.ac.nz'); " +
                                                           "END ";
 
         private readonly string _insertDefaultColours = "if (select count(id) from dbo.Colour) = 0 BEGIN " +
@@ -71,11 +70,46 @@ namespace DataLayer
                                                            "END ";
 
         private readonly string _insertDefaultSuppliers = "if (select count(id) from dbo.Supplier) = 0 BEGIN " +
-                                                           "insert into Supplier (name, homeNumber, emailAddress, workNumber, mobileNumber) " +
+                                                           "insert into Supplier (name, emailAddress, homeNumber, workNumber, mobileNumber) " +
                                                            "values('Escobar Fabrics', 'sales@escobar.co.nz', '094443333','',''),('Alto Monte Fashion','sales@altomonte.com','073347776','',''); " +
                                                            "END ";
 
-
+        private readonly string _insertDefaultProducts = "if (select count(id) from dbo.Cap) = 0 BEGIN " +
+                                                         "INSERT INTO Cap (name,price,description,imageUrl,supplierId,categoryId) " +
+                                                         "values " +
+                                                         "('Top Crump',28.1,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',1,1),('Top Squat',11.9,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/GL-271-RED.jpg',1,2)," +
+                                                         "('Top Flex',29.6,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/Corporate-Caps-1.jpg',1,3),('Top Peak',22.9,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/007-WH-ROY.jpg',1,4)," +
+                                                         "('Top Breaker',16.8,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/Corporate-Caps-1.jpg',2,1)," +
+                                                         "('Top Pounder',27.5,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/best-caps-20.jpg',2,2),('Top Trucker',25.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/best-caps-20.jpg',2,3)," +
+                                                         "('Top Trilby',12.7,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/pac10601_black.jpg',2,4),('Side Crump',21.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/hi-vis-cap-4356.jpg',1,1)," +
+                                                         "('Side Squat',29.4,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/Corporate-Caps-1.jpg',1,2),('Side Flex',10.8,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',1,3)," +
+                                                         "('Side Peak',23.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',1,4),('Side Breaker',20.6,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,1)," +
+                                                         "('Side Pounder',21.7,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,2),('Side Trucker',12.0,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/17Red-White.jpg',2,3)," +
+                                                         "('Side Trilby',25.9,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/pac10602.jpg',2,4),('Bottom Crump',26.9,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/pac10601_black.jpg',1,1)," +
+                                                         "('Bottom Squat',22.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',1,2),('Bottom Flex',19.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/186_53.jpg',1,3)," +
+                                                         "('Bottom Peak',24.9,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/17Red-White.jpg',1,4),('Bottom Breaker',11.4,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,1)," +
+                                                         "('Bottom Pounder',11.9,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/007-WH-ROY.jpg',2,2),('Bottom Trucker',22.1,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Corporate-Caps-1.jpg',2,3)," +
+                                                         "('Bottom Trilby',16.7,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/long_peak_cap_2.jpg',2,4),('Dour Crump',20.3,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/bamboo-507-ivy-cap.jpg',1,1)," +
+                                                         "('Dour Squat',14.7,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/bamboo-507-ivy-cap.jpg',1,2),('Dour Flex',24.5,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/186_53.jpg',1,3)," +
+                                                         "('Dour Peak',20.4,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Corporate-Caps-1.jpg',1,4),('Dour Breaker',20.1,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/bamboo-507-ivy-cap.jpg',2,1)," +
+                                                         "('Dour Pounder',10.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/GL-271-RED.jpg',2,2),('Dour Trucker',25.0,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/pac10602.jpg',2,3)," +
+                                                         "('Dour Trilby',20.7,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/GL-271-RED.jpg',2,4),('Bold Crump',22.8,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Corporate-Caps-1.jpg',1,1)," +
+                                                         "('Bold Squat',14.6,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/best-caps-20.jpg',1,2),('Bold Flex',26.2,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',1,3)," +
+                                                         "('Bold Peak',21.6,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/GL-271-RED.jpg',1,4),('Bold Breaker',19.3,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/186_53.jpg',2,1)," +
+                                                         "('Bold Pounder',19.1,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/186_53.jpg',2,2),('Bold Trucker',23.2,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',2,3)," +
+                                                         "('Bold Trilby',16.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,4),('Tall Crump',16.5,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/pac10601_black.jpg',1,1)," +
+                                                         "('Tall Squat',22.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/17Red-White.jpg',1,2),('Tall Flex',10.7,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',1,3)," +
+                                                         "('Tall Peak',18.7,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',1,4),('Tall Breaker',11.2,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/pac10602.jpg',2,1)," +
+                                                         "('Tall Pounder',28.5,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/GL-271-RED.jpg',2,2),('Tall Trucker',15.1,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,3)," +
+                                                         "('Tall Trilby',14.5,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,4),('Wide Crump',21.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/pac10602.jpg',1,1)," +
+                                                         "('Wide Squat',19.8,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/long_peak_cap_2.jpg',1,2),('Wide Flex',15.0,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/hi-vis-cap-4356.jpg',1,3)," +
+                                                         "('Wide Peak',18.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/Corporate-Caps-1.jpg',1,4),('Wide Breaker',25.6,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,1)," +
+                                                         "('Wide Pounder',14.2,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,2),('Wide Trucker',22.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Corporate-Caps-1.jpg',2,3)," +
+                                                         "('Wide Trilby',24.0,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',2,4),('Sassy Crump',10.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/pac10602.jpg',1,1)," +
+                                                         "('Sassy Squat',30.0,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/best-caps-20.jpg',1,2),('Sassy Flex',19.2,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',1,3)," +
+                                                         "('Sassy Peak',29.0,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',1,4),('Sassy Breaker',12.2,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',2,1);" +
+                                                         "END ";
+        
         private readonly string _selectAllCustomers = "Select * from SiteUser where userType='C';";
 
         private readonly string _selectAllAdmins = "Select * from SiteUser where userType='A';";
@@ -161,8 +195,12 @@ namespace DataLayer
         private readonly string _selectAllCapsByCategoryId = "select * from Cap where categoryId=?;";
 
 
+        /// <summary>
+        ///     DatabaseManager Constructor.
+        /// </summary>
         private DataManager()
         {
+            // Get connection string for Connection Object, depending on if developer or release version.
             _connection = new OleDbConnection(GeneralConstants.DefaultConnectionString);
 
             BuildDatabase();
@@ -205,6 +243,9 @@ namespace DataLayer
 
             dbCommand = new OleDbCommand(_insertDefaultSuppliers, _connection);
             RunDbCommandNoResults(dbCommand);
+
+            dbCommand = new OleDbCommand(_insertDefaultProducts, _connection);
+            RunDbCommandNoResults(dbCommand);
         }
 
         /// <summary>
@@ -233,7 +274,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Getter for DataManager Singleton Instance
+        ///     WAS reference to singleton instance. Currently just returns a new instance.
         /// </summary>
         public static DataManager Instance
         {
@@ -246,7 +287,7 @@ namespace DataLayer
         /// <summary>
         ///     OleDb method to get list of all customers.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Customer, all customers in DB system.</returns>
         public List<Customer> GetAllCustomers()
         {
             List<Customer> records = new List<Customer>();
@@ -293,9 +334,10 @@ namespace DataLayer
         }
 
         /// <summary>
-        /// 
+        ///     Given a customer ID, disable the customer.
+        ///     If ID does not reference a customer, nothing happens.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">integer, being the ID of customer.</param>
         public void DisableExistingCustomer(int id)
         {
             OleDbCommand command = new OleDbCommand(_updateCustomerIsDisabled, _connection);
@@ -307,8 +349,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single customer referenced by id. If no customer fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, for customer ID</param>
+        /// <returns>null or Customer object.</returns>
         public Customer GetSingleCustomerById(int id)
         {
             OleDbDataReader reader = null;
@@ -356,15 +398,14 @@ namespace DataLayer
                 _connection.Close();
             }
 
-
             return customer;
         }
 
         /// <summary>
         ///     Return a single customer referenced by login. If no customer fetched, return null.
         /// </summary>
-        /// <param name="login"></param>
-        /// <returns></returns>
+        /// <param name="login">string, login of customer</param>
+        /// <returns>null or Customer object.</returns>
         public Customer GetSingleCustomerByLogin(string login)
         {
             Customer customer = null;
@@ -397,9 +438,7 @@ namespace DataLayer
                     customer.Suburb = reader["suburb"].ToString();
                     customer.City = reader["city"].ToString();
                     customer.IsDisabled = Convert.ToBoolean(reader["isDisabled"]);
-
                 }
-                
             }
             finally
             {
@@ -408,7 +447,6 @@ namespace DataLayer
                     reader.Close();
                 }
                 _connection.Close();
-
             }
 
             return customer;
@@ -417,7 +455,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single customer referenced by email. If no customer fetched, return null.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="email">string, email of customer</param>
+        /// <returns>null or Customer object.</returns>
         public Customer GetSingleCustomerByEmail(string email)
         {
             OleDbDataReader reader = null;
@@ -564,7 +603,8 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     
+        ///     Update the password of a customer.
+        ///     If no such customer exists, do nothing.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="passwordHash"></param>
@@ -581,9 +621,9 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     OleDb method to get list of all admins.
+        ///     get list of all admins.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>list, Administrator, contains all administrators.</returns>
         public List<Administrator> GetAllAdministrators()
         {
             List<Administrator> records = new List<Administrator>();
@@ -626,7 +666,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Return a single customer referenced by id. If no customer fetched, return null.
+        ///     Return a single administrator referenced by id. If no customer fetched, return null.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -714,8 +754,7 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     Add a new admin with this login  and email
-        ///     Use randomised password for security.
+        ///     Add a new admin with this login, password hash  and email
         /// </summary>
         /// <param name="email"></param>
         /// <param name="login"></param>
@@ -733,7 +772,8 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Update an existing admin by id.
+        ///     Update an existing admin email and/or login by id.
+        ///     If no such admin exists, do nothing.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="email"></param>
@@ -754,7 +794,7 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     
+        ///     Update password of an admin, by id.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="passwordHash"></param>
@@ -775,7 +815,7 @@ namespace DataLayer
         /// <summary>
         ///     get list of all Category.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Category, all categories.</returns>
         public List<Category> GetAllCategories()
         {
             List<Category> records = new List<Category>();
@@ -890,7 +930,7 @@ namespace DataLayer
         /// <summary>
         ///     get list of all Colour.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Colour, all Colours</returns>
         public List<Colour> GetAllColours()
         {
             List<Colour> records = new List<Colour>();
@@ -931,8 +971,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single Colour referenced by id. If no Colour fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, id of Colour</param>
+        /// <returns>Colour object or null</returns>
         public Colour GetSingleColourById(int id)
         {
             OleDbDataReader reader = null;
@@ -974,7 +1014,7 @@ namespace DataLayer
         /// <summary>
         ///     Add a new Colour with this name
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">string, name of colour</param>
         public void AddNewColour(string name)
         {
             OleDbCommand command = new OleDbCommand(_insertColour, _connection);
@@ -986,8 +1026,8 @@ namespace DataLayer
         /// <summary>
         ///     Update an existing Colour by id.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
+        /// <param name="id">integer, id of colour</param>
+        /// <param name="name">string, name, new name of colour</param>
         public void UpdateExistingColour(int id, string name)
         {
             OleDbCommand command =
@@ -1005,7 +1045,7 @@ namespace DataLayer
         /// <summary>
         ///     get list of all suppliers.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Supplier, all suppliers</returns>
         public List<Supplier> GetAllSuppliers()
         {
             List<Supplier> records = new List<Supplier>();
@@ -1050,8 +1090,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single supplier referenced by id. If no supplier fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, id of supplier</param>
+        /// <returns>Supplier object or null</returns>
         public Supplier GetSingleSupplierById(int id)
         {
             OleDbDataReader reader = null;
@@ -1095,13 +1135,13 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     Add a new supplier with this name, contact number  and email
+        ///     Add a new supplier with this name, contact number and email
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="homeNumber"></param>
-        /// <param name="workNumber"></param>
-        /// <param name="mobileNumber"></param>
-        /// <param name="email"></param>
+        /// <param name="name">string, name</param>
+        /// <param name="homeNumber">string, home phone number</param>
+        /// <param name="workNumber">string, work phone number</param>
+        /// <param name="mobileNumber">string, mobile phone number</param>
+        /// <param name="email">string, email</param>
         public void AddNewSupplier(string name, string homeNumber, string workNumber, string mobileNumber, string email)
         {
             OleDbCommand command = new OleDbCommand(_insertSupplier, _connection);
@@ -1120,14 +1160,15 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     Update an existing supplier by id.
+        ///     Update a supplier by id.
+        ///     If no existing supplier, do nothing.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="homeNumber"></param>
-        /// <param name="workNumber"></param>
-        /// <param name="mobileNumber"></param>
-        /// <param name="email"></param>
+        /// <param name="id">integer, id of supplier</param>
+        /// <param name="name">string, name of supplier</param>
+        /// <param name="homeNumber">string, home phone number</param>
+        /// <param name="workNumber">string, work phone number</param>
+        /// <param name="mobileNumber">string, mobile phone number</param>
+        /// <param name="email">string, email</param>
         public void UpdateExistingSupplier(int id, string name, string homeNumber, string workNumber, string mobileNumber, string email)
         {
             OleDbCommand command =
@@ -1153,11 +1194,14 @@ namespace DataLayer
         /// <summary>
         ///     get list of all cap.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, Cap, all caps</returns>
         public List<Cap> GetAllCaps()
         {
             List<Cap> records = new List<Cap>();
             OleDbDataReader reader = null;
+
+            Dictionary<int, Supplier> foundSuppliers = new Dictionary<int, Supplier>();
+            Dictionary<int, Category> foundCategories = new Dictionary<int, Category>();
 
             try
             {
@@ -1187,8 +1231,18 @@ namespace DataLayer
                     // As DataReader requires an open connection, finish using the DataReader before using these methods.
                     foreach (Cap cap in records)
                     {
-                        cap.Category = GetSingleCategoryById(cap.CategoryId);
-                        cap.Supplier = GetSingleSupplierById(cap.SupplierId);
+                        // reuse Supplier and Category objects, where different Caps reference the same Supplier or Category.
+                        if (!foundSuppliers.ContainsKey(cap.SupplierId))
+                        {
+                            foundSuppliers[cap.SupplierId] = GetSingleSupplierById(cap.SupplierId);
+                        }
+                        cap.Supplier = foundSuppliers[cap.SupplierId];
+
+                        if (!foundCategories.ContainsKey(cap.CategoryId))
+                        {
+                            foundCategories[cap.CategoryId] = GetSingleCategoryById(cap.CategoryId);
+                        }
+                        cap.Category = foundCategories[cap.CategoryId];
                     }
                 }
             }
@@ -1208,8 +1262,8 @@ namespace DataLayer
         /// <summary>
         ///     Return a single cap referenced by id. If no cap fetched, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, id of Cap</param>
+        /// <returns>Cap object, or null</returns>
         public Cap GetSingleCapById(int id)
         {
             OleDbDataReader reader = null;
@@ -1266,12 +1320,12 @@ namespace DataLayer
         /// <summary>
         ///     Add a new cap with this name and data.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="price"></param>
-        /// <param name="description"></param>
-        /// <param name="imageUrl"></param>
-        /// <param name="categoryId"></param>
-        /// <param name="supplierId"></param>
+        /// <param name="name">string, name</param>
+        /// <param name="price">floating point, cost of Cap</param>
+        /// <param name="description">string, description of Cap</param>
+        /// <param name="imageUrl">string, server URL to image</param>
+        /// <param name="categoryId">integer, category</param>
+        /// <param name="supplierId">integer, supplier</param>
         public void AddNewCap(string name, Single price, string description, string imageUrl, int categoryId, int supplierId)
         {
             OleDbCommand command = new OleDbCommand(_insertCap, _connection);
@@ -1292,15 +1346,16 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     Update an existing cap by id.
+        ///     Update a cap by id.
+        ///     If no such cap exists, do nothing.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="price"></param>
-        /// <param name="description"></param>
-        /// <param name="imageUrl"></param>
-        /// <param name="categoryId"></param>
-        /// <param name="supplierId"></param>
+        /// <param name="id">integer, id of cap</param>
+        /// <param name="name">string, name</param>
+        /// <param name="price">floating point, cost of Cap</param>
+        /// <param name="description">string, description of Cap</param>
+        /// <param name="imageUrl">string, server URL to image</param>
+        /// <param name="categoryId">integer, category</param>
+        /// <param name="supplierId">integer, supplier</param>
         public void UpdateExistingCap(int id, string name, Single price, string description, string imageUrl, int categoryId, int supplierId)
         {
             OleDbCommand command = new OleDbCommand(_updateCap, _connection);
@@ -1323,9 +1378,11 @@ namespace DataLayer
 
         /// <summary>
         ///     Update an existing cap by id.
+        ///     Update the supplierId.
+        ///     Do nothing if no matching Cap.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="supplierId"></param>
+        /// <param name="id">integer, id of Cap</param>
+        /// <param name="supplierId">integer, supplier ID</param>
         public void UpdateExistingCapSupplierId(int id, int supplierId)
         {
             OleDbCommand command = new OleDbCommand(_updateCapSupplierId, _connection);
@@ -1338,9 +1395,11 @@ namespace DataLayer
 
         /// <summary>
         ///     Update an existing cap by id.
+        ///     Update the categoryId.
+        ///     Do nothing if no matching Cap.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="categoryId"></param>
+        /// <param name="id">integer, id of Cap</param>
+        /// <param name="categoryId">integer, category ID</param>
         public void UpdateExistingCapCategoryId(int id, int categoryId)
         {
             OleDbCommand command = new OleDbCommand(_updateCapCategoryId, _connection);
@@ -1352,9 +1411,9 @@ namespace DataLayer
         }
 
         /// <summary>
-        ///     
+        ///     get list of order.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List, CustomerOrder, all orders.</returns>
         public List<CustomerOrder> GetAllOrders()
         {
             List<CustomerOrder> records = new List<CustomerOrder>();
@@ -1366,6 +1425,8 @@ namespace DataLayer
                 {
                     _connection.Open();
                 }
+
+                Dictionary<int, Customer> foundCustomers = new Dictionary<int, Customer>();
 
                 reader = (new OleDbCommand(_selectAllOrders, _connection)).ExecuteReader();
 
@@ -1388,7 +1449,11 @@ namespace DataLayer
                     // As DataReader requires an open connection, finish using the DataReader before using these methods.
                     foreach (var customerOrder in records)
                     {
-                        customerOrder.Customer = GetSingleCustomerById(customerOrder.UserId);
+                        if (!foundCustomers.ContainsKey(customerOrder.UserId))
+                        {
+                            foundCustomers[customerOrder.UserId] = GetSingleCustomerById(customerOrder.UserId);
+                        }
+                        customerOrder.Customer = foundCustomers[customerOrder.UserId];
                     }
                 }
             }
@@ -1407,10 +1472,11 @@ namespace DataLayer
 
 
         /// <summary>
-        ///     
+        ///     Get one customer order.
+        ///     If the customer id used to get orders is not for a customer, return null.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">integer, the is of the customer.</param>
+        /// <returns>nul or CustomerOrder object.</returns>
         public CustomerOrder GetSingleOrderById(int id)
         {
             OleDbDataReader reader = null;
@@ -1457,10 +1523,10 @@ namespace DataLayer
 
 
         /// <summary>
-        /// 
+        ///     Update status of order.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="status"></param>
+        /// <param name="id">integer, is of Order</param>
+        /// <param name="status">string, status to update to</param>
         public void UpdateOrderStatus(int id, string status)
         {
             OleDbCommand command = new OleDbCommand(_updateOrderStatus, _connection);
@@ -1472,10 +1538,11 @@ namespace DataLayer
         }
 
         /// <summary>
-        /// 
+        ///     Insert new order.
+        ///     For date placed, default to Now.
         /// </summary>
-        /// <param name="status"></param>
-        /// <param name="customerId"></param>
+        /// <param name="status">string, status to use.</param>
+        /// <param name="customerId">integer, id of customer</param>
         public void InsertNewOrder(string status, int customerId)
         {
             OleDbCommand command = new OleDbCommand(_insertOrder, _connection);
@@ -1490,14 +1557,15 @@ namespace DataLayer
 
 
         /// <summary>
-        /// 
+        ///     Get all order items
         /// </summary>
-        /// <param name="orderId"></param>
-        /// <returns></returns>
+        /// <param name="orderId">integer, id of order</param>
+        /// <returns>List, OrderItem, of all itens for the order.</returns>
         public List<OrderItem> GetAllOrderItemsByOrderId(int orderId)
         {
             List<OrderItem> records = new List<OrderItem>();
             OleDbDataReader reader = null;
+            CustomerOrder order = GetSingleOrderById(orderId);
 
             // As each order item references a cap and colour, keep a list of the caps and colours retrieved
             // then if separate orderItems reference the same Cap or colour, reuse that cap or colour
@@ -1511,8 +1579,6 @@ namespace DataLayer
 
             try
             {
-                CustomerOrder order = GetSingleOrderById(orderId);
-
                 if (_connection.State != ConnectionState.Open)
                 {
                     _connection.Open();
@@ -1537,27 +1603,17 @@ namespace DataLayer
                     // so OrderItems with same cap / colour will reference that same Cap / colour object.
                     foreach (var orderItem in records)
                     {
-                        if (foundCaps.ContainsKey(orderItem.CapId))
+                        if (!foundCaps.ContainsKey(orderItem.CapId))
                         {
-                            orderItem.Cap = foundCaps[orderItem.CapId];
+                            foundCaps[orderItem.CapId] = GetSingleCapById(orderItem.CapId);
                         }
-                        else
-                        {
-                            Cap cap = GetSingleCapById(orderItem.CapId);
-                            orderItem.Cap = cap;
-                            foundCaps[orderItem.CapId] = cap;
-                        }
+                        orderItem.Cap = foundCaps[orderItem.CapId];
 
-                        if (foundColours.ContainsKey(orderItem.ColourId))
+                        if (!foundColours.ContainsKey(orderItem.ColourId))
                         {
-                            orderItem.Colour = foundColours[orderItem.ColourId];
+                            foundColours[orderItem.ColourId] = GetSingleColourById(orderItem.ColourId);
                         }
-                        else
-                        {
-                            Colour colour = GetSingleColourById(orderItem.ColourId);
-                            orderItem.Colour = colour;
-                            foundColours[orderItem.ColourId] = colour;
-                        }
+                        orderItem.Colour = foundColours[orderItem.ColourId];
                     }
 
                     // Suppliers and categories will still be duplicated, until this is fixed.
@@ -1578,12 +1634,12 @@ namespace DataLayer
 
 
         /// <summary>
-        /// 
+        ///     Add new order item.
         /// </summary>
-        /// <param name="orderId"></param>
-        /// <param name="capId"></param>
-        /// <param name="colourId"></param>
-        /// <param name="quantity"></param>
+        /// <param name="orderId">integer, id of order</param>
+        /// <param name="capId">integer, id of cap</param>
+        /// <param name="colourId">integer, id of colour</param>
+        /// <param name="quantity">integer, quantity of order.</param>
         public void InsertNewOrderItem(int orderId, int capId, int colourId, int quantity)
         {
             OleDbCommand command = new OleDbCommand(_insertOrderItem, _connection);
@@ -1599,10 +1655,11 @@ namespace DataLayer
         }
 
         /// <summary>
-        /// 
+        ///     Get list of caps.
+        ///     Use a category ID to select caps with.
         /// </summary>
-        /// <param name="categoryId"></param>
-        /// <returns></returns>
+        /// <param name="categoryId">integer, the ID of the category to match caps by.</param>
+        /// <returns>List, Cap, list of caps.</returns>
         public List<Cap> GetCapsByCategoryId(int categoryId)
         {
             Category category = GetSingleCategoryById(categoryId);

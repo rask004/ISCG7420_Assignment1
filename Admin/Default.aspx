@@ -1,10 +1,11 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Master/Admin.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Admin_Default" %>
 
 <asp:Content ID="AdminColourMain" ContentPlaceHolderID="AdminContentMain" Runat="Server">
-    <div id="introductionSection" class="container-fluid AdminSection" >
+    <div id="introductionSection" class="container-fluid AdminSection">
         <div class="row">
             <div class="col-md-12">
-                <H5><p>
+                <H5>
+                    <p>
                         Welcome to the Administration Section.
                     </p>
                     <br/>

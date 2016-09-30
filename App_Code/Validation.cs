@@ -9,6 +9,9 @@ namespace SecurityLayer
 {
     /// <summary>
     ///     Provides constants and helpers for data validation.
+    /// 
+    ///     Changelog:
+    ///     24-08-16        19:01   AskewR04    created static class
     /// </summary>
     public static class Validation
     {
@@ -22,6 +25,10 @@ namespace SecurityLayer
         public static readonly string ValidationLoginErrorMessageGeneral = "The User Login must only have alphanumeric characters.";
         public static readonly string ValidationLoginErrorMessageInUse = "The User Login is already in use.";
 
+        /// <summary>
+        ///     Validate that input is only alphabetic.
+        /// </summary>
+        /// <param name="args"></param>
         public static void ValidateAlphabeticInput(ref ServerValidateEventArgs args)
         {
             foreach (char c in args.Value)
@@ -36,6 +43,10 @@ namespace SecurityLayer
             args.IsValid = true;
         }
 
+        /// <summary>
+        ///     Validate that input is an email address
+        /// </summary>
+        /// <param name="args"></param>
         public static void ValidateEmailInput(ref ServerValidateEventArgs args)
         {
             try
@@ -51,6 +62,10 @@ namespace SecurityLayer
             args.IsValid = true;
         }
 
+        /// <summary>
+        ///     Validate that input is alphabetic or numeric
+        /// </summary>
+        /// <param name="args"></param>
         public static void ValidateAlphaNumericInput(ref ServerValidateEventArgs args)
         {
             foreach (char c in args.Value)
@@ -66,6 +81,10 @@ namespace SecurityLayer
             args.IsValid = true;
         }
 
+        /// <summary>
+        ///     Validate that a number can represent a landline number 
+        /// </summary>
+        /// <param name="args"></param>
         public static void ValidateLandlineNumber(ref ServerValidateEventArgs args)
         {
             if (args.Value.Length < 8 || args.Value.Length > 10 || args.Value[0] != '0')
@@ -94,6 +113,11 @@ namespace SecurityLayer
             args.IsValid = true;
         }
 
+        /// <summary>
+        ///     Validate that a number can be a mobile number
+        ///     Can be in international (+CCRRNNNNNN[NN]) or local (0RRNNNNNN[NN])
+        /// </summary>
+        /// <param name="args"></param>
         public static void ValidateMobileNumber(ref ServerValidateEventArgs args)
         {
             string numberDigits = String.Empty;
@@ -161,6 +185,11 @@ namespace SecurityLayer
             args.IsValid = true;
         }
 
+        /// <summary>
+        ///     Validate input representing a password meets a minimum length.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="length"></param>
         public static void ValidatePasswordLength(ref ServerValidateEventArgs args, int length)
         {
             if (length < 1)
@@ -177,6 +206,10 @@ namespace SecurityLayer
             args.IsValid = true;
         }
 
+        /// <summary>
+        ///     Validate input matches a street address (number[letter] name [suffix...])
+        /// </summary>
+        /// <param name="args"></param>
         public static void ValidateStreetAddress(ref ServerValidateEventArgs args)
         {
             string[] address = args.Value.Split(' ');
@@ -218,6 +251,10 @@ namespace SecurityLayer
             args.IsValid = true;
         }
 
+        /// <summary>
+        ///     Validate input as alphanumeric, ignoting periods, commas and apostrophes.
+        /// </summary>
+        /// <param name="args"></param>
         public static void ValidateGenericName(ref ServerValidateEventArgs args)
         {
             foreach (char c in args.Value)
@@ -232,6 +269,10 @@ namespace SecurityLayer
             args.IsValid = true;
         }
 
+        /// <summary>
+        ///     Validate that input can represent a money value (number to two decimal places)
+        /// </summary>
+        /// <param name="args"></param>
         public static void ValidateMoneyInput(ref ServerValidateEventArgs args)
         {
             try

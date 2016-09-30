@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Configuration;
+using System.Web;
 using System.Web.Configuration;
 
 namespace Common
 {
     /// <summary>
+    ///     Common constants
     /// 
+    ///     Changelog:
+    ///     22-08-16        19:01   AskewR04    created static class
     /// </summary>
     public static class GeneralConstants
     {
+        public static readonly string ReleaseMachineName = "DOCHYPER";
+
         public static readonly string CustomerUserType = "C";
         public static readonly string AdminUserType = "A";
 
@@ -25,11 +31,15 @@ namespace Common
 
         public static readonly string ImagesUploadFolder = "~/UploadFiles";
 
-        public static readonly string[] PermittedContentTypes = new string[] {"image/jpeg", "image/png"};
+        public static readonly string[] PermittedContentTypes = new string[] {"image/jpeg", "image/jpg", "image/png"};
 
         public static readonly string[] PermittedOrderStatuses = new string[] {"Waiting", "Shipped"};
 
         public static readonly Double MoneyGstRate = 0.15;
+
+        public static readonly string EmailErrorSubject = "Error, Quality Caps Website.";
+
+        public static readonly string EmailErrorBody = "Error Report:\n\n{0}\n\nSource Page:\n{1}.";
 
         public static readonly string EmailPasswordChangeSubject = "Quality Caps, change in customer details";
 
@@ -97,19 +107,21 @@ namespace Common
 
         public static readonly string SessionCartItems = "cartItems";
 
+        /// <summary>
+        ///     Determines the connection string to use depending on which machine is running the application.
+        /// </summary>
         public static string DefaultConnectionString
         {
             get
             {
-                CompilationSection compilationSection =
-                    (CompilationSection) System.Configuration.ConfigurationManager.GetSection(@"system.web/compilation");
-                if (compilationSection.Debug)
+                
+                if (HttpContext.Current.Server.MachineName.Equals(ReleaseMachineName))
                 {
-                    return ConfigurationManager.ConnectionStrings["DeveloperExpressConnection"].ConnectionString;
+                    return ConfigurationManager.ConnectionStrings["ReleaseConnection"].ConnectionString;
                 }
                 else
                 {
-                    return ConfigurationManager.ConnectionStrings["ReleaseConnection"].ConnectionString;
+                    return ConfigurationManager.ConnectionStrings["DeveloperExpressConnection"].ConnectionString;
                 }
                 
             }
@@ -117,15 +129,46 @@ namespace Common
     }
 
     /// <summary>
+    ///     Support functions shared across the application.
     /// 
+    ///     Changelog:
+    ///     24-08-16        19:01   AskewR04    created static class
     /// </summary>
     public static class GeneralFunctions
     {
+        /// <summary>
+        ///     manage sending an email.
+        /// </summary>
+        /// <param name="destinationEmail">To Address</param>
+        /// <param name="subject">Subject line</param>
+        /// <param name="messageBody">Body paragraph</param>
+        /// <param name="replyToEmail">From and ReplyTo Address.</param>
         public static void SendEmail(string destinationEmail, string subject, string messageBody, string replyToEmail)
         {
-            var toAddress = new MailAddress(destinationEmail);
-            var replyAddress = new MailAddress(replyToEmail);
-            MailMessage message = new MailMessage(replyAddress, toAddress);
+            MailMessage message = new MailMessage();
+            try
+            {
+                message.To.Add(destinationEmail);
+            }
+            catch (Exception ex)
+            {
+                if (ex is ArgumentNullException || ex is ArgumentException)
+                {
+                    throw new SmtpException("No destination email provided.");
+                }    
+                else if (ex is FormatException)
+                {
+                    throw new SmtpException("Destination email is not in correct email format.");
+                }
+            }
+
+            if (replyToEmail.Equals(String.Empty))
+            {
+                throw new SmtpException("ReplyTo email is Required.");
+            }
+            message.From = new MailAddress(replyToEmail);
+                
+            
             message.Subject = subject;
             message.Body = messageBody;
 
@@ -136,9 +179,15 @@ namespace Common
                 client.Host = "mail.unitec.ac.nz";
                 client.Send(message);
             }
-            catch (SmtpException smtpEx)
+            catch (Exception ex)
             {
-                throw smtpEx;
+                if (ex is SmtpException)
+                {
+                    SmtpException smtpEx = ex as SmtpException;
+                    throw smtpEx;
+                }
+
+                throw ex;
             }
         }
     }

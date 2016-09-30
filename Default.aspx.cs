@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using BusinessLayer;
@@ -11,9 +10,10 @@ using Common;
 using CommonLogging;
 
 /// <summary>
-/// 
+///     Changelog:
+///     04-09-16    18:04   AskewR04    created page
 /// </summary>
-public partial class _Default : System.Web.UI.Page
+public partial class _Default : Page
 {
     /// <summary>
     ///     Property to aid pagination of the Available Products Section.
@@ -26,19 +26,12 @@ public partial class _Default : System.Web.UI.Page
             {
                 return 0;
             }
-            else
-            {
-                return Convert.ToInt16(ViewState["pg"]);
-            }
+            return Convert.ToInt16(ViewState["pg"]);
         }
-        set
-        {
-            ViewState["pg"] = value;
-        }
+        set { ViewState["pg"] = value; }
     }
 
     /// <summary>
-    /// 
     /// </summary>
     public int CurrentCategoryId
     {
@@ -48,27 +41,20 @@ public partial class _Default : System.Web.UI.Page
             {
                 return 0;
             }
-            else
-            {
-                return Convert.ToInt32(ViewState["cid"]);
-            }
+            return Convert.ToInt32(ViewState["cid"]);
         }
-        set
-        {
-            ViewState["cid"] = value;
-        }
+        set { ViewState["cid"] = value; }
     }
 
 
     /// <summary>
-    /// 
     /// </summary>
     private void Load_Categories()
     {
-        PublicController controller = new PublicController();
-        List<Category> categories = controller.GetCategoriesWithCaps();
-        lstvCategoriesWithProducts.DataSource = categories;
-        lstvCategoriesWithProducts.DataBind();
+        var controller = new PublicController();
+        var categories = controller.GetCategoriesWithCaps();
+        lvCategoriesWithProducts.DataSource = categories;
+        lvCategoriesWithProducts.DataBind();
     }
 
     /// <summary>
@@ -90,66 +76,75 @@ public partial class _Default : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     On no postback, load the initial set of prodicts to show
     /// </summary>
     private void LoadInitialProducts()
     {
-        PublicController controller = new PublicController();
-        List<Category> categories = controller.GetCategoriesWithCaps();
+        var controller = new PublicController();
+        var categories = controller.GetCategoriesWithCaps();
         if (categories.Count > 0)
         {
-            int categoryId = categories[0].ID;
+            var categoryId = categories[0].ID;
             CurrentCategoryId = categoryId;
-            string categoryName = categories[0].Name;
+            var categoryName = categories[0].Name;
 
             Load_Caps();
             lblCentreHeader.Text = categoryName;
 
-            lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
         }
-        
     }
 
     /// <summary>
-    /// 
+    ///     Load the caps for the current category
     /// </summary>
     private void Load_Caps()
     {
-        PublicController controller = new PublicController();
-        List<Cap> caps = controller.GetAllCapsByCategoryId(CurrentCategoryId);
-        PagedDataSource pagedData = new PagedDataSource();
+        var controller = new PublicController();
+        var caps = controller.GetAllCapsByCategoryId(CurrentCategoryId);
+        var pagedData = new PagedDataSource();
         pagedData.DataSource = caps;
         pagedData.CurrentPageIndex = AvailableProductsCurrentPageIndex;
         pagedData.AllowPaging = true;
-        pagedData.PageSize = 9;
+        pagedData.PageSize = 6;
         dlstAvailableProducts.DataSource = pagedData;
         Prepare_PageButtons(pagedData);
         dlstAvailableProducts.DataBind();
     }
 
     /// <summary>
-    /// 
+    ///     Load the required pagination buttons
     /// </summary>
-    /// <param name="datasource"></param>
+    /// <param name="datasource">PagedDataSource, paginates the data</param>
     private void Prepare_PageButtons(PagedDataSource datasource)
     {
-        btnPreviousProductPage.Enabled = !(datasource.IsFirstPage);
-        btnNextProductPage.Enabled = !(datasource.IsLastPage);
+        if (datasource.PageCount == 0)
+        {
+            btnPreviousProductPage.Visible = false;
+            btnNextProductPage.Visible = false;
+            lblCurrentProductPage.Visible = false;
+        }
+        else
+        {
+            lblCurrentProductPage.Visible = true;
+            lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
+            btnPreviousProductPage.Visible = !datasource.IsFirstPage;
+            btnNextProductPage.Visible = !datasource.IsLastPage;
+        }
     }
 
     /// <summary>
-    /// 
+    ///     load in the available colours
     /// </summary>
     private void Bind_Colours()
     {
-        PublicController controller = new PublicController();
-        List<Colour> colours = controller.GetAllColours();
+        var controller = new PublicController();
+        var colours = controller.GetAllColours();
         ddlCapColours.DataSource = colours;
         ddlCapColours.DataBind();
     }
 
     /// <summary>
-    /// 
+    ///     Rebind the items in the cart
     /// </summary>
     private void Bind_CartItems()
     {
@@ -163,18 +158,19 @@ public partial class _Default : System.Web.UI.Page
             cartItems = new List<OrderItem>();
         }
 
-        lstvShoppingItems.DataSource = cartItems;
-        lstvShoppingItems.DataBind();
+        lvShoppingItems.DataSource = cartItems;
+        lvShoppingItems.DataBind();
     }
 
     /// <summary>
-    /// 
+    ///     Load the page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
 
         if (!IsPostBack)
@@ -191,50 +187,52 @@ public partial class _Default : System.Web.UI.Page
 
             UpdateCartTotals();
 
-            List<OrderItem> items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+            var items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
 
             if (!items.Any())
             {
                 // disable checkout button.
-                Button btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
+                var btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
                 if (btnCheckout != null)
                 {
                     btnCheckout.Enabled = false;
+                    btnCheckout.CssClass += " disabled";
                 }
             }
         }
     }
 
     /// <summary>
-    /// 
+    ///     ItemDataBound eventhandler, listview categories
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void LstvCategoriesWithProductsOnItemDataBound(object sender, ListViewItemEventArgs e)
     {
-        ImageButton img = (e.Item.FindControl("imgCategoryPicture") as ImageButton);
+        var imgButton = e.Item.FindControl("ibtnCategoryPicture") as ImageButton;
         try
         {
-            int id = Convert.ToInt32((e.Item.FindControl("lblCategoryId") as Label).Text);
-            PublicController controller = new PublicController();
-            if (img != null)
+            var id = Convert.ToInt32((e.Item.FindControl("lblCategoryId") as Label).Text);
+            var controller = new PublicController();
+            if (imgButton != null)
             {
-                img.ImageUrl = controller.GetFirstCapImageByCategoryId(id);
+                imgButton.ImageUrl = controller.GetFirstCapImageByCategoryId(id);
             }
         }
         catch (NullReferenceException ex)
         {
-            (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "NullReferenceException, Could not reference a control. Method:" + ex.TargetSite + "; message:" + ex.Message);
-            if (img != null)
+            (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+                "NullReferenceException, Could not reference a control. Method:" + ex.TargetSite + "; message:" +
+                ex.Message);
+            if (imgButton != null)
             {
-                img.ImageUrl = GeneralConstants.CapImageDefaultFileName;
+                imgButton.ImageUrl = GeneralConstants.CapImageDefaultFileName;
             }
         }
-        
     }
 
     /// <summary>
-    /// 
+    ///     OnItemCommand eventhandler, listview Categories
     /// </summary>
     /// <param name="source"></param>
     /// <param name="e"></param>
@@ -242,10 +240,10 @@ public partial class _Default : System.Web.UI.Page
     {
         if (e.CommandName == "loadCapsByCategory")
         {
-            PublicController controller = new PublicController();
-            int categoryId = Convert.ToInt32(e.CommandArgument);
+            var controller = new PublicController();
+            var categoryId = Convert.ToInt32(e.CommandArgument);
             CurrentCategoryId = categoryId;
-            string categoryName = controller.GetCategoryName(categoryId);
+            var categoryName = controller.GetCategoryName(categoryId);
             lblCentreHeader.Text = categoryName;
 
             Load_Caps();
@@ -255,7 +253,7 @@ public partial class _Default : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     OnItemDataBound eventhandler, datalist prodicts
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -268,42 +266,42 @@ public partial class _Default : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     button click handler, checkout button
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void btnProceedToCheckout_OnClick(object sender, EventArgs e)
     {
-        StringBuilder builder = new StringBuilder("~/Customer/Checkout.aspx");
+        var builder = new StringBuilder("~/Customer/Checkout.aspx");
         Response.Redirect(builder.ToString());
     }
 
     /// <summary>
-    /// 
+    ///     click handler, clear cart
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void btnCartClear_OnClick(object sender, EventArgs e)
     {
-        List<OrderItem> cartItems = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+        var cartItems = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
         cartItems.Clear();
         Bind_CartItems();
         UpdateCartTotals();
 
         // no cart items, so disable checkout button.
-        Button btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
+        var btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
         if (btnCheckout != null)
         {
             btnCheckout.Enabled = false;
         }
     }
-    
+
     /// <summary>
-    /// 
+    ///     support method, update the totals shown in the cart
     /// </summary>
     protected void UpdateCartTotals()
     {
-        List<OrderItem> cartItems = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+        var cartItems = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
         if (cartItems != null)
         {
             if (cartItems.Count > 0)
@@ -311,25 +309,25 @@ public partial class _Default : System.Web.UI.Page
                 double subtotal = 0;
                 foreach (var orderItem in cartItems)
                 {
-                    subtotal += orderItem.Quantity * orderItem.Cap.Price;
+                    subtotal += orderItem.Quantity*orderItem.Cap.Price;
                 }
-                double gst = subtotal*GeneralConstants.MoneyGstRate;
+                var gst = subtotal*GeneralConstants.MoneyGstRate;
 
-                lblSubtotal.Text = subtotal.ToString("C", CultureInfo.CurrentCulture);
-                lblGst.Text = gst.ToString("C", CultureInfo.CurrentCulture);
-                lblTotalCost.Text = (subtotal + gst).ToString("C", CultureInfo.CurrentCulture);
+                lblSubtotal.InnerText = subtotal.ToString("F2");
+                lblGst.InnerText = gst.ToString("F2");
+                lblTotalCost.InnerText = (subtotal + gst).ToString("F2");
             }
             else
             {
-                lblSubtotal.Text = "0.00";
-                lblGst.Text = "0.00";
-                lblTotalCost.Text = "0.00";
+                lblSubtotal.InnerText = "0.00";
+                lblGst.InnerText = "0.00";
+                lblTotalCost.InnerText = "0.00";
             }
         }
     }
 
     /// <summary>
-    /// 
+    ///     click handler, cancel the current product view
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -339,24 +337,24 @@ public partial class _Default : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     click handler, add a cap to the shopping cart
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void btnAddCapToBasket_OnClick(object sender, EventArgs e)
     {
-        OrderItem newShoppingCartItem = new OrderItem();
+        var newShoppingCartItem = new OrderItem();
         newShoppingCartItem.CapId = Convert.ToInt32(lblCurrentCapId.Text);
         newShoppingCartItem.ColourId = Convert.ToInt32(ddlCapColours.SelectedValue);
 
-        PublicController controller = new PublicController();
+        var controller = new PublicController();
         newShoppingCartItem.Cap = controller.GetCapById(newShoppingCartItem.CapId);
         newShoppingCartItem.Colour = controller.GetColourById(newShoppingCartItem.ColourId);
         newShoppingCartItem.Quantity = Convert.ToInt32(nptQuantity.Value);
 
-        List<OrderItem> cartItems = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>);
-        bool itemAlreadyExists = false;
-        for (int i = 0; i < cartItems.Count; i++)
+        var cartItems = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+        var itemAlreadyExists = false;
+        for (var i = 0; i < cartItems.Count; i++)
         {
             if (newShoppingCartItem.CapId == cartItems[i].CapId &&
                 newShoppingCartItem.ColourId == cartItems[i].ColourId)
@@ -378,15 +376,16 @@ public partial class _Default : System.Web.UI.Page
         UpdateCartTotals();
 
         // cart items count > 0, therefore make sure checkout button is enabled.
-        Button btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
+        var btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
         if (btnCheckout != null)
         {
             btnCheckout.Enabled = true;
+            btnCheckout.CssClass = "btn btn-primary";
         }
     }
 
     /// <summary>
-    /// 
+    ///     OnItemCommand handler, datalist products
     /// </summary>
     /// <param name="source"></param>
     /// <param name="e"></param>
@@ -394,16 +393,16 @@ public partial class _Default : System.Web.UI.Page
     {
         if (e.CommandName == "loadCapDetails")
         {
-            PublicController controller = new PublicController();
-            int capId = Convert.ToInt32(e.CommandArgument);
-            Cap cap = controller.GetCapDetails(capId);
+            var controller = new PublicController();
+            var capId = Convert.ToInt32(e.CommandArgument);
+            var cap = controller.GetCapDetails(capId);
 
             lblCurrentCapId.Text = cap.ID.ToString();
             lblCurrentCapName.Text = cap.Name;
-            lblCurrentCapPrice.Text = cap.Price.ToString("C", CultureInfo.CurrentCulture);
+            lblCurrentCapPrice.Text = cap.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 
-            imgCurrentCapPicture.ImageUrl = cap.ImageUrl;
-            lblCurrentCapDescription.Text = cap.Description;
+            imgCurrentCapPicture.Src = cap.ImageUrl;
+            divCurrentCapDescription.InnerText = cap.Description;
 
             nptQuantity.Value = "1";
             ddlCapColours.SelectedIndex = 0;
@@ -413,19 +412,20 @@ public partial class _Default : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     Page change handler, listview for cart
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void lstvShoppingItems_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
     {
-        (lstvShoppingItems.FindControl("dpgItemPager") as DataPager).SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+        (lvShoppingItems.FindControl("dpgItemPager") as DataPager).SetPageProperties(e.StartRowIndex, e.MaximumRows,
+            false);
         Bind_CartItems();
         UpdateCartTotals();
     }
 
     /// <summary>
-    /// 
+    ///     OnItemCommand handler, listview for cart
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -437,12 +437,12 @@ public partial class _Default : System.Web.UI.Page
             Bind_CartItems();
             UpdateCartTotals();
 
-            List<OrderItem> items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+            var items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
 
             if (!items.Any())
             {
                 // disable checkcout button.
-                Button btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
+                var btnCheckout = lgnviewCart.FindControl("btnProceedToCheckout") as Button;
                 if (btnCheckout != null)
                 {
                     btnCheckout.Enabled = false;
@@ -452,7 +452,7 @@ public partial class _Default : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     clikc handler, change the current product page.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -470,5 +470,17 @@ public partial class _Default : System.Web.UI.Page
         Load_Caps();
 
         lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
+    }
+
+    /// <summary>
+    ///     Update the current page for Categories.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void lvCategoriesWithProducts_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
+    {
+        DataPager pager = lvCategoriesWithProducts.FindControl("dpgItemPager") as DataPager;
+        pager.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+        Load_Categories();
     }
 }

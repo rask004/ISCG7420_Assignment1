@@ -1,56 +1,90 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Net.Mail;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Common;
+using SecurityLayer;
 
-/// <summary>
-/// 
-/// </summary>
-public partial class Error_Default : System.Web.UI.Page
+public partial class Error_Default : Page
 {
     /// <summary>
-    /// 
+    ///     Load the page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        Exception ex = Server.GetLastError();
-
-        if (ex != null)
+        if (!IsPostBack)
         {
+            var ex = Session["lastError"] as Exception;
+            if (ex == null)
+            {
+                KnownErrorSection.Visible = false;
+                return;
+            }
+
             UnknownErrorSection.Visible = false;
 
             lblErrorName.InnerText = ex.GetType().ToString();
-            lblErrorDescription.InnerText = ex.Message;
             lblErrorHResult.InnerText = ex.HResult.ToString();
-            lblErrorSourceMethod.InnerText = ex.Source;
-            if (ex.InnerException != null)
-            {
-                lblInnerException.InnerText = ex.InnerException.ToString() + ";  " + ex.InnerException.Message;
-            }
-            else
-            {
-                lblInnerException.InnerText = "NULL";
-            }
+            lblErrorMessage.InnerText = ex.Message;
         }
-        else
-        {
-            KnownErrorSection.Visible = false;
-        }
-
-
     }
 
     /// <summary>
-    /// 
+    ///     click handler, send email
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void btnEmailAdmin_OnClick(object sender, EventArgs e)
+    protected void btnSendEmail_OnClick(object sender, EventArgs e)
     {
-        
+        if (Page.IsValid)
+        {
+            var ex = Session["lastError"] as Exception;
+            var message = "Name: " + lblErrorName.InnerText + "\nHResult: " + lblErrorHResult.InnerText + "\n\n";
+            message += "StackTrace: " + ex.StackTrace + "\n\n\n";
+            if (ex.InnerException != null)
+            {
+                message += "InnerException: " + ex.InnerException.GetType() + "\n";
+                message += "HResult: " + ex.InnerException.HResult + "\n";
+                message += "StackTrace: " + ex.InnerException.StackTrace + "\n\n";
+            }
+
+            if (txtSenderName.Text != string.Empty)
+            {
+                message += "Sent By: " + txtSenderName.Text;
+            }
+
+            var emailMessage = string.Format(GeneralConstants.EmailErrorBody, message, Session["pageOfLastError"]);
+
+            try
+            {
+                GeneralFunctions.SendEmail(GeneralConstants.AdminReplyToEmailDefault,
+                    GeneralConstants.EmailErrorSubject, emailMessage,
+                    txtSenderEmail.Text);
+                litEmailResponse.Text = "The Email Has Been Sent.";
+            }
+            catch (SmtpException)
+            {
+                litEmailResponse.Text =
+                    "There was an error sending the email. You can manually email the Administrator at " +
+                    GeneralConstants.AdminReplyToEmailDefault + ".";
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Validation handler, validate the email.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="args"></param>
+    protected void ValidateEmailInput(object source, ServerValidateEventArgs args)
+    {
+        Validation.ValidateEmailInput(ref args);
+
+        if (!args.IsValid)
+        {
+            litEmailResponse.Text = "ERROR: email is not valid. Please Correct.";
+        }
     }
 }

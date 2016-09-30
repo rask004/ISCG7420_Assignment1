@@ -1,39 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Common;
 using BusinessLayer;
+using Common;
 using CommonLogging;
-using DataLayer;
-using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 /// <summary>
-/// 
 ///     The Admin page for the Orders Entity.
-///
 ///     Change Log:
-/// 
 ///     24-8-16  15:30       AskewR04 Created page and layout.
+///     20-9-16     18:06       AskewR04 Final review
 /// </summary>
-public partial class AdminOrders : System.Web.UI.Page
+public partial class AdminOrders : Page
 {
     /// <summary>
-    /// 
+    ///     Reload the sidebar list
     /// </summary>
     private void Reload_Sidebar()
     {
         AdminController controller = new AdminController();
-        dbrptSideBarItems.DataSource = controller.GetOrders();
-        dbrptSideBarItems.DataBind();
+        repSideBarItems.DataSource = controller.GetOrders();
+        repSideBarItems.DataBind();
     }
 
     /// <summary>
-    /// 
+    ///     Reload the list of order items
     /// </summary>
     private void Rebind_OrderItems()
     {
@@ -47,8 +43,8 @@ public partial class AdminOrders : System.Web.UI.Page
             orderId = 0;
         }
         AdminController controller = new AdminController();
-        grdvCustomerOrders.DataSource = controller.GetItemsForOrderWithId(orderId);
-        grdvCustomerOrders.DataBind();
+        gvCustomerOrders.DataSource = controller.GetItemsForOrderWithId(orderId);
+        gvCustomerOrders.DataBind();
     }
 
     /// <summary>
@@ -58,7 +54,17 @@ public partial class AdminOrders : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
+        }
+
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
         if (!Page.IsPostBack)
         {
@@ -69,8 +75,8 @@ public partial class AdminOrders : System.Web.UI.Page
                 ddlOrderStatus.Items.Add(new ListItem {Text = permittedOrderStatus, Value = permittedOrderStatus});
             }
 
-            grdvCustomerOrders.DataSource = new List<OrderItem>();
-            grdvCustomerOrders.DataBind();
+            gvCustomerOrders.DataSource = new List<OrderItem>();
+            gvCustomerOrders.DataBind();
 
             lblSideBarHeader.Text = "Orders";
 
@@ -83,7 +89,7 @@ public partial class AdminOrders : System.Web.UI.Page
     /// </summary>
     /// <param name="sender">The Repeater</param>
     /// <param name="e">Command Parameters</param>
-    protected void dbrptSideBarItems_ItemCommand(object sender, RepeaterCommandEventArgs e)
+    protected void repSideBarItems_ItemCommand(object sender, RepeaterCommandEventArgs e)
     {
         if (e.CommandName == "loadItem")
         {
@@ -102,7 +108,7 @@ public partial class AdminOrders : System.Web.UI.Page
 
             lblOrderId.Text = OrderId.ToString();
             lblCustomerName.Text = customerId + ", " + customerFirstName + " " + customerLastName;
-            
+
             // set list for status to correct value.
             ddlOrderStatus.Enabled = true;
             for (int i = 0; i < ddlOrderStatus.Items.Count; i++)
@@ -123,26 +129,24 @@ public partial class AdminOrders : System.Web.UI.Page
 
             foreach (var orderItem in orderItems)
             {
-                summary.SubTotalPrice += Convert.ToDouble(orderItem.Cap.Price * orderItem.Quantity);
+                summary.SubTotalPrice += Convert.ToDouble(orderItem.Cap.Price*orderItem.Quantity);
                 summary.TotalQuantity += orderItem.Quantity;
             }
 
-            lblOrderSubtotal.Text = summary.SubTotalPrice.ToString("C", CultureInfo.CurrentCulture);
-            lblOrderGst.Text = summary.SubTotalGst.ToString("C", CultureInfo.CurrentCulture);
-            lblOrderTotal.Text = summary.TotalPrice.ToString("C", CultureInfo.CurrentCulture);
+            lblOrderSubtotal.Text = summary.SubTotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+            lblOrderGst.Text = summary.SubTotalGst.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+            lblOrderTotal.Text = summary.TotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 
             Rebind_OrderItems();
 
-            
 
             btnSaveChanges.Enabled = true;
             btnCancelChanges.Enabled = true;
 
             lblMessageJumboTron.Text = "Item " + lblOrderId.Text + " Loaded.";
-            
         }
     }
-    
+
     /// <summary>
     ///     Undo any uncommitted changes.
     /// </summary>
@@ -150,7 +154,6 @@ public partial class AdminOrders : System.Web.UI.Page
     /// <param name="e"></param>
     protected void CancelButton_Click(object sender, EventArgs e)
     {
-
         btnSaveChanges.Enabled = false;
         btnCancelChanges.Enabled = false;
 
@@ -161,8 +164,7 @@ public partial class AdminOrders : System.Web.UI.Page
 
     /// <summary>
     ///     Save Changes.
-    ///     If id is for an existing Colour, update the Colour.
-    ///     Else add a new Colour.
+    ///     Update any pending change in status
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -177,20 +179,19 @@ public partial class AdminOrders : System.Web.UI.Page
             // Only updating (no Inserts or Deletes), therefore sidebar contents will not change.
             Reload_Sidebar();
 
-            lblMessageJumboTron.Text = "SUCCESS: Order updated: " + 
-                lblOrderId.Text + ", " + ddlOrderStatus.Items[ddlOrderStatus.SelectedIndex].Text;
+            lblMessageJumboTron.Text = "SUCCESS: Order updated: " +
+                                       lblOrderId.Text + ", " + ddlOrderStatus.Items[ddlOrderStatus.SelectedIndex].Text;
         }
-
     }
 
     /// <summary>
-    /// 
+    ///     Manage pagination for multiple orders.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void grdvCustomerOrders_OnPageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        grdvCustomerOrders.PageIndex = e.NewPageIndex;
+        gvCustomerOrders.PageIndex = e.NewPageIndex;
         Rebind_OrderItems();
     }
 }

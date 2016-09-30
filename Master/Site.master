@@ -40,7 +40,7 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <%--Collapse button--%>
-                <div class="navbar-header col-md-3">
+                <div class="navbar-header col-sm-4 col-md-3">
                      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                          <span class="icon-bar"></span>
                          <span class="icon-bar"></span>
@@ -49,30 +49,30 @@
                     <a class="navbar-left" runat="server" href="~/Default"><img ID="imgLogo" runat="server" Height="80" alt="Logo" src="~/Images/Logo.png"/></a>
                 </div>
                 <%--links--%>
-                <div class="navbar-collapse collapse col-md-9">
+                <div class="navbar-collapse collapse col-sm-8 col-md-9">
                     <div class="container-fluid">
                         <div class="row">
                             <ul class="nav navbar-nav">
-                                <li><a style="color: white" runat="server" href="~/Contact">Contact Us</a></li>
+                                <li><a style="color: white; text-align: center" runat="server" href="~/Contact">Contact Us</a></li>
                                 <asp:LoginView id="lgnViewProfile" runat="server">
                                     <AnonymousTemplate>
-                                        <li><a style="color: white" runat="server" href="~/Registration">Register</a></li>
+                                        <li><a style="color: white; text-align: center" runat="server" href="~/Registration">Register</a></li>
                                     </AnonymousTemplate>
                                     <LoggedInTemplate>
-                                        <li><a style="color: white" runat="server" href="~/Customer">Profile</a></li>
+                                        <li><a style="color: white; text-align: center" runat="server" href="~/Customer">Profile</a></li>
                                     </LoggedInTemplate>
                                 </asp:LoginView>
-                                <li style="color: white"><asp:LoginStatus ID="lgnStatusCustomer" runat="server" LogoutAction="Redirect" OnLoggingOut="lgnStatusCustomer_OnLoggingOut" LogoutPageUrl="~/Default.aspx"/> </li>
+                                <li style="color: white; text-align: center"><asp:LoginStatus ID="lgnStatusCustomer" runat="server" LogoutAction="Redirect" OnLoggingOut="lgnStatusCustomer_OnLoggingOut" LogoutPageUrl="~/Default.aspx"/> </li>
                             </ul>
                         </div>
                         <div class="row">
                             <ul class="nav navbar-nav">
                                 <asp:LoginView id="lgnViewCustomer" runat="server">
                                     <AnonymousTemplate>
-                                        <li style="color: white">Greetings Visitor!</li>
+                                        <li style="color: white; text-align: center">Greetings Visitor!</li>
                                     </AnonymousTemplate>
                                     <LoggedInTemplate>
-                                        <li style="color: white">You are logged in as <asp:LoginName id="lgnNameCustomer" runat="Server" ></asp:LoginName>.</li>
+                                        <li style="color: white;  text-align: center">You are logged in as <asp:LoginName id="lgnNameCustomer" runat="Server" ></asp:LoginName>.</li>
                                     </LoggedInTemplate>
                                 </asp:LoginView>
                             </ul>
@@ -83,18 +83,18 @@
             </div>
         </div>
         
-        <div class="container-fluid" style="margin-top: 30px; border: dashed yellow 1px;">
+        <div class="container-fluid" style="margin-top: 30px;">
             <%--Content area--%>
             <div class="row">
-                <div id="divLeftSidebar" class="col-md-3" style="border: dashed orange 1px;">
+                <div id="divLeftSidebar" class="col-md-3">
                      <asp:ContentPlaceHolder ID="PageContentLeft" runat="server">
                      </asp:ContentPlaceHolder>
                 </div>
-                <div id="divCentreSpace" class="col-md-6" style="border: dashed orange 1px;">
+                <div id="divCentreSpace" class="col-md-6">
                      <asp:ContentPlaceHolder ID="PageContentCentre" runat="server">
                      </asp:ContentPlaceHolder>
                 </div>
-                <div id="divRightsidebar" class="col-md-3" style="border: dashed orange 1px;">
+                <div id="divRightsidebar" class="col-md-3">
                      <asp:ContentPlaceHolder ID="PageContentRight" runat="server">
                      </asp:ContentPlaceHolder>
                 </div>
@@ -104,7 +104,7 @@
     
     <!-- Footer -->
     <div class="navbar-fixed-bottom navbar-inverse">
-        <div class="col-md-9 col-sm-9" style="color: white">
+        <div class="col-md-6" style="color: white">
             <span id="footerCurrentTime" style="float:left">
             <!-- Call javascript function -->
                 <script type="text/javascript">
@@ -113,7 +113,7 @@
             </span>
         </div>
 
-        <div class="col-md-3 col-sm-3" style="color: white"><span style="float:right">&copy;Quality Caps LTD.</span></div>
+        <div class="col-md-6" style="color: white"><span style="float:right">&copy;Quality Caps LTD.</span></div>
     </div>
 
 </body>

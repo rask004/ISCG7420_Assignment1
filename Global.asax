@@ -1,8 +1,7 @@
 ﻿<%@ Application Language="C#" %>
 <%@ Import Namespace="System.IO" %>
-<%@ Import Namespace="ASP_Alt" %>
-<%@ Import Namespace="System.Web.Optimization" %>
 <%@ Import Namespace="System.Web.Routing" %>
+<%@ Import Namespace="ASP_Alt" %>
 <%@ Import Namespace="BusinessLayer" %>
 <%@ Import Namespace="Common" %>
 <%@ Import Namespace="CommonLogging" %>
@@ -11,90 +10,76 @@
 <script runat="server">
 
     /// <summary>
-    /// 
+    ///     Manage start of application
+    ///     Setup logger.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    void Application_Start(object sender, EventArgs e)
+    private void Application_Start(object sender, EventArgs e)
     {
         RouteConfig.RegisterRoutes(RouteTable.Routes);
         BundleConfig.RegisterBundles(BundleTable.Bundles);
 
         // attach a logger instance to the Global application.
         // keep the logger, and target logging stream, open until the application ends.
-        StreamWriter writer = new StreamWriter(
-                Server.MapPath(GeneralConstants.LogFileDefaultLocation), true);
+        var writer = new StreamWriter(
+            Server.MapPath(GeneralConstants.LogFileDefaultLocation), true);
         writer.AutoFlush = true;
-        Logger logger = new Logger(LoggingLevel.Debug, writer);
+        var logger = new Logger(LoggingLevel.Debug, writer);
         logger.AppendDateTime = true;
         Application.Add(GeneralConstants.LoggerApplicationStateKey, logger);
     }
 
     /// <summary>
-    /// 
+    ///     Manage errors, globally
+    ///     Manage failure to connect to database
+    ///     Otherwise use default error page.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    void Application_Error(object sender, EventArgs e)
+    private void Application_Error(object sender, EventArgs e)
     {
-        Exception ex = Server.GetLastError();
+        var ex = Server.GetLastError();
 
-        //if (ex.Source.Contains("SQL Server") || ex.Message.Contains("Error Locating Server/Instance Specified"))
-        //{
-        //    Server.ClearError();
-        //    Response.Clear();
-        //    Response.Redirect("~/Error/ErrorDatabaseConnection.aspx");
-        //}
+        if (ex.InnerException != null && ex.InnerException.ToString().Contains("SQL Server") &&
+            ex.InnerException.ToString().Contains("Server is not found"))
+        {
+            Response.Redirect("/Error/ErrorDatabaseConnection");
+        }
 
+        Session["lastError"] = ex.InnerException;
+
+        // Issue with the default error page losing information upon postback - Url changes from last page accessed to the Error page, losing data.
+        // This approach avoids the problem. 
+        Session["pageOfLastError"] = Request.RawUrl;
+        Response.Redirect("/Error/Default");
     }
 
     /// <summary>
-    /// 
+    ///     Manage session start
+    ///     Set for not logged in, no security tokens, empty shopping cart, no previous errors.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    void Session_Start(object sender, EventArgs e)
+    private void Session_Start(object sender, EventArgs e)
     {
+        Session["lastError"] = null;
+        Session["pageOfLastError"] = null;
         Session[GeneralConstants.SessionCartItems] = new List<OrderItem>();
-        Session[Security.SessionIdentifierLogin] = null;
         Session[Security.SessionIdentifierSecurityToken] = null;
-
-        // TODO: remove this at Release.
-        AdminController controller = new AdminController();
-        List<Customer> customers = controller.GetCustomers();
-        List<Cap> caps = controller.GetCaps();
-        List<Colour> colours = controller.GetColours();
-        if (customers.Count > 0)
-        {
-            Session[Security.SessionIdentifierLogin] = customers[0].Login;
-            Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customers[0].Login, customers[0].Password);
-        }
-        OrderItem o = new OrderItem {Cap = caps[0], Colour = colours[0]};
-        o.CapId = o.Cap.ID;
-        o.ColourId = o.Colour.ID;
-        o.Quantity = 2;
-        ((List<OrderItem>) Session[GeneralConstants.SessionCartItems]).Add(o);
-        o = new OrderItem {Cap = caps[1], Colour = colours[3]};
-        o.CapId = o.Cap.ID;
-        o.ColourId = o.Colour.ID;
-        o.Quantity = 1;
-        ((List<OrderItem>) Session[GeneralConstants.SessionCartItems]).Add(o);
-
     }
 
     /// <summary>
-    /// 
+    ///     End session or abandon session
+    ///     clear any security or authentication tokens, log the customer out, send to default page.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    void Session_End(object sender, EventArgs e)
+    private void Session_End(object sender, EventArgs e)
     {
-        Session[Security.SessionIdentifierLogin] = null;
+        Session["lastError"] = null;
+        Session["pageOfLastError"] = null;
         Session[Security.SessionIdentifierSecurityToken] = null;
-        if (Session[GeneralConstants.SessionCartItems] != null)
-        {
-            (Session[GeneralConstants.SessionCartItems] as List<OrderItem>).Clear();
-        }
     }
 
 </script>

@@ -1,26 +1,34 @@
 ﻿using System;
-using System.Linq;
-using Common;
-using Microsoft.AspNet.Identity;
-using System.Security.Claims;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using BusinessLayer;
+using Common;
+using CommonLogging;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 /// <summary>
+///     Login page
+/// 
+///     Changelog:
+///     24-09-16        19:01   AskewR04    created page
 /// 
 /// </summary>
-public partial class Customer_Login : System.Web.UI.Page
+public partial class General_Login : Page
 {
     /// <summary>
-    /// 
+    ///     load page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
         if (!IsPostBack)
         {
             var authenticationManager = Context.GetOwinContext().Authentication;
@@ -37,7 +45,6 @@ public partial class Customer_Login : System.Web.UI.Page
                 }
 
                 Response.Redirect("~/");
-                
             }
 
             if (Request.QueryString.AllKeys.Contains(GeneralConstants.QueryStringGeneralMessageKey)
@@ -51,13 +58,13 @@ public partial class Customer_Login : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     Authenticate the user.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void lgnTestingSection_OnAuthenticate(object sender, AuthenticateEventArgs e)
     {
-        PublicController customerManager = new PublicController();
+        var customerManager = new PublicController();
 
         // Check if this user is a customer.
         if (customerManager.LoginIsValid(lgnTestingSection.UserName.Trim(), lgnTestingSection.Password))
@@ -73,7 +80,7 @@ public partial class Customer_Login : System.Web.UI.Page
             authenticationManager.SignIn(id);
 
             // update the session securityToken for this customer.
-            Customer customer = customerManager.GetCustomerByLogin(lgnTestingSection.UserName.Trim());
+            var customer = customerManager.GetCustomerByLogin(lgnTestingSection.UserName.Trim());
             Session[Security.SessionIdentifierLogin] = customer.Login;
             Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(customer.Login,
                 customer.Password);
@@ -83,7 +90,7 @@ public partial class Customer_Login : System.Web.UI.Page
         else
         {
             // Check if user is otherwise an administrator.
-            AdminController administratorManager = new AdminController();
+            var administratorManager = new AdminController();
             // Check if this user is a customer.
             if (administratorManager.LoginIsValid(lgnTestingSection.UserName.Trim(), lgnTestingSection.Password))
             {
@@ -98,7 +105,7 @@ public partial class Customer_Login : System.Web.UI.Page
                 authenticationManager.SignIn(id);
 
                 // update the session securityToken for this customer.
-                Administrator admin = administratorManager.GetAdministratorByLogin(lgnTestingSection.UserName.Trim());
+                var admin = administratorManager.GetAdministratorByLogin(lgnTestingSection.UserName.Trim());
                 Session[Security.SessionIdentifierLogin] = admin.Login;
                 Session[Security.SessionIdentifierSecurityToken] = Security.GenerateSecurityTokenHash(admin.Login,
                     admin.Password);
@@ -112,21 +119,24 @@ public partial class Customer_Login : System.Web.UI.Page
                 var ctx = Request.GetOwinContext();
                 var authenticationManager = ctx.Authentication;
                 authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-
             }
         }
-
-
-
     }
 
     /// <summary>
-    /// 
+    ///     Check if account is suspended.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void lgnTestingSection_OnLoggedIn(object sender, EventArgs e)
+    protected void lgnTestingSection_OnLoggingIn(object sender, LoginCancelEventArgs e)
     {
+        var controller = new PublicController();
 
+        if (controller.IsCustomerSuspended(lgnTestingSection.UserName.Trim()))
+        {
+            e.Cancel = true;
+            lblLoginMessages.InnerText =
+                "This Account has been suspended.\nTo request reactivation, please contact the Administrator.";
+        }
     }
 }

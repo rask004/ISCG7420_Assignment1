@@ -1,19 +1,30 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Text;
+using System.Web.UI;
 using System.Web.UI.WebControls;
+using BusinessLayer;
 using Common;
 using CommonLogging;
 using SecurityLayer;
-using BusinessLayer;
 
-public partial class Registration : System.Web.UI.Page
+/// <summary>
+/// Changelog:
+///     09-09-16        19:01   AskewR04    created page
+/// </summary>
+public partial class Registration : Page
 {
+    /// <summary>
+    ///     Load the page
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
-        lblErrorMessages.Text = String.Empty;
+        lblErrorMessages.Text = string.Empty;
 
         if (!IsPostBack)
         {
@@ -28,18 +39,6 @@ public partial class Registration : System.Web.UI.Page
             txtStreetAddress.MaxLength = GeneralConstants.StreetAddressMaxLength;
             txtSuburb.MaxLength = GeneralConstants.SuburbMaxLength;
             txtCity.MaxLength = GeneralConstants.CityMaxLength;
-
-            txtEmail.Width = new Unit(txtEmail.MaxLength, UnitType.Em);
-            txtLogin.Width = new Unit(txtLogin.MaxLength, UnitType.Em);
-            txtPassword.Width = new Unit(txtPassword.MaxLength, UnitType.Em);
-            txtHomeNumber.Width = new Unit(txtHomeNumber.MaxLength, UnitType.Em);
-            txtWorkNumber.Width = new Unit(txtWorkNumber.MaxLength, UnitType.Em);
-            txtMobileNumber.Width = new Unit(txtMobileNumber.MaxLength, UnitType.Em);
-            txtFirstName.Width = new Unit(txtFirstName.MaxLength, UnitType.Em);
-            txtLastName.Width = new Unit(txtLastName.MaxLength, UnitType.Em);
-            txtStreetAddress.Width = new Unit(txtStreetAddress.MaxLength, UnitType.Em);
-            txtSuburb.Width = new Unit(txtSuburb.MaxLength, UnitType.Em);
-            txtCity.Width = new Unit(txtCity.MaxLength, UnitType.Em);
         }
     }
 
@@ -55,7 +54,7 @@ public partial class Registration : System.Web.UI.Page
         if (!args.IsValid)
         {
             if (!lblErrorMessages.Text.Contains("First and Last Name should only have letters."))
-            lblErrorMessages.Text += "First and Last Name should only have letters. ";
+                lblErrorMessages.Text += "First and Last Name should only have letters. ";
         }
     }
 
@@ -75,13 +74,12 @@ public partial class Registration : System.Web.UI.Page
             return;
         }
 
-        PublicController controller = new PublicController();
+        var controller = new PublicController();
         if (controller.EmailIsAlreadyInUse(args.Value))
         {
             args.IsValid = false;
             lblErrorMessages.Text += "This Email is already in use. ";
         }
-
     }
 
     /// <summary>
@@ -100,7 +98,7 @@ public partial class Registration : System.Web.UI.Page
             return;
         }
 
-        PublicController controller = new PublicController();
+        var controller = new PublicController();
         if (controller.LoginIsAlreadyInUse(args.Value))
         {
             args.IsValid = false;
@@ -130,9 +128,9 @@ public partial class Registration : System.Web.UI.Page
     /// <param name="args"></param>
     protected void ContactNumberRequired(object sender, ServerValidateEventArgs args)
     {
-        if (txtHomeNumber.Text == String.Empty &&
-            txtWorkNumber.Text == String.Empty &&
-            txtMobileNumber.Text == String.Empty)
+        if (txtHomeNumber.Text == string.Empty &&
+            txtWorkNumber.Text == string.Empty &&
+            txtMobileNumber.Text == string.Empty)
         {
             args.IsValid = false;
             lblErrorMessages.Text += "At least one contact number is required. ";
@@ -150,7 +148,8 @@ public partial class Registration : System.Web.UI.Page
 
         if (!args.IsValid)
         {
-            lblErrorMessages.Text += "Home and work numbers should be in a valid local landline format. Examples include 09555444, 0733337777. ";
+            lblErrorMessages.Text +=
+                "Home and work numbers should be in a valid local landline format. Examples include 09555444, 0733337777. ";
         }
     }
 
@@ -165,7 +164,8 @@ public partial class Registration : System.Web.UI.Page
 
         if (!args.IsValid)
         {
-            lblErrorMessages.Text += "Mobile Numbers should be in a valid mobile number format, in international or local form. ";
+            lblErrorMessages.Text +=
+                "Mobile Numbers should be in a valid mobile number format, in international or local form. ";
         }
     }
 
@@ -180,7 +180,8 @@ public partial class Registration : System.Web.UI.Page
 
         if (!args.IsValid)
         {
-            lblErrorMessages.Text += "Street address is not valid. Valid examples are 123a Simpson St, or 5545 Carolina Ave.";
+            lblErrorMessages.Text +=
+                "Street address is not valid. Valid examples are 123a Simpson St, or 5545 Carolina Ave.";
         }
     }
 
@@ -210,23 +211,23 @@ public partial class Registration : System.Web.UI.Page
     {
         if (!Page.IsValid)
         {
-            if (lblErrorMessages.Text == String.Empty)
+            if (lblErrorMessages.Text == string.Empty)
             {
                 lblErrorMessages.Text = "Please fill in the required fields. ";
             }
         }
         else
         {
-            PublicController controller = new PublicController();
+            var controller = new PublicController();
 
-            
+
             // email the Customer their new registration details.
             try
             {
-                string ReplyToEmail = controller.GetAvailableAdminEmail();
-                if (ReplyToEmail.Equals(String.Empty))
+                var replyToEmail = controller.GetAvailableAdminEmail();
+                if (replyToEmail.Equals(string.Empty))
                 {
-                    ReplyToEmail = GeneralConstants.AdminReplyToEmailDefault;
+                    replyToEmail = GeneralConstants.AdminReplyToEmailDefault;
                 }
 
                 // add the registered user to the db.
@@ -234,32 +235,37 @@ public partial class Registration : System.Web.UI.Page
                     txtPassword.Text, txtEmail.Text, txtHomeNumber.Text, txtWorkNumber.Text,
                     txtMobileNumber.Text, txtStreetAddress.Text, txtSuburb.Text, txtCity.Text);
 
-                // TODO: get emailing working to notify registered user of details.
-                /*
                 GeneralFunctions.SendEmail(txtEmail.Text,
                     GeneralConstants.EmailRegisteredCustomerSubject,
-                    String.Format(
-                        GeneralConstants.EmailRegisteredCustomerBody, txtFirstName.Text, txtLastName.Text, 
+                    string.Format(
+                        GeneralConstants.EmailRegisteredCustomerBody, txtFirstName.Text, txtLastName.Text,
                         txtLogin.Text, txtPassword.Text, txtHomeNumber.Text, txtWorkNumber.Text, txtMobileNumber.Text,
                         txtStreetAddress.Text, txtSuburb.Text, txtCity.Text),
-                    ReplyToEmail);
-                */
+                    replyToEmail);
             }
             catch (SmtpException smtpEx)
             {
-                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error, "ERROR: Unable to send email in response to change in Customer password. Exception Message: " + smtpEx.Message + "; " + smtpEx.StatusCode);
+                throw new Exception("Unable to send email in response to change in Customer password.", smtpEx);
             }
-                
-            
 
 
-            StringBuilder builder = new StringBuilder("~/Login.aspx");
+            var builder = new StringBuilder("~/Login.aspx");
             builder.Append("?").Append(GeneralConstants.QueryStringGeneralMessageKey);
             builder.Append("=").Append(GeneralConstants.QueryStringGeneralMessageSuccessfulRegistration);
 
             Response.Redirect(builder.ToString());
         }
+    }
 
-        
+    /// <summary>
+    ///     Manage errors, failure to register or send email.
+    /// </summary>
+    /// <param name="e"></param>
+    protected override void OnError(EventArgs e)
+    {
+        Session["lastError"] = Server.GetLastError();
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+            Server.GetLastError().Message + "; " + Request.RawUrl);
+        Response.Redirect("~/Error/Default");
     }
 }

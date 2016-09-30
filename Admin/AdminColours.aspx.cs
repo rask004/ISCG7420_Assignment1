@@ -1,29 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Common;
 using BusinessLayer;
+using Common;
 using CommonLogging;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 /// <summary>
 ///     The Admin page for the Colour Entity.
-///
 ///     Change Log:
-///
-///     18-8-16  12:00       AskewR04 Created page and layout.
+///     18-8-16     12:00    AskewR04   Created page and layout.
+///     20-9-16     18:06    AskewR04   Final review
 /// </summary>
-public partial class AdminColours : System.Web.UI.Page
+public partial class AdminColours : Page
 {
     /// <summary>
-    /// 
+    ///     Reload sidebar with colours
     /// </summary>
     private void Reload_Sidebar()
     {
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
         dbrptSideBarItems.DataSource = controller.GetColours();
         dbrptSideBarItems.DataBind();
     }
@@ -35,7 +33,17 @@ public partial class AdminColours : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
+        }
+
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
         if (!Page.IsPostBack)
         {
@@ -60,13 +68,13 @@ public partial class AdminColours : System.Web.UI.Page
     {
         if (e.CommandName == "loadItem")
         {
-            AdminController controller = new AdminController();
-            int itemId = Convert.ToInt32(e.CommandArgument);
-            string name = controller.GetColourName(itemId);
+            var controller = new AdminController();
+            var itemId = Convert.ToInt32(e.CommandArgument);
+            var name = controller.GetColourName(itemId);
             if (name == null)
             {
-                lblColourId.Text = String.Empty;
-                txtColourName.Text = String.Empty;
+                lblColourId.Text = string.Empty;
+                txtColourName.Text = string.Empty;
                 lblMessageJumboTron.Text = "could not load item " + itemId;
             }
             else
@@ -85,14 +93,14 @@ public partial class AdminColours : System.Web.UI.Page
     }
 
     /// <summary>
-    ///     Prepare item form with a new available id, so user can add a new item.
+    ///     Prepare item form, so user can add a new item.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void AddButton_Click(object sender, EventArgs e)
     {
-        lblColourId.Text = String.Empty;
-        txtColourName.Text = String.Empty;
+        lblColourId.Text = string.Empty;
+        txtColourName.Text = string.Empty;
         txtColourName.Enabled = true;
 
         txtColourName.Focus();
@@ -139,7 +147,7 @@ public partial class AdminColours : System.Web.UI.Page
     {
         if (Page.IsValid)
         {
-            AdminController controller = new AdminController();
+            var controller = new AdminController();
 
             int id;
 
@@ -157,8 +165,8 @@ public partial class AdminColours : System.Web.UI.Page
 
             Reload_Sidebar();
 
-            lblMessageJumboTron.Text = "SUCCESS: Colour added or updated: " + lblColourId.Text + ", " + txtColourName.Text;
+            lblMessageJumboTron.Text = "SUCCESS: Colour added or updated: " + lblColourId.Text + ", " +
+                                       txtColourName.Text;
         }
-
     }
 }

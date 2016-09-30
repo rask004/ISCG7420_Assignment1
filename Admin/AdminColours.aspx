@@ -9,8 +9,8 @@
 --%>
 
 <asp:Content ID="AdminColourSideBar" ContentPlaceHolderID="AdminContentSideBar" Runat="Server">
-    <div id="ColourListingSection" class="AdminSection" 
-        style="position: fixed; overflow-y: scroll; overflow-x: hidden; width: 22%; max-height:86%">
+    <div id="ColourListingSection" class="AdminSection"
+         style="max-height: 86%; overflow-x: hidden; overflow-y: scroll; position: fixed; width: 22%;">
         <%-- to be filled with items from the currently used DB Table --%>
         <div class="row">
             <div id="divLeftSidebar" class="col-md-12">
@@ -24,13 +24,14 @@
                 <span class="BlankRow"></span>
             </div>
         </div>
-    
+
+        <!-- Sidebar for listing items -->
         <asp:UpdatePanel ID="ItemSideBarPanel" UpdateMode="Always" runat="server">
             <ContentTemplate>
                 <div class="row">
                     <div class="col-md-12">
-                        <asp:Repeater 
-                            id="dbrptSideBarItems" 
+                        <asp:Repeater
+                            id="dbrptSideBarItems"
                             OnItemCommand="dbrptSideBarItems_ItemCommand"
                             runat="server">
                             <HeaderTemplate>
@@ -41,11 +42,11 @@
                                 <tr class="col-md-12">
                                     <td class="col-md-12 SidebarItem">
                                         <asp:Button
-                                            ID = "btnSideBarItem"
-                                            CssClass = "col-md-12 SidebarButton" 
+                                            ID="btnSideBarItem"
+                                            CssClass="col-md-12 SidebarButton"
                                             CausesValidation="false"
-                                            Text ='<%# DataBinder.Eval(Container.DataItem, "name") %>'
-                                            CommandName="loadItem" 
+                                            Text='<%# DataBinder.Eval(Container.DataItem, "name") %>'
+                                            CommandName="loadItem"
                                             CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>'
                                             runat="server"/>
                                     </td>
@@ -70,6 +71,7 @@
             <span class="BlankRow"></span>
         </div>
 
+        <!-- Editing subform for individual items -->
         <asp:UpdatePanel ID="CurrentItemMainPanel" UpdateMode="Always" runat="server">
             <ContentTemplate>
                 <div class="row">
@@ -85,7 +87,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        
+
                     </div>
                     <div class="col-md-4">
                         <span>
@@ -171,14 +173,14 @@
                     <span class="BlankRow"></span>
                 </div>
                 <div class="row">
-                    <div class="col-md-12" >
-                        <asp:Label id="lblMessageJumboTron" CssClass="jumbotron" style="float: right; margin: 4px;" runat="server" />
+                    <div class="col-md-12">
+                        <asp:Label id="lblMessageJumboTron" CssClass="jumbotron" style="float: right; margin: 4px;" runat="server"/>
                     </div>
                 </div>
-                
+
             </ContentTemplate>
             <Triggers>
-                <asp:AsyncPostBackTrigger ControlID="btnSaveChanges" />
+                <asp:AsyncPostBackTrigger ControlID="btnSaveChanges"/>
                 <asp:AsyncPostBackTrigger ControlID="btnAddColour"/>
                 <asp:AsyncPostBackTrigger ControlID="btnCancelChanges"/>
             </Triggers>

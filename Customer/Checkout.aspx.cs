@@ -3,26 +3,38 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Web;
+using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using BusinessLayer;
 using Common;
 using CommonLogging;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
-public partial class Customer_Checkout : System.Web.UI.Page
+public partial class Customer_Checkout : Page
 {
-
     /// <summary>
-    /// 
+    ///     load the page
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info, "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
+        }
 
-        List<OrderItem> items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
+        var items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
 
         // redirect to Default page if cart is empty.
         if (!items.Any())
@@ -39,48 +51,48 @@ public partial class Customer_Checkout : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     reload the checkout items
     /// </summary>
     protected void ReBind()
     {
-        List<OrderItem> items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
-        lstvCheckoutItems.DataSource = items;
-        lstvCheckoutItems.DataBind();
+        var items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+        lvCheckoutItems.DataSource = items;
+        lvCheckoutItems.DataBind();
     }
 
     /// <summary>
-    /// 
+    ///     recalculate the checkout totals.
     /// </summary>
     protected void RecalculateTotals()
     {
-        OrderSummary summary = new OrderSummary();
-        List<OrderItem> items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+        var summary = new OrderSummary();
+        var items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
         foreach (var orderItem in items)
         {
-            summary.SubTotalPrice += orderItem.Cap.Price * orderItem.Quantity;
+            summary.SubTotalPrice += orderItem.Cap.Price*orderItem.Quantity;
         }
 
-        lblSubTotal.InnerText = summary.SubTotalPrice.ToString("C", CultureInfo.CurrentCulture);
-        lblSubTotalGst.InnerText = (summary.SubTotalGst).ToString("C", CultureInfo.CurrentCulture);
-        lblFullTotal.InnerText = (summary.TotalPrice).ToString("C", CultureInfo.CurrentCulture);
+        lblSubTotal.InnerText = summary.SubTotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+        lblSubTotalGst.InnerText = summary.SubTotalGst.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+        lblFullTotal.InnerText = summary.TotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
     }
 
     /// <summary>
-    /// 
+    ///     ItemDataBound handler, checkout listview
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void lstvCheckoutItems_OnItemDataBound(object sender, ListViewItemEventArgs e)
     {
-        PublicController controller = new PublicController();
-        List<Colour> colours = controller.GetAllColours();
-        
-        DropDownList ddlColoursList = e.Item.FindControl("ddlCapColoursCheckout") as DropDownList;
+        var controller = new PublicController();
+        var colours = controller.GetAllColours();
+
+        var ddlColoursList = e.Item.FindControl("ddlCapColoursCheckout") as DropDownList;
         ddlColoursList.DataSource = colours;
         ddlColoursList.DataBind();
-        
-        int colourId = (e.Item.DataItem as OrderItem).ColourId;
-        int i = 0;
+
+        var colourId = (e.Item.DataItem as OrderItem).ColourId;
+        var i = 0;
         // assign the correct index in the dropdownlist, according to the colour for this OrderItem
         for (i = ddlColoursList.Items.Count - 1; i >= 0; i--)
         {
@@ -94,35 +106,36 @@ public partial class Customer_Checkout : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     page change handler, checkout listview
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void lstvCheckoutItems_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
     {
-        (lstvCheckoutItems.FindControl("dpgItemPager") as DataPager).SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+        (lvCheckoutItems.FindControl("dpgItemPager") as DataPager).SetPageProperties(e.StartRowIndex, e.MaximumRows,
+            false);
         ReBind();
     }
 
     /// <summary>
-    /// 
+    ///     click handler, cancel checkout
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void Cancel_OnClick(object sender, EventArgs e)
     {
-        StringBuilder builder = new StringBuilder("~/Default.aspx");
+        var builder = new StringBuilder("~/Default.aspx");
         Response.Redirect(builder.ToString());
     }
 
     /// <summary>
-    /// 
+    ///     ItemCommand handler, checkout listview
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void lstvCheckoutItems_OnItemCommand(object sender, ListViewCommandEventArgs e)
     {
-        bool cartContentsChanged = false;
+        var cartContentsChanged = false;
         if (e.CommandName == "editItem")
         {
             var btnModify = e.Item.FindControl("btnModifyItem") as Button;
@@ -131,7 +144,7 @@ public partial class Customer_Checkout : System.Web.UI.Page
 
             var input = e.Item.FindControl("nptQuantity") as HtmlInputControl;
             var colourList = e.Item.FindControl("ddlCapColoursCheckout") as DropDownList;
-            
+
             input.Disabled = false;
             colourList.Enabled = true;
         }
@@ -141,12 +154,12 @@ public partial class Customer_Checkout : System.Web.UI.Page
             btnModify.CommandName = "editItem";
             btnModify.Text = "Edit";
 
-            OrderItem o = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>)[e.Item.DataItemIndex];
+            var o = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>)[e.Item.DataItemIndex];
             var input = e.Item.FindControl("nptQuantity") as HtmlInputControl;
             var colourList = e.Item.FindControl("ddlCapColoursCheckout") as DropDownList;
 
             o.Quantity = Convert.ToInt32(input.Value);
-            PublicController controller = new PublicController();
+            var controller = new PublicController();
             o.Colour = controller.GetColourById(Convert.ToInt32(colourList.SelectedValue));
             o.ColourId = o.Colour.ID;
 
@@ -162,7 +175,7 @@ public partial class Customer_Checkout : System.Web.UI.Page
         }
         else if (e.CommandName == "undoItem")
         {
-            OrderItem o = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>)[e.Item.DataItemIndex];
+            var o = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>)[e.Item.DataItemIndex];
             var input = e.Item.FindControl("nptQuantity") as HtmlInputControl;
             var colourList = e.Item.FindControl("ddlCapColoursCheckout") as DropDownList;
 
@@ -179,6 +192,12 @@ public partial class Customer_Checkout : System.Web.UI.Page
 
         if (cartContentsChanged)
         {
+            if (!(Session[GeneralConstants.SessionCartItems] as List<OrderItem>).Any())
+            {
+                btnPlaceOrder.Enabled = false;
+                btnPlaceOrder.CssClass += " disabled";
+            }
+
             ReBind();
 
             RecalculateTotals();
@@ -186,23 +205,55 @@ public partial class Customer_Checkout : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     click handler, do checkout 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void CompleteOrder_OnClick(object sender, EventArgs e)
     {
-        PublicController controller = new PublicController();
-        string login = Session[Security.SessionIdentifierLogin].ToString();
-        List<OrderItem> items = (Session[GeneralConstants.SessionCartItems] as List<OrderItem>);
-        controller.PlaceOrderForCustomer(login, items);
+        var controller = new PublicController();
+        var login = Session[Security.SessionIdentifierLogin].ToString();
+        var items = Session[GeneralConstants.SessionCartItems] as List<OrderItem>;
+        try
+        {
+            controller.PlaceOrderForCustomer(login, items);
+        }
+        catch (Exception lastEx)
+        {
+            if (lastEx is NullReferenceException)
+            {
+                var ex = new Exception("The login does not refer to an existing customer.", lastEx);
+                throw ex;
+            }
+                // should log person out but don't know how
+
+            if (lastEx is ArgumentOutOfRangeException)
+            {
+                var ex = new Exception("Attempted to insert new order but Encountered an Error.", lastEx);
+                throw ex;
+            }
+            throw lastEx;
+        }
         items.Clear();
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.Append("~/Customer");
         builder.Append("?");
         builder.Append(GeneralConstants.QueryStringGeneralMessageKey);
         builder.Append("=");
         builder.Append(GeneralConstants.QueryStringGeneralMessageSuccessfulPlacedNewOrder);
         Response.Redirect(builder.ToString());
+    }
+
+
+    /// <summary>
+    ///     manage errors
+    /// </summary>
+    /// <param name="e"></param>
+    protected override void OnError(EventArgs e)
+    {
+        Session["lastError"] = Server.GetLastError();
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+            Server.GetLastError().Message + "; " + Request.RawUrl);
+        Response.Redirect("~/Error/Default");
     }
 }

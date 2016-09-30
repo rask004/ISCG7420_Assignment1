@@ -6,7 +6,11 @@ using System.Web;
 namespace BusinessLayer
 {
     /// <summary>
-    ///     Summary description for BaseBusinessObject
+    ///     Base Class for a BusinessObject
+    /// 
+    ///     Changelog:
+    /// 
+    ///     24-08-16        19:01   AskewR04    created class
     /// </summary>
     public class BaseBusinessObject
     {
@@ -14,7 +18,10 @@ namespace BusinessLayer
         {
         }
 
-        public int Key
+        /// <summary>
+        ///     Represents the Database Key for this object.
+        /// </summary>
+        public virtual int Key
         {
             get
             {
@@ -22,6 +29,9 @@ namespace BusinessLayer
             }
         }
 
+        /// <summary>
+        ///     Generic Key for objects. 
+        /// </summary>
         public int ID { get; set; }
     }
 }
