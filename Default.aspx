@@ -33,6 +33,7 @@
                         <div class="container-fluid">
                             <asp:ListView ID="lvCategoriesWithProducts" OnItemDataBound="LstvCategoriesWithProductsOnItemDataBound"
                                           OnItemCommand="LstvCategoriesWithProducts_OnItemCommand"
+                                          OnPagePropertiesChanging="lvCategoriesWithProducts_OnPagePropertiesChanging"
                                           runat="server">
 
                                 <LayoutTemplate>

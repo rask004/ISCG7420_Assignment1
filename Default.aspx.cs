@@ -471,4 +471,16 @@ public partial class _Default : Page
 
         lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
     }
+
+    /// <summary>
+    ///     Update the current page for Categories.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void lvCategoriesWithProducts_OnPagePropertiesChanging(object sender, PagePropertiesChangingEventArgs e)
+    {
+        DataPager pager = lvCategoriesWithProducts.FindControl("dpgItemPager") as DataPager;
+        pager.SetPageProperties(e.StartRowIndex, e.MaximumRows, false);
+        Load_Categories();
+    }
 }
