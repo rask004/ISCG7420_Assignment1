@@ -58,7 +58,7 @@ namespace DataLayer
 
         private readonly string _insertDefaultUserAdmin = "if (select count(id) from dbo.SiteUser) = 0 BEGIN " +
                                                           "insert into SiteUser (login, password, userType, emailAddress) Values('AdminRolandAskew2016', " +
-                                                          "'BB51AD0AAB66C70D3B26CEC4EFCC224273AF5E18', 'A', 'AskewR04@myunitec.ac.nz'); " +
+                                                          "'001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'A', 'AskewR04@myunitec.ac.nz'); " +
                                                           "END ";
 
         private readonly string _insertDefaultColours = "if (select count(id) from dbo.Colour) = 0 BEGIN " +
