@@ -56,9 +56,15 @@ namespace DataLayer
                                                        "quantity    int     not null, " +
                                                        "Constraint  orderItem_pk    Primary Key(colourId, capId, orderId)); END ";
 
-        private readonly string _insertDefaultUserAdmin = "if (select count(id) from dbo.SiteUser) = 0 BEGIN " +
+        private readonly string _insertDefaultUserAdmin = "if (select count(id) from dbo.SiteUser where UserType='A') = 0 BEGIN " +
                                                           "insert into SiteUser (login, password, userType, emailAddress) Values('AdminRolandAskew2016', " +
                                                           "'001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'A', 'AskewR04@myunitec.ac.nz'); " +
+                                                          "END ";
+
+        private readonly string _insertDefaultUserCustomers = "if (select count(id) from dbo.SiteUser where UserType='C') = 0 BEGIN " +
+                                                          "insert into SiteUser (firstName, lastName, userType, login, password, emailAddress, homeNumber, workNumber, mobileNumber, streetAddress, suburb, city, isDisabled ) Values('Harry','Bloggs','C' " +
+                                                          "'Customer111','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0)," +
+                                                          "('Harry','Bloggs','C','SuspendedCustomer','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',1); " +
                                                           "END ";
 
         private readonly string _insertDefaultColours = "if (select count(id) from dbo.Colour) = 0 BEGIN " +
@@ -239,6 +245,9 @@ namespace DataLayer
             RunDbCommandNoResults(dbCommand);
 
             dbCommand = new OleDbCommand(_insertDefaultUserAdmin, _connection);
+            RunDbCommandNoResults(dbCommand);
+
+            dbCommand = new OleDbCommand(_insertDefaultUserCustomers, _connection);
             RunDbCommandNoResults(dbCommand);
 
             dbCommand = new OleDbCommand(_insertDefaultSuppliers, _connection);
