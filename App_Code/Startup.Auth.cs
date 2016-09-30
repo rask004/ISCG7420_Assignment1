@@ -17,7 +17,7 @@ namespace ASP_Alt
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account/Login")
+                LoginPath = new PathString("/Login")
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 

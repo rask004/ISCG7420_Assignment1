@@ -7,18 +7,27 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Common;
+using CommonLogging;
+using Microsoft.AspNet.Identity;
+using SecurityLayer;
 
-public partial class AdminImages : System.Web.UI.Page
+/// <summary>
+///     Admin page for images management
+///     Change log:
+///     08-9-16     18:06       AskewR04 Created Page
+///     20-9-16     18:06       AskewR04 Final review
+/// </summary>
+public partial class AdminImages : Page
 {
     /// <summary>
-    /// 
+    ///     Retrieve available images
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List, of images, by filename and server URL</returns>
     private List<ListItem> GetListOfUploadedImages()
     {
-        DirectoryInfo uploadedDirectoryInfo = new DirectoryInfo(Server.MapPath(GeneralConstants.ImagesUploadFolder));
+        var uploadedDirectoryInfo = new DirectoryInfo(Server.MapPath(GeneralConstants.ImagesUploadFolder));
 
-        List<ListItem> imageUrls = new List<ListItem>();
+        var imageUrls = new List<ListItem>();
 
         // permitted types are in MIME form. Cannot directly compare to extension.
         // but each type will include the extension.
@@ -28,7 +37,11 @@ public partial class AdminImages : System.Web.UI.Page
             {
                 if (permittedMimeType.Contains(file.Extension.Substring(1)))
                 {
-                    imageUrls.Add(new ListItem { Text = file.Name, Value = GeneralConstants.ImagesUploadFolder + "/" + file.Name });
+                    imageUrls.Add(new ListItem
+                    {
+                        Text = file.Name,
+                        Value = GeneralConstants.ImagesUploadFolder + "/" + file.Name
+                    });
                     break;
                 }
             }
@@ -38,17 +51,37 @@ public partial class AdminImages : System.Web.UI.Page
     }
 
     /// <summary>
-    /// 
+    ///     Binder method for datalist.
+    /// </summary>
+    protected void Rebind()
+    {
+        dtlUploadedImages.DataSource = GetListOfUploadedImages();
+        dtlUploadedImages.DataBind();
+    }
+
+    /// <summary>
+    ///     page loader
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
+        }
+
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         if (!IsPostBack)
         {
-            dtlUploadedImages.DataSource = GetListOfUploadedImages();
-            dtlUploadedImages.DataBind();
-        }        
+            Rebind();
+        }
     }
 
     /// <summary>
@@ -72,7 +105,7 @@ public partial class AdminImages : System.Web.UI.Page
         }
         else if (!GeneralConstants.PermittedContentTypes.Contains(fupImageUploader.PostedFile.ContentType))
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("Unpermitted file type. Permitted types are: ");
             foreach (var permittedContentType in GeneralConstants.PermittedContentTypes)
             {
@@ -85,19 +118,20 @@ public partial class AdminImages : System.Web.UI.Page
         {
             if (uploadedImage.Text.Equals(fupImageUploader.FileName))
             {
-                lblStatusMessage.Text = "The filename is already in use. Please give the file a unique name before uploading.";
+                lblStatusMessage.Text =
+                    "The filename is already in use. Please give the file a unique name before uploading.";
                 return;
             }
         }
 
-        fupImageUploader.SaveAs(Server.MapPath(GeneralConstants.ImagesUploadFolder + "/" + fupImageUploader.FileName ));
+        fupImageUploader.SaveAs(Server.MapPath(GeneralConstants.ImagesUploadFolder + "/" + fupImageUploader.FileName));
 
-        dtlUploadedImages.DataSource = GetListOfUploadedImages();
-        dtlUploadedImages.DataBind();
+        Rebind();
     }
 
     /// <summary>
-    /// 
+    ///     OnItem data bound method
+    ///     DEPRECATED
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -105,19 +139,23 @@ public partial class AdminImages : System.Web.UI.Page
     {
         if (e.Item.ItemType == ListItemType.Item)
         {
-            Button btn = (e.Item.FindControl("btnDeleteImage") as Button);
-            Image img = (e.Item.FindControl("imgCurrentImage") as Image);
+            // don't do anything here
+        }
+    }
 
-            EventHandler btnDeleteImageOnClick = new EventHandler(
-                delegate(object btnSender, EventArgs args)
-                {
-                    
-                    FileInfo fi = new FileInfo(Server.MapPath(img.ImageUrl));
-                    fi.Delete();
-                }
-            );
-
-            btn.Click += btnDeleteImageOnClick;
+    /// <summary>
+    ///     OnItem Command
+    ///     if request is to delete, delete the file and rebind.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="e"></param>
+    protected void dtlUploadedImages_OnItemCommand(object source, DataListCommandEventArgs e)
+    {
+        if (e.CommandName == "deleteImage")
+        {
+            var fi = new FileInfo(Server.MapPath(e.CommandArgument.ToString()));
+            fi.Delete();
+            Rebind();
         }
     }
 }

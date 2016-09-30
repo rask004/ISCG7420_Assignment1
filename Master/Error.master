@@ -1,0 +1,62 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Error.master.cs" Inherits="Master_Error" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title><%= Page.Title %></title>
+    <script type="text/javascript" src="../Content/common.js">
+    </script>
+    <script type="text/javascript" src="../Content/Validation.js">
+    </script>
+    <asp:ContentPlaceHolder runat="server" ID="MetaPlaceholder"></asp:ContentPlaceHolder>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%--Bootstrap CSS code--%>
+    <webopt:BundleReference runat="server" path="~/Content/css" />
+</head>
+<body style="background-color: lightgoldenrodyellow">
+    <form id="frmError" runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--Site Scripts--%>
+                <asp:ScriptReference Name="jquery" />
+                <%--Bootstrap Framework Scripts--%>
+                <asp:ScriptReference Name="bootstrap" />
+            </Scripts>
+        </asp:ScriptManager>
+        <div class="container-fluid" style="position: absolute; width: 100%; height: 92%;">
+            <%--Content area--%>
+            <br/>
+            <div class="row">
+                <div class="col-xs-2 col-sm-1 col-md-1"></div>
+                <div class="col-xs-10 col-sm-10 col-md-10" style="color: red; font-size: 2em">
+                    <H3><label><asp:ContentPlaceHolder ID="ErrorTitle" runat="server">
+                    </asp:ContentPlaceHolder></label></H3>
+                </div>
+                <div class="col-xs-0 col-sm-1 col-md-1"></div> 
+            </div>
+            <div class="row"><br/></div>
+            <div class="row"><br/></div>
+            <div class="row">
+                <div class="col-xs-2 col-sm-1 col-md-1"></div> 
+                <div class="col-xs-10 col-sm-10 col-md-10">
+                    <asp:ContentPlaceHolder ID="ErrorBody" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+                <div class="col-xs-0 col-sm-1 col-md-1">
+                    
+                </div> 
+            </div>
+            <div class="row">
+                <br/><br/>
+            </div>
+            <div class="row">
+                <div class="col-xs-2 col-sm-1 col-md-1"></div>
+                <div class="col-xs-6 col-sm-4 col-md-4">
+                <asp:Button CssClass="btn btn-lg btn-info" runat="server" Text="Return to Home Page" OnClick="HomePage_OnClick" />
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,32 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Common;
 using BusinessLayer;
+using Common;
+using CommonLogging;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 /// <summary>
-/// 
-///     The Admin page for the Colour Entity.
-/// 
+///     The Admin page for the Supplier Entity.
 ///     Change Log:
-/// 
 ///     18-8-16  14:30       AskewR04 Created page and layout.
-/// 
 /// </summary>
-public partial class AdminSupplier : System.Web.UI.Page
+public partial class AdminSupplier : Page
 {
     /// <summary>
-    /// 
+    ///     Reload list of suppliers.
     /// </summary>
     private void Reload_Sidebar()
     {
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
         dbrptSideBarItems.DataSource = controller.GetSuppliers();
         dbrptSideBarItems.DataBind();
     }
@@ -38,13 +32,29 @@ public partial class AdminSupplier : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
+        }
+
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         if (!Page.IsPostBack)
         {
-            txtSupplierContactNumber.MaxLength = GeneralConstants.WorkNumberMaxLength;
+            txtSupplierHomeNumber.MaxLength = GeneralConstants.HomeNumberMaxLength;
+            txtSupplierWorkNumber.MaxLength = GeneralConstants.WorkNumberMaxLength;
+            txtSupplierMobileNumber.MaxLength = GeneralConstants.MobileNumberMaxLength;
             txtSupplierName.MaxLength = GeneralConstants.SupplierNameMaxLength;
             txtSupplierEmail.MaxLength = GeneralConstants.SupplierEmailMaxLength;
 
-            txtSupplierContactNumber.Width = new Unit(txtSupplierContactNumber.MaxLength, UnitType.Em);
+            txtSupplierHomeNumber.Width = new Unit(txtSupplierHomeNumber.MaxLength, UnitType.Em);
+            txtSupplierWorkNumber.Width = new Unit(txtSupplierWorkNumber.MaxLength, UnitType.Em);
+            txtSupplierMobileNumber.Width = new Unit(txtSupplierMobileNumber.MaxLength, UnitType.Em);
             txtSupplierName.Width = new Unit(txtSupplierName.MaxLength, UnitType.Em);
             txtSupplierEmail.Width = new Unit(txtSupplierEmail.MaxLength, UnitType.Em);
 
@@ -65,28 +75,34 @@ public partial class AdminSupplier : System.Web.UI.Page
     {
         if (e.CommandName == "loadItem")
         {
-            AdminController controller = new AdminController();
-            int itemId = Convert.ToInt32(e.CommandArgument);
-            string name = controller.GetSupplierName(itemId);
-            string contact = controller.GetSupplierContactNumber(itemId);
-            string email = controller.GetSupplierEmail(itemId);
+            var controller = new AdminController();
+            var itemId = Convert.ToInt32(e.CommandArgument);
+            var name = controller.GetSupplierName(itemId);
+            var homeContact = controller.GetSupplierHomeNumber(itemId);
+            var workContact = controller.GetSupplierWorkNumber(itemId);
+            var mobileContact = controller.GetSupplierMobileNumber(itemId);
+            var email = controller.GetSupplierEmail(itemId);
             if (name == null)
             {
-                lblSupplierId.Text = String.Empty;
-                txtSupplierName.Text = String.Empty;
-                txtSupplierContactNumber.Text = String.Empty;
-                txtSupplierEmail.Text = String.Empty;
+                lblSupplierId.Text = string.Empty;
+                txtSupplierName.Text = string.Empty;
+                txtSupplierHomeNumber.Text = string.Empty;
+                txtSupplierEmail.Text = string.Empty;
                 lblMessageJumboTron.Text = "could not load item " + itemId;
             }
             else
             {
                 lblSupplierId.Text = itemId.ToString();
                 txtSupplierName.Text = name;
-                txtSupplierContactNumber.Text = contact;
+                txtSupplierHomeNumber.Text = homeContact;
+                txtSupplierWorkNumber.Text = workContact;
+                txtSupplierMobileNumber.Text = mobileContact;
                 txtSupplierEmail.Text = email;
 
                 txtSupplierName.Enabled = true;
-                txtSupplierContactNumber.Enabled = true;
+                txtSupplierHomeNumber.Enabled = true;
+                txtSupplierWorkNumber.Enabled = true;
+                txtSupplierMobileNumber.Enabled = true;
                 txtSupplierEmail.Enabled = true;
 
                 btnSaveChanges.Enabled = true;
@@ -104,14 +120,20 @@ public partial class AdminSupplier : System.Web.UI.Page
     /// <param name="e"></param>
     protected void AddButton_Click(object sender, EventArgs e)
     {
-        lblSupplierId.Text = String.Empty;
-        txtSupplierName.Text = String.Empty;
+        lblSupplierId.Text = string.Empty;
+        txtSupplierName.Text = string.Empty;
         txtSupplierName.Enabled = true;
 
-        txtSupplierContactNumber.Text = String.Empty;
-        txtSupplierContactNumber.Enabled = true;
+        txtSupplierHomeNumber.Text = string.Empty;
+        txtSupplierHomeNumber.Enabled = true;
 
-        txtSupplierEmail.Text = String.Empty;
+        txtSupplierWorkNumber.Text = string.Empty;
+        txtSupplierWorkNumber.Enabled = true;
+
+        txtSupplierMobileNumber.Text = string.Empty;
+        txtSupplierMobileNumber.Enabled = true;
+
+        txtSupplierEmail.Text = string.Empty;
         txtSupplierEmail.Enabled = true;
 
         txtSupplierName.Focus();
@@ -130,7 +152,9 @@ public partial class AdminSupplier : System.Web.UI.Page
     protected void CancelButton_Click(object sender, EventArgs e)
     {
         txtSupplierName.Enabled = false;
-        txtSupplierContactNumber.Enabled = false;
+        txtSupplierHomeNumber.Enabled = false;
+        txtSupplierWorkNumber.Enabled = false;
+        txtSupplierMobileNumber.Enabled = false;
         txtSupplierEmail.Enabled = false;
 
         btnSaveChanges.Enabled = false;
@@ -160,6 +184,45 @@ public partial class AdminSupplier : System.Web.UI.Page
     }
 
     /// <summary>
+    ///     Validation function for the User Contact Numbers.
+    ///     At least one contact number is required.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="args"></param>
+    protected void NumberRequiredValidation(object source, ServerValidateEventArgs args)
+    {
+        if (txtSupplierHomeNumber.Text == string.Empty &&
+            txtSupplierWorkNumber.Text == string.Empty &&
+            txtSupplierMobileNumber.Text == string.Empty)
+        {
+            args.IsValid = false;
+            return;
+        }
+
+        args.IsValid = true;
+    }
+
+    /// <summary>
+    ///     Validation function for the User Home or Work number
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="args"></param>
+    protected void LandlineNumberValidation(object source, ServerValidateEventArgs args)
+    {
+        Validation.ValidateLandlineNumber(ref args);
+    }
+
+    /// <summary>
+    ///     Validation function for the User Mobile Number
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="args"></param>
+    protected void MobileNumberValidation(object source, ServerValidateEventArgs args)
+    {
+        Validation.ValidateMobileNumber(ref args);
+    }
+
+    /// <summary>
     ///     Validation function for the Supplier Email
     /// </summary>
     /// <param name="source"></param>
@@ -180,7 +243,7 @@ public partial class AdminSupplier : System.Web.UI.Page
     {
         if (Page.IsValid)
         {
-            AdminController controller = new AdminController();
+            var controller = new AdminController();
 
             int id;
 
@@ -194,12 +257,12 @@ public partial class AdminSupplier : System.Web.UI.Page
             }
 
             controller.AddOrUpdateSupplier(id,
-                txtSupplierName.Text, txtSupplierContactNumber.Text, txtSupplierEmail.Text);
+                txtSupplierName.Text, txtSupplierHomeNumber.Text, "", "", txtSupplierEmail.Text);
 
             Reload_Sidebar();
 
-            lblMessageJumboTron.Text = "SUCCESS: Supplier added or updated: " + lblSupplierId.Text + ", " + txtSupplierName.Text;
+            lblMessageJumboTron.Text = "SUCCESS: Supplier added or updated: " + lblSupplierId.Text + ", " +
+                                       txtSupplierName.Text;
         }
-
     }
 }

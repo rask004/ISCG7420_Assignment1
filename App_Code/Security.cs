@@ -10,7 +10,10 @@ using Common;
 namespace SecurityLayer
 {
     /// <summary>
-    /// Constants and helpers for use by application, session state, and hashing.
+    ///     Constants and helpers for use by application, session state, and hashing.
+    /// 
+    ///     Changelog:
+    ///     24-08-16        19:01   AskewR04    created static class
     /// </summary>
     public static class Security
     {
@@ -36,9 +39,14 @@ namespace SecurityLayer
         // Identifies the username section.
         public static string SessionIdentifierSecurityToken
         {
-            get { return "h9o3f5y45d23d5u35nyl"; }
+            get { return "sessiontoken"; }
         }
 
+        /// <summary>
+        ///     given a password, obtain the SHA1 hash
+        /// </summary>
+        /// <param name="password">password to hash</param>
+        /// <returns>string, HASH of password</returns>
         public static string GetPasswordHash(string password)
         {
             string saltedPassword = password + PasswordSalt.ToString();
@@ -48,6 +56,10 @@ namespace SecurityLayer
             return hash;
         }
 
+        /// <summary>
+        ///     generate a random password
+        /// </summary>
+        /// <returns>string, password</returns>
         public static string GetRandomPassword()
         {
             Random random = new Random();
@@ -56,6 +68,14 @@ namespace SecurityLayer
 
         }
 
+        /// <summary>
+        ///     compare two security tokens, one pregeerated, and another created from supplied login and password
+        ///     DEPRECATED
+        /// </summary>
+        /// <param name="login">string, login</param>
+        /// <param name="passwordHash">string, HASH password</param>
+        /// <param name="sessionTokenHash">string, HASH, security token</param>
+        /// <returns>true if tokens match, false otherwise</returns>
         public static bool IsValidLoginToken(string login, string passwordHash, string sessionTokenHash)
         {
             bool IsValid = false;
@@ -71,6 +91,13 @@ namespace SecurityLayer
             return IsValid;
         }
 
+        /// <summary>
+        ///     Generate a security token.
+        ///     Token is an MD5 meta salt hash  - hash of salted login, combined with passwordHash as salt, then hash again.
+        /// </summary>
+        /// <param name="login">string, login</param>
+        /// <param name="passwordHash">string, HASH of password</param>
+        /// <returns>string, HASH, security token</returns>
         public static string GenerateSecurityTokenHash(string login, string passwordHash)
         {
             StringBuilder builder = new StringBuilder();

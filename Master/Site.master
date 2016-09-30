@@ -1,0 +1,120 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="Master.SiteMaster" %>
+
+<%--  
+    The master page for the Public pages of the Quality Caps Website.
+    
+    Change Log:
+        9-8-16  12:01       AskewR04        Created page and layout.
+
+--%>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title>
+            <%= Page.Title %>
+    </title>
+    <asp:ContentPlaceHolder ID="AdditionalScripts" runat="server">
+        <script type="text/javascript" src="Content/common.js">
+        </script>
+        <script type="text/javascript" src="Content/Validation.js">
+        </script>
+    </asp:ContentPlaceHolder>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%--Bootstrap CSS code--%>
+    <webopt:BundleReference runat="server" path="~/Content/css" />
+</head>
+<body>
+    <form id="frmReg" name="frmReg" runat="server" method="post">
+        <%--Navigation Area--%>
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--Site Scripts--%>
+                <asp:ScriptReference Name="jquery" />
+                <%--Bootstrap Framework Scripts--%>
+                <asp:ScriptReference Name="bootstrap" />
+            </Scripts>
+        </asp:ScriptManager>
+        <%--Navigation bar--%>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <%--Collapse button--%>
+                <div class="navbar-header col-sm-4 col-md-3">
+                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                         <span class="icon-bar"></span>
+                         <span class="icon-bar"></span>
+                         <span class="icon-bar"></span>
+                      </button>
+                    <a class="navbar-left" runat="server" href="~/Default"><img ID="imgLogo" runat="server" Height="80" alt="Logo" src="~/Images/Logo.png"/></a>
+                </div>
+                <%--links--%>
+                <div class="navbar-collapse collapse col-sm-8 col-md-9">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <ul class="nav navbar-nav">
+                                <li><a style="color: white; text-align: center" runat="server" href="~/Contact">Contact Us</a></li>
+                                <asp:LoginView id="lgnViewProfile" runat="server">
+                                    <AnonymousTemplate>
+                                        <li><a style="color: white; text-align: center" runat="server" href="~/Registration">Register</a></li>
+                                    </AnonymousTemplate>
+                                    <LoggedInTemplate>
+                                        <li><a style="color: white; text-align: center" runat="server" href="~/Customer">Profile</a></li>
+                                    </LoggedInTemplate>
+                                </asp:LoginView>
+                                <li style="color: white; text-align: center"><asp:LoginStatus ID="lgnStatusCustomer" runat="server" LogoutAction="Redirect" OnLoggingOut="lgnStatusCustomer_OnLoggingOut" LogoutPageUrl="~/Default.aspx"/> </li>
+                            </ul>
+                        </div>
+                        <div class="row">
+                            <ul class="nav navbar-nav">
+                                <asp:LoginView id="lgnViewCustomer" runat="server">
+                                    <AnonymousTemplate>
+                                        <li style="color: white; text-align: center">Greetings Visitor!</li>
+                                    </AnonymousTemplate>
+                                    <LoggedInTemplate>
+                                        <li style="color: white;  text-align: center">You are logged in as <asp:LoginName id="lgnNameCustomer" runat="Server" ></asp:LoginName>.</li>
+                                    </LoggedInTemplate>
+                                </asp:LoginView>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="container-fluid" style="margin-top: 30px;">
+            <%--Content area--%>
+            <div class="row">
+                <div id="divLeftSidebar" class="col-md-3">
+                     <asp:ContentPlaceHolder ID="PageContentLeft" runat="server">
+                     </asp:ContentPlaceHolder>
+                </div>
+                <div id="divCentreSpace" class="col-md-6">
+                     <asp:ContentPlaceHolder ID="PageContentCentre" runat="server">
+                     </asp:ContentPlaceHolder>
+                </div>
+                <div id="divRightsidebar" class="col-md-3">
+                     <asp:ContentPlaceHolder ID="PageContentRight" runat="server">
+                     </asp:ContentPlaceHolder>
+                </div>
+            </div>
+        </div> <!-- Close container --> 
+    </form>
+    
+    <!-- Footer -->
+    <div class="navbar-fixed-bottom navbar-inverse">
+        <div class="col-md-6" style="color: white">
+            <span id="footerCurrentTime" style="float:left">
+            <!-- Call javascript function -->
+                <script type="text/javascript">
+                    update_time();
+                </script>
+            </span>
+        </div>
+
+        <div class="col-md-6" style="color: white"><span style="float:right">&copy;Quality Caps LTD.</span></div>
+    </div>
+
+</body>
+</html>

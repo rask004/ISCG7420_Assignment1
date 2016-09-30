@@ -1,62 +1,50 @@
-﻿<%@ Page Title="Log in" Language="C#" MasterPageFile="~/Admin/Admin.Master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Account_Login" Async="true" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master/Site.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Customer_Login" %>
 
-<%@ Register Src="~/Account/OpenAuthProviders.ascx" TagPrefix="uc" TagName="OpenAuthProviders" %>
+<%--  
+    The Customer Login page for the Quality Caps Website.
+    
+    Change Log:
 
-<asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="AdminContentMain">
-    <h2><%: Title %>.</h2>
-
-    <div class="row">
-        <div class="col-md-8">
-            <section id="loginForm">
-                <div class="form-horizontal">
-                    <h4>Use a local account to log in.</h4>
-                    <hr />
-                    <asp:PlaceHolder runat="server" ID="ErrorMessage" Visible="false">
-                        <p class="text-danger">
-                            <asp:Literal runat="server" ID="FailureText" />
-                        </p>
-                    </asp:PlaceHolder>
-                    <div class="form-group">
-                        <asp:Label runat="server" AssociatedControlID="UserName" CssClass="col-md-2 control-label">User name</asp:Label>
-                        <div class="col-md-10">
-                            <asp:TextBox runat="server" ID="UserName" CssClass="form-control" />
-                            <asp:RequiredFieldValidator runat="server" ControlToValidate="UserName"
-                                CssClass="text-danger" ErrorMessage="The user name field is required." />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <asp:Label runat="server" AssociatedControlID="Password" CssClass="col-md-2 control-label">Password</asp:Label>
-                        <div class="col-md-10">
-                            <asp:TextBox runat="server" ID="Password" TextMode="Password" CssClass="form-control" />
-                            <asp:RequiredFieldValidator runat="server" ControlToValidate="Password" CssClass="text-danger" ErrorMessage="The password field is required." />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <div class="checkbox">
-                                <asp:CheckBox runat="server" ID="RememberMe" />
-                                <asp:Label runat="server" AssociatedControlID="RememberMe">Remember me?</asp:Label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <asp:Button runat="server" OnClick="LogIn" Text="Log in" CssClass="btn btn-default" />
-                        </div>
-                    </div>
+--%>
+<asp:Content ID="Content3" ContentPlaceHolderID="PageContentCentre" Runat="Server">
+    <div class="container PageSectionCentre">
+        <div class="row">
+            <div class="DecoHeader" style="margin-left:12%">
+                <H3 style="margin-left:50%">Login</H3>
+            </div>
+        </div>
+        <div class="row"><span class="BlankRow"></span></div>
+        <div class="row"><span class="BlankRow"></span></div>
+        <div class="row">
+            <div class="col-md-3">
+                        
+            </div>
+            <div class="col-md-6">
+                <div style="text-align: center; display: table-cell; vertical-align: middle">
+                    <asp:Login ID="lgnTestingSection" runat="server"
+                        OnAuthenticate="lgnTestingSection_OnAuthenticate"></asp:Login>
+                    <!-- add asp controls for reset password -->
                 </div>
-                <p>
-                    <asp:HyperLink runat="server" ID="RegisterHyperLink" ViewStateMode="Disabled">Register</asp:HyperLink>
-                    if you don't have a local account.
-                </p>
-            </section>
+            </div>
+            <div class="col-md-3">
+                
+            </div>
+            
         </div>
-
-        <div class="col-md-4">
-            <section id="socialLoginForm">
-                <uc:openauthproviders runat="server" id="OpenAuthLogin" />
-            </section>
+        <div class="row"><span class="BlankRow"></span></div>
+        <div class="row">
+            <div class="col-md-3">
+                        
+            </div>
+            <div class="col-md-6">
+                <span><label ID="lblLoginMessages" runat="server"></label></span>
+            </div>
+            <div class="col-md-3">
+                
+            </div>
+            
         </div>
+        <div class="row"><span class="BlankRow"></span></div>
     </div>
 </asp:Content>
 

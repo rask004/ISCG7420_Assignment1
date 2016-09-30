@@ -1,33 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Common;
 using BusinessLayer;
-using DataLayer;
-using Microsoft.Ajax.Utilities;
+using Common;
+using CommonLogging;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 /// <summary>
-/// 
 ///     The Admin page for the Orders Entity.
-///
 ///     Change Log:
-/// 
 ///     24-8-16  15:30       AskewR04 Created page and layout.
+///     20-9-16     18:06       AskewR04 Final review
 /// </summary>
-public partial class AdminOrders : System.Web.UI.Page
+public partial class AdminOrders : Page
 {
     /// <summary>
-    /// 
+    ///     Reload the sidebar list
     /// </summary>
     private void Reload_Sidebar()
     {
         AdminController controller = new AdminController();
-        dbrptSideBarItems.DataSource = controller.GetOrders();
-        dbrptSideBarItems.DataBind();
+        repSideBarItems.DataSource = controller.GetOrders();
+        repSideBarItems.DataBind();
+    }
+
+    /// <summary>
+    ///     Reload the list of order items
+    /// </summary>
+    private void Rebind_OrderItems()
+    {
+        int orderId;
+        try
+        {
+            orderId = Convert.ToInt32(Session["AdminOrderId"]);
+        }
+        catch (FormatException)
+        {
+            orderId = 0;
+        }
+        AdminController controller = new AdminController();
+        gvCustomerOrders.DataSource = controller.GetItemsForOrderWithId(orderId);
+        gvCustomerOrders.DataBind();
     }
 
     /// <summary>
@@ -37,6 +54,18 @@ public partial class AdminOrders : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
+        {
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
+        }
+
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
+
         if (!Page.IsPostBack)
         {
             Reload_Sidebar();
@@ -45,6 +74,9 @@ public partial class AdminOrders : System.Web.UI.Page
             {
                 ddlOrderStatus.Items.Add(new ListItem {Text = permittedOrderStatus, Value = permittedOrderStatus});
             }
+
+            gvCustomerOrders.DataSource = new List<OrderItem>();
+            gvCustomerOrders.DataBind();
 
             lblSideBarHeader.Text = "Orders";
 
@@ -57,21 +89,28 @@ public partial class AdminOrders : System.Web.UI.Page
     /// </summary>
     /// <param name="sender">The Repeater</param>
     /// <param name="e">Command Parameters</param>
-    protected void dbrptSideBarItems_ItemCommand(object sender, RepeaterCommandEventArgs e)
+    protected void repSideBarItems_ItemCommand(object sender, RepeaterCommandEventArgs e)
     {
         if (e.CommandName == "loadItem")
         {
             AdminController controller = new AdminController();
-            int orderId = Convert.ToInt32(e.CommandArgument);
-            Customer customer = controller.GetCustomerByOrderId(orderId);
+            int OrderId = Convert.ToInt32(e.CommandArgument);
+            Session["AdminOrderId"] = OrderId;
+            Customer customer = controller.GetCustomerByOrderId(OrderId);
+
+            // set the customer details
             int customerId = customer.ID;
             string customerFirstName = controller.GetCustomerFirstName(customerId);
-            string customerLastName = controller.GetCustomerFirstName(customerId);
+            string customerLastName = controller.GetCustomerLastName(customerId);
 
-            string orderStatus = controller.GetOrderStatus(orderId);
+            string orderStatus = controller.GetOrderStatus(OrderId);
+            string datePlaced = controller.GetOrderDate(OrderId).ToString("d");
 
-            lblOrderId.Text = orderId.ToString();
+            lblOrderId.Text = OrderId.ToString();
             lblCustomerName.Text = customerId + ", " + customerFirstName + " " + customerLastName;
+
+            // set list for status to correct value.
+            ddlOrderStatus.Enabled = true;
             for (int i = 0; i < ddlOrderStatus.Items.Count; i++)
             {
                 if (ddlOrderStatus.Items[i].Text.Equals(orderStatus))
@@ -81,65 +120,33 @@ public partial class AdminOrders : System.Web.UI.Page
                 }
             }
 
-            Double subTotal = 0;
+            lblOrderDate.Text = datePlaced;
 
-            // remove all old table data before adding new.
-            for (int i = tblOrderItemListing.Rows.Count - 1; i >= 1; i--)
+            // collect Totals for the order.
+            OrderSummary summary = new OrderSummary {OrderId = OrderId};
+            summary.OrderId = OrderId;
+            List<OrderItem> orderItems = controller.GetItemsForOrderWithId(OrderId);
+
+            foreach (var orderItem in orderItems)
             {
-                tblOrderItemListing.Rows.RemoveAt(i);
+                summary.SubTotalPrice += Convert.ToDouble(orderItem.Cap.Price*orderItem.Quantity);
+                summary.TotalQuantity += orderItem.Quantity;
             }
 
-            List<OrderItem> orderItems = controller.GetItemsForOrderWithId(orderId);
-            TableRow tr;
-            TableCell tc;
-            if (orderItems.Count == 0)
-            {
-                tr = new TableRow();
-                tc = new TableCell();
-                tc.Text = "This order has no products.";
-                tr.Cells.Add(tc);
-                tblOrderItemListing.Rows.Add(tr);
+            lblOrderSubtotal.Text = summary.SubTotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+            lblOrderGst.Text = summary.SubTotalGst.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+            lblOrderTotal.Text = summary.TotalPrice.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 
-                lblOrderSubtotal.Text = "0.00";
-                lblOrderGst.Text = "0.00";
-                lblOrderTotal.Text = "0.00";
-            }
-            else
-            {
+            Rebind_OrderItems();
 
-                foreach (var orderItem in orderItems)
-                {
-                    tr = new TableRow();
-                    tc = new TableCell {Text = orderItem.Cap.Name};
-                    tr.Cells.Add(tc);
-                    tc = new TableCell {Text = orderItem.Colour.Name};
-                    tr.Cells.Add(tc);
-                    tc = new TableCell {Text = orderItem.Quantity.ToString()};
-                    tr.Cells.Add(tc);
-                    tc = new TableCell {Text = orderItem.Cap.Price.ToString()};
-                    tr.Cells.Add(tc);
-                    tblOrderItemListing.Rows.Add(tr);
-
-                    subTotal += Convert.ToDouble(orderItem.Cap.Price * orderItem.Quantity);
-                }
-            }
-
-            Double gst = subTotal * GeneralConstants.MoneyGstRate;
-
-            lblOrderSubtotal.Text = subTotal.ToString();
-            lblOrderGst.Text = (gst).ToString();
-            lblOrderTotal.Text = (subTotal + gst).ToString();
-
-            ddlOrderStatus.Enabled = true;
 
             btnSaveChanges.Enabled = true;
             btnCancelChanges.Enabled = true;
 
             lblMessageJumboTron.Text = "Item " + lblOrderId.Text + " Loaded.";
-            
         }
     }
-    
+
     /// <summary>
     ///     Undo any uncommitted changes.
     /// </summary>
@@ -147,7 +154,6 @@ public partial class AdminOrders : System.Web.UI.Page
     /// <param name="e"></param>
     protected void CancelButton_Click(object sender, EventArgs e)
     {
-
         btnSaveChanges.Enabled = false;
         btnCancelChanges.Enabled = false;
 
@@ -157,28 +163,8 @@ public partial class AdminOrders : System.Web.UI.Page
     }
 
     /// <summary>
-    ///     Validation function for the Colour Name
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="args"></param>
-    protected void ColourNameValidation(object source, ServerValidateEventArgs args)
-    {
-        foreach (char c in args.Value)
-        {
-            if (!Validation.ValidationAlphabetic.Contains(c))
-            {
-                args.IsValid = false;
-                return;
-            }
-        }
-
-        args.IsValid = true;
-    }
-
-    /// <summary>
     ///     Save Changes.
-    ///     If id is for an existing Colour, update the Colour.
-    ///     Else add a new Colour.
+    ///     Update any pending change in status
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -191,11 +177,21 @@ public partial class AdminOrders : System.Web.UI.Page
             controller.UpdateOrderStatus(Convert.ToInt32(lblOrderId.Text), ddlOrderStatus.SelectedValue);
 
             // Only updating (no Inserts or Deletes), therefore sidebar contents will not change.
-            //Reload_Sidebar();
+            Reload_Sidebar();
 
-            lblMessageJumboTron.Text = "SUCCESS: Order updated: " + 
-                lblOrderId.Text + ", " + ddlOrderStatus.Items[ddlOrderStatus.SelectedIndex].Text;
+            lblMessageJumboTron.Text = "SUCCESS: Order updated: " +
+                                       lblOrderId.Text + ", " + ddlOrderStatus.Items[ddlOrderStatus.SelectedIndex].Text;
         }
+    }
 
+    /// <summary>
+    ///     Manage pagination for multiple orders.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void grdvCustomerOrders_OnPageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        gvCustomerOrders.PageIndex = e.NewPageIndex;
+        Rebind_OrderItems();
     }
 }

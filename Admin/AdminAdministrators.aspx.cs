@@ -1,26 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Mail;
+using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
-using Common;
 using BusinessLayer;
+using Common;
+using CommonLogging;
+using Microsoft.AspNet.Identity;
 using SecurityLayer;
 
 /// <summary>
 ///     The Admin page for the SiteUsers Entity. - Admin users only
-///     
 ///     Change Log:
-///
 ///     25-8-16     00:35       AskewR04 Created Admin Page for Customers.
+///     20-9-16     18:06       Final review
 /// </summary>
-public partial class AdminUsers : System.Web.UI.Page
+public partial class AdminUsers : Page
 {
     /// <summary>
-    /// 
     /// </summary>
     private void Reload_Sidebar()
     {
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
         dbrptSideBarItems.DataSource = controller.GetAdministrators();
         dbrptSideBarItems.DataBind();
     }
@@ -32,18 +33,17 @@ public partial class AdminUsers : System.Web.UI.Page
     /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session[Security.SessionIdentifierLogin] == null
-            || Session[Security.SessionIdentifierSecurityToken] == null)
+        if (Session[Security.SessionIdentifierSecurityToken] == null)
         {
-            // redirect to Login page
+            Session.Abandon();
+            var ctx = Request.GetOwinContext();
+            var authenticationManager = ctx.Authentication;
+            authenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Response.Redirect("~/Default");
         }
-        else
-        {
-            // get login name through Session SessionIdentifierLogin
-            // retrieve password hash using login and AdminController.
-            // request security token comparison, if not matching then permanent redirect.
 
-        }
+        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Info,
+            "Loaded Page " + Page.Title + ", " + Request.RawUrl);
 
         if (!Page.IsPostBack)
         {
@@ -68,20 +68,20 @@ public partial class AdminUsers : System.Web.UI.Page
     {
         if (e.CommandName == "loadItem")
         {
-            AdminController controller = new AdminController();
-            int itemId = Convert.ToInt32(e.CommandArgument);
-            string login = controller.GetAdminLogin(itemId);
-            string email = controller.GetAdminEmail(itemId);
+            var controller = new AdminController();
+            var itemId = Convert.ToInt32(e.CommandArgument);
+            var login = controller.GetAdminLogin(itemId);
+            var email = controller.GetAdminEmail(itemId);
 
             lblUsersId.Text = itemId.ToString();
             txtUserLogin.Text = login;
             txtUserEmail.Text = email;
-            
+
             txtUserLogin.Enabled = true;
             txtUserEmail.Enabled = true;
 
             txtUserPassword.Enabled = false;
-            txtUserPassword.Text = String.Empty;
+            txtUserPassword.Text = string.Empty;
             btnUserRegeneratePassword.Enabled = true;
             btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
 
@@ -107,7 +107,7 @@ public partial class AdminUsers : System.Web.UI.Page
         }
         else
         {
-            txtUserPassword.Text = String.Empty;
+            txtUserPassword.Text = string.Empty;
             txtUserPassword.Enabled = false;
             btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
         }
@@ -122,7 +122,7 @@ public partial class AdminUsers : System.Web.UI.Page
     {
         txtUserLogin.Enabled = false;
         txtUserEmail.Enabled = false;
-        txtUserPassword.Text = String.Empty;
+        txtUserPassword.Text = string.Empty;
         btnUserRegeneratePassword.Enabled = false;
 
         btnSaveChanges.Enabled = false;
@@ -138,11 +138,11 @@ public partial class AdminUsers : System.Web.UI.Page
     /// <param name="e"></param>
     protected void AddButton_Click(object sender, EventArgs e)
     {
-        lblUsersId.Text = String.Empty;
-        txtUserEmail.Text = String.Empty;
-        txtUserLogin.Text = String.Empty;
-        txtUserPassword.Text = String.Empty;
-        
+        lblUsersId.Text = string.Empty;
+        txtUserEmail.Text = string.Empty;
+        txtUserLogin.Text = string.Empty;
+        txtUserPassword.Text = string.Empty;
+
         txtUserEmail.Enabled = true;
         txtUserLogin.Enabled = true;
         txtUserPassword.Enabled = true;
@@ -183,7 +183,7 @@ public partial class AdminUsers : System.Web.UI.Page
             return;
         }
 
-        AdminController controller = new AdminController();
+        var controller = new AdminController();
 
         foreach (var user in controller.GetAdministrators())
         {
@@ -196,9 +196,9 @@ public partial class AdminUsers : System.Web.UI.Page
         }
     }
 
-    
+
     /// <summary>
-    ///     
+    ///     Validate password from user
     /// </summary>
     /// <param name="source"></param>
     /// <param name="args"></param>
@@ -213,7 +213,7 @@ public partial class AdminUsers : System.Web.UI.Page
             args.IsValid = true;
         }
     }
-    
+
 
     /// <summary>
     ///     Save Changes.
@@ -226,12 +226,7 @@ public partial class AdminUsers : System.Web.UI.Page
     {
         if (Page.IsValid)
         {
-            AdminController controller = new AdminController();
-
             int id;
-
-            bool clientWasEmailedUponUpdate = true;
-
             try
             {
                 id = Convert.ToInt32(lblUsersId.Text);
@@ -241,76 +236,58 @@ public partial class AdminUsers : System.Web.UI.Page
                 id = -1;
             }
 
-            // TODO: fix emailing.
-            // try sending email before updating.
-            string replyToAddress = String.Empty;
+            var controller = new AdminController();
+            controller.AddOrUpdateAdmin(id, txtUserEmail.Text, txtUserLogin.Text);
+            var admin = controller.GetAdministratorByLogin(txtUserLogin.Text);
 
-            string emailMessage = "Greetings {0},\n\nYour account has been updated.\n" +
-                                  "Please use the following credentials the next time you login:\n\n" +
-                                  "login:\t\t{0}\n{1}\n" +
-                                  "\nRegards\n\nThe Quality Caps Administration Team\n\n";
-
-            string emailedPasswordSubMessage;
-
-            if (txtUserPassword.Enabled)
+            if (admin == null)
             {
-                emailedPasswordSubMessage = "password:\t" + txtUserPassword.Text;
+                (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+                    "ERROR: Cannot retrieve Admin instance, after insert or update to entities. Login Used:" +
+                    txtUserLogin.Text);
+                lblMessageJumboTron.Text = "Error: Cannot locate Admin Entity despite update/insert. Login used: " +
+                                           txtUserLogin.Text;
             }
             else
             {
-                emailedPasswordSubMessage = String.Empty;
-            }
-
-            var admins = controller.GetAdministrators();
-            if (admins.Count == 0)
-            {
-                replyToAddress = GeneralConstants.AdminReplyToEmailDefault;
-            }
-            else
-            {
-                replyToAddress = admins[0].Email;
-            }
-
-            /* try
-            {
-                GeneralFunctions.SendEmail(txtUserEmail.Text, GeneralConstants.UserNewPasswordEmailSubject,
-                    String.Format(emailMessage, txtUserLogin.Text, emailedPasswordSubMessage, txtUserEmail.Text),
-                    replyToAddress);
-            }
-            catch (SmtpException)
-            {
-                // failed to send the email
-                clientWasEmailedUponUpdate = false;
-            } */
-
-            // only update the db if email was actually sent.
-            if (clientWasEmailedUponUpdate)
-            {
-                controller.AddOrUpdateAdmin(id, txtUserEmail.Text, txtUserLogin.Text);
-
-                if (txtUserPassword.Enabled)
+                // update the change in password
+                if (btnUserRegeneratePassword.Enabled)
                 {
-                    string login = txtUserLogin.Text;
-                    var admin = controller.FindAdminByLoginName(login);
-                    if (admin != null)
+                    // email the Customer their new password.
+                    try
                     {
                         controller.UpdateAdminPassword(admin.ID, txtUserPassword.Text);
+                        Session[Security.SessionIdentifierSecurityToken] =
+                            Security.GenerateSecurityTokenHash(admin.Login,
+                                Security.GetPasswordHash(txtUserPassword.Text));
+
+                        GeneralFunctions.SendEmail(admin.Email,
+                            GeneralConstants.EmailPasswordChangeSubject,
+                            string.Format(GeneralConstants.EmailPasswordChangeBody, "Administrator", "",
+                                txtUserLogin.Text,
+                                txtUserPassword.Text),
+                            GeneralConstants.AdminReplyToEmailDefault);
+
+                        lblMessageJumboTron.Text = "SUCCESS: ";
                     }
-                    
+                    catch (SmtpException smtpEx)
+                    {
+                        (Application[GeneralConstants.LoggerApplicationStateKey] as Logger).Log(LoggingLevel.Error,
+                            "ERROR: Unable to send email in response to change in Admin password. Exception Message: " +
+                            smtpEx.Message + "; " + smtpEx.StatusCode);
+
+                        lblMessageJumboTron.Text = "WARNING: failed to send password change email. ";
+                    }
                 }
 
                 Reload_Sidebar();
 
                 btnUserRegeneratePassword.Text = GeneralConstants.ButtonTextChangePassword;
-                txtUserPassword.Text = String.Empty;
+                txtUserPassword.Text = string.Empty;
                 txtUserPassword.Enabled = false;
 
-                lblMessageJumboTron.Text = "SUCCESS: Admin added or updated: " +
-                                           lblUsersId.Text + ", " + txtUserLogin.Text;
-            }
-            else
-            {
-                lblMessageJumboTron.Text = "ERROR: could not send email to client. Admin was not updated.";
+                lblMessageJumboTron.Text += "Admin added or updated: " +
+                                            lblUsersId.Text + ", " + txtUserLogin.Text;
             }
         }
     }
