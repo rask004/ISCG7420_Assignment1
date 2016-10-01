@@ -44,7 +44,7 @@
         if (ex.InnerException != null && ex.InnerException.ToString().Contains("SQL Server") &&
             ex.InnerException.ToString().Contains("Server is not found"))
         {
-            Response.Redirect("/Error/ErrorDatabaseConnection");
+            Response.Redirect("~/Error/ErrorDatabaseConnection");
         }
 
         Session["lastError"] = ex.InnerException;
@@ -52,7 +52,7 @@
         // Issue with the default error page losing information upon postback - Url changes from last page accessed to the Error page, losing data.
         // This approach avoids the problem. 
         Session["pageOfLastError"] = Request.RawUrl;
-        Response.Redirect("/Error/Default");
+        Response.Redirect("~/Error/Default");
     }
 
     /// <summary>
