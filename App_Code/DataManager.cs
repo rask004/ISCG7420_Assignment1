@@ -62,7 +62,7 @@ namespace DataLayer
                                                           "END ";
 
         private readonly string _insertDefaultUserCustomers = "if (select count(id) from dbo.SiteUser where UserType='C') = 0 BEGIN " +
-                                                          "insert into SiteUser (firstName, lastName, userType, login, password, emailAddress, homeNumber, workNumber, mobileNumber, streetAddress, suburb, city, isDisabled ) Values('Harry','Bloggs','C' " +
+                                                          "insert into SiteUser (firstName, lastName, userType, login, password, emailAddress, homeNumber, workNumber, mobileNumber, streetAddress, suburb, city, isDisabled ) Values('Harry','Bloggs','C'," +
                                                           "'Customer111','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0)," +
                                                           "('Harry','Bloggs','C','SuspendedCustomer','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',1); " +
                                                           "END ";
