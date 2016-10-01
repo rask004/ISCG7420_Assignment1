@@ -134,6 +134,17 @@ public partial class Registration : Page
         {
             args.IsValid = false;
             lblErrorMessages.Text += "At least one contact number is required. ";
+
+            lblErrorHomeNumberRequired.Text = "*";
+            lblErrorWorkNumberRequired.Text = "*";
+            lblErrorMobileNumberRequired.Text = "*";
+        }
+        else
+        {
+
+            lblErrorHomeNumberRequired.Text = "";
+            lblErrorWorkNumberRequired.Text = "";
+            lblErrorMobileNumberRequired.Text = "";
         }
     }
 

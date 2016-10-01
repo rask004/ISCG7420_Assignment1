@@ -246,7 +246,10 @@ public partial class _Default : Page
             var categoryName = controller.GetCategoryName(categoryId);
             lblCentreHeader.Text = categoryName;
 
+            AvailableProductsCurrentPageIndex = 1;
             Load_Caps();
+
+
 
             ShowProductsGrid();
         }

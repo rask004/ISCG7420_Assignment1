@@ -167,6 +167,7 @@
         <asp:CustomValidator runat="server"
                              ControlToValidate="txtHomeNumber"
                              OnServerValidate="LandlineNumberValidation"/>
+        <asp:Label runat="server" ForeColor="Red" ID="lblErrorHomeNumberRequired" Text=""></asp:Label>
     </div>
     <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtHomeNumber" runat="server" />
@@ -190,6 +191,7 @@
         <asp:CustomValidator runat="server"
                              ControlToValidate="txtWorkNumber"
                              OnServerValidate="LandlineNumberValidation"/>
+        <asp:Label runat="server" ForeColor="Red" ID="lblErrorWorkNumberRequired" Text=""></asp:Label>
     </div>
     <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtWorkNumber" runat="server" />
@@ -212,6 +214,7 @@
         <asp:CustomValidator runat="server"
                              ControlToValidate="txtMobileNumber"
                              OnServerValidate="MobileNumberValidation"/>
+        <asp:Label runat="server" ForeColor="Red" ID="lblErrorMobileNumberRequired" Text=""></asp:Label>
     </div>
     <div class="col-xs-10 col-sm-5 col-md-4">
                     <asp:TextBox CssClass="form-control input-sm" id="txtMobileNumber" runat="server" />
