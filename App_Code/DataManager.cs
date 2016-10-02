@@ -57,7 +57,7 @@ namespace DataLayer
                                                        "Constraint  orderItem_pk    Primary Key(colourId, capId, orderId)); END ";
 
         private readonly string _insertDefaultUserAdmin = "if (select count(id) from dbo.SiteUser where UserType='A') = 0 BEGIN " +
-                                                          "insert into SiteUser (login, password, userType, emailAddress) Values('AdminRolandAskew2016', " +
+                                                          "insert into SiteUser (login, password, userType, emailAddress) Values('Adin_Testing', " +
                                                           "'001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'A', 'AskewR04@myunitec.ac.nz'); " +
                                                           "END ";
 
