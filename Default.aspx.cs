@@ -126,7 +126,7 @@ public partial class _Default : Page
         else
         {
             lblCurrentProductPage.Visible = true;
-            lblCurrentProductPage.Text = "Page " + datasource.PageCount.ToString() + " Of " + (AvailableProductsCurrentPageIndex + 1).ToString();
+            lblCurrentProductPage.Text = "Page " + (AvailableProductsCurrentPageIndex + 1).ToString() + " of  " + datasource.PageCount.ToString();
             btnPreviousProductPage.Visible = !datasource.IsFirstPage;
             btnNextProductPage.Visible = !datasource.IsLastPage;
         }
@@ -471,8 +471,6 @@ public partial class _Default : Page
         }
 
         Load_Caps();
-
-        lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
     }
 
     /// <summary>

@@ -181,20 +181,20 @@
                                 </asp:DataList>
 
                                 <div class="row">
-                                    <div class="col-xs-0 col-sm-3 col-md-2"></div>
-                                    <div class="col-xs-3 col-sm-2 col-md-3">
+                                    <div class="col-xs-0 col-sm-3 col-md-3"></div>
+                                    <div class="col-xs-3 col-sm-2 col-md-2">
                                         <asp:LinkButton runat="server" ID="btnPreviousProductPage" OnClick="btnChangeProductPage_OnClick"
                                                         Text="Previous" CssClass="btn btn-info btn-xs"/>
                                     </div>
                                     <div class="col-xs-6 col-sm-2 col-md-2">
-                                        Page: <asp:Label runat="server" ID="lblCurrentProductPage"/>
+                                        <asp:Label runat="server" ID="lblCurrentProductPage"/>
                                     </div>
-                                    <div class="col-xs-3 col-sm-2 col-md-3">
+                                    <div class="col-xs-3 col-sm-2 col-md-2">
                                         <span class="ContentShiftRight">
                                         <asp:LinkButton runat="server" ID="btnNextProductPage" OnClick="btnChangeProductPage_OnClick"
                                             Text="Next" CssClass="btn btn-info btn-xs"/>
                                     </span></div>
-                                    <div class="col-xs-0 col-sm-3 col-md-2"></div>
+                                    <div class="col-xs-0 col-sm-3 col-md-3"></div>
                                 </div>
                             </div>
 

@@ -190,7 +190,7 @@ namespace DataLayer
 
         private readonly string _selectSingleCapById = "Select * from Cap where id=?;";
 
-        private readonly string _insertCap = "insert into Cap (name, price, description, imageUrl, categoryId, supplierId) values (?, ?, ?);";
+        private readonly string _insertCap = "insert into Cap (name, price, description, imageUrl, categoryId, supplierId) values (?, ?, ?, ?, ?, ?);";
 
         private readonly string _updateCap = "update Cap set name=?, price=?, description=?, imageUrl=?, categoryId=?, supplierId=? where id=?;";
 
