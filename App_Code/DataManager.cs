@@ -62,9 +62,10 @@ namespace DataLayer
                                                           "END ";
 
         private readonly string _insertDefaultUserCustomers = "if (select count(id) from dbo.SiteUser where UserType='C') = 0 BEGIN " +
-                                                          "insert into SiteUser (firstName, lastName, userType, login, password, emailAddress, homeNumber, workNumber, mobileNumber, streetAddress, suburb, city, isDisabled ) Values('Harry','Bloggs','C'," +
-                                                          "'Customer111','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0)," +
+                                                          "insert into SiteUser (firstName, lastName, userType, login, password, emailAddress, homeNumber, workNumber, mobileNumber, streetAddress, suburb, city, isDisabled ) " + 
+                                                          "Values('Harry','Bloggs','C','Customer111','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0)," +
                                                           "('Harry','Bloggs','C','SuspendedCustomer','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',1); " +
+                                                          "('Maude','Shaun','C','Customer222','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0); " +
                                                           "END ";
 
         private readonly string _insertDefaultColours = "if (select count(id) from dbo.Colour) = 0 BEGIN " +
@@ -115,7 +116,18 @@ namespace DataLayer
                                                          "('Sassy Squat',30.0,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/best-caps-20.jpg',1,2),('Sassy Flex',19.2,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',1,3)," +
                                                          "('Sassy Peak',29.0,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',1,4),('Sassy Breaker',12.2,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',2,1);" +
                                                          "END ";
-        
+
+        private readonly string _insertDefaultOrders = "if (select count(id) from dbo.CustomerOrder) = 0 BEGIN " +
+                                                "insert into CustomerOrder (userId, status, datePlaced) values(3, 'waiting',GETDATE()); " +
+                                                "END ";
+
+        private readonly string _insertDefaultOrderItems = "if (select count(id) from dbo.CustomerOrder) = 0 BEGIN " +
+                                                "insert into OrderItem (orderId, capId, colourId, quantity) " + 
+                                                "values(1, 7, 2, 2); " +
+                                                "(1, 4, 2, 1); " +
+                                                "(1, 2, 4, 4); " +
+                                                "END ";
+
         private readonly string _selectAllCustomers = "Select * from SiteUser where userType='C';";
 
         private readonly string _selectAllAdmins = "Select * from SiteUser where userType='A';";
