@@ -438,7 +438,7 @@ public partial class AdminUsers : Page
                             GeneralConstants.EmailPasswordChangeSubject,
                             string.Format(GeneralConstants.EmailPasswordChangeBody, customer.FirstName,
                                 customer.LastName, customer.Login,
-                                customer.Password),
+                                txtUserPassword.Text),
                             GeneralConstants.AdminReplyToEmailDefault);
 
                         lblMessageJumboTron.Text = "SUCCESS: ";

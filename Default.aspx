@@ -276,7 +276,7 @@
                                 </asp:TableRow>
                                 <asp:TableRow Width="100%">
                                     <asp:TableCell Width="50%">
-                                        <asp:Button ID="btnCancel" Text="Cancel" CssClass="caption btn btn-primary" OnClick="btnCancel_OnClick" runat="server"/>
+                                        <asp:Button ID="btnCancel" Text="Return" CssClass="caption btn btn-primary" OnClick="btnCancel_OnClick" runat="server"/>
                                     </asp:TableCell>
                                     <asp:TableCell>
                                         <asp:Button ID="btnAddCapToBasket" Text="Add To Basket" CssClass="caption btn btn-primary" OnClick="btnAddCapToBasket_OnClick" Enabled="True" runat="server"/>
