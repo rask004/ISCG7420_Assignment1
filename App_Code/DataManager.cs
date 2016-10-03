@@ -56,9 +56,16 @@ namespace DataLayer
                                                        "quantity    int     not null, " +
                                                        "Constraint  orderItem_pk    Primary Key(colourId, capId, orderId)); END ";
 
-        private readonly string _insertDefaultUserAdmin = "if (select count(id) from dbo.SiteUser) = 0 BEGIN " +
-                                                          "insert into SiteUser (login, password, userType, emailAddress) Values('AdminRolandAskew2016', " +
+        private readonly string _insertDefaultUserAdmin = "if (select count(id) from dbo.SiteUser where UserType='A') = 0 BEGIN " +
+                                                          "insert into SiteUser (login, password, userType, emailAddress) Values('Admin_Testing', " +
                                                           "'001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'A', 'AskewR04@myunitec.ac.nz'); " +
+                                                          "END ";
+
+        private readonly string _insertDefaultUserCustomers = "if (select count(id) from dbo.SiteUser where UserType='C') = 0 BEGIN " +
+                                                          "insert into SiteUser (firstName, lastName, userType, login, password, emailAddress, homeNumber, workNumber, mobileNumber, streetAddress, suburb, city, isDisabled ) " + 
+                                                          "Values('Harry','Bloggs','C','Customer111','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'myCustomer111@mail.com','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0)," +
+                                                          "('Harry','Bloggs','C','SuspendedCustomer','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'myCustomer122@mail.com','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',1), " +
+                                                          "('Maude','Shaun','C','Customer222','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'myCustomer222@mail.com','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0); " +
                                                           "END ";
 
         private readonly string _insertDefaultColours = "if (select count(id) from dbo.Colour) = 0 BEGIN " +
@@ -77,39 +84,49 @@ namespace DataLayer
         private readonly string _insertDefaultProducts = "if (select count(id) from dbo.Cap) = 0 BEGIN " +
                                                          "INSERT INTO Cap (name,price,description,imageUrl,supplierId,categoryId) " +
                                                          "values " +
-                                                         "('Top Crump',28.1,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',1,1),('Top Squat',11.9,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/GL-271-RED.jpg',1,2)," +
-                                                         "('Top Flex',29.6,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/Corporate-Caps-1.jpg',1,3),('Top Peak',22.9,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/007-WH-ROY.jpg',1,4)," +
-                                                         "('Top Breaker',16.8,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/Corporate-Caps-1.jpg',2,1)," +
-                                                         "('Top Pounder',27.5,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/best-caps-20.jpg',2,2),('Top Trucker',25.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/best-caps-20.jpg',2,3)," +
-                                                         "('Top Trilby',12.7,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/pac10601_black.jpg',2,4),('Side Crump',21.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/hi-vis-cap-4356.jpg',1,1)," +
-                                                         "('Side Squat',29.4,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/Corporate-Caps-1.jpg',1,2),('Side Flex',10.8,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',1,3)," +
-                                                         "('Side Peak',23.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',1,4),('Side Breaker',20.6,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,1)," +
-                                                         "('Side Pounder',21.7,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,2),('Side Trucker',12.0,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/17Red-White.jpg',2,3)," +
-                                                         "('Side Trilby',25.9,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/pac10602.jpg',2,4),('Bottom Crump',26.9,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/pac10601_black.jpg',1,1)," +
-                                                         "('Bottom Squat',22.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',1,2),('Bottom Flex',19.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/186_53.jpg',1,3)," +
-                                                         "('Bottom Peak',24.9,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/17Red-White.jpg',1,4),('Bottom Breaker',11.4,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,1)," +
-                                                         "('Bottom Pounder',11.9,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/007-WH-ROY.jpg',2,2),('Bottom Trucker',22.1,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Corporate-Caps-1.jpg',2,3)," +
-                                                         "('Bottom Trilby',16.7,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/long_peak_cap_2.jpg',2,4),('Dour Crump',20.3,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/bamboo-507-ivy-cap.jpg',1,1)," +
-                                                         "('Dour Squat',14.7,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/bamboo-507-ivy-cap.jpg',1,2),('Dour Flex',24.5,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/186_53.jpg',1,3)," +
-                                                         "('Dour Peak',20.4,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Corporate-Caps-1.jpg',1,4),('Dour Breaker',20.1,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/bamboo-507-ivy-cap.jpg',2,1)," +
-                                                         "('Dour Pounder',10.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/GL-271-RED.jpg',2,2),('Dour Trucker',25.0,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/pac10602.jpg',2,3)," +
-                                                         "('Dour Trilby',20.7,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/GL-271-RED.jpg',2,4),('Bold Crump',22.8,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Corporate-Caps-1.jpg',1,1)," +
-                                                         "('Bold Squat',14.6,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/best-caps-20.jpg',1,2),('Bold Flex',26.2,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',1,3)," +
-                                                         "('Bold Peak',21.6,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/GL-271-RED.jpg',1,4),('Bold Breaker',19.3,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/186_53.jpg',2,1)," +
-                                                         "('Bold Pounder',19.1,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/186_53.jpg',2,2),('Bold Trucker',23.2,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',2,3)," +
-                                                         "('Bold Trilby',16.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,4),('Tall Crump',16.5,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/pac10601_black.jpg',1,1)," +
-                                                         "('Tall Squat',22.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/17Red-White.jpg',1,2),('Tall Flex',10.7,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',1,3)," +
-                                                         "('Tall Peak',18.7,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',1,4),('Tall Breaker',11.2,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/pac10602.jpg',2,1)," +
-                                                         "('Tall Pounder',28.5,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/GL-271-RED.jpg',2,2),('Tall Trucker',15.1,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,3)," +
-                                                         "('Tall Trilby',14.5,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,4),('Wide Crump',21.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/pac10602.jpg',1,1)," +
-                                                         "('Wide Squat',19.8,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/long_peak_cap_2.jpg',1,2),('Wide Flex',15.0,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/hi-vis-cap-4356.jpg',1,3)," +
-                                                         "('Wide Peak',18.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/Corporate-Caps-1.jpg',1,4),('Wide Breaker',25.6,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,1)," +
-                                                         "('Wide Pounder',14.2,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',2,2),('Wide Trucker',22.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Corporate-Caps-1.jpg',2,3)," +
-                                                         "('Wide Trilby',24.0,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',2,4),('Sassy Crump',10.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/pac10602.jpg',1,1)," +
-                                                         "('Sassy Squat',30.0,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/best-caps-20.jpg',1,2),('Sassy Flex',19.2,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',1,3)," +
-                                                         "('Sassy Peak',29.0,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',1,4),('Sassy Breaker',12.2,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',2,1);" +
+                                                         "('Top Crump',28.1,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',{0},{2}),('Top Squat',11.9,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/GL-271-RED.jpg',{0},{2})," +
+                                                         "('Top Flex',29.6,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/Corporate-Caps-1.jpg',{0},{2}),('Top Peak',22.9,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/007-WH-ROY.jpg',{0},{2})," +
+                                                         "('Top Breaker',16.8,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/Corporate-Caps-1.jpg',{0},{2})," +
+                                                         "('Top Pounder',27.5,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/best-caps-20.jpg',{0},{2}),('Top Trucker',25.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/best-caps-20.jpg',{0},{5})," +
+                                                         "('Top Trilby',12.7,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/pac10601_black.jpg',{0},{2}),('Side Crump',21.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/hi-vis-cap-4356.jpg',{1},{5})," +
+                                                         "('Side Squat',29.4,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/Corporate-Caps-1.jpg',{0},{2}),('Side Flex',10.8,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',{0},{5})," +
+                                                         "('Side Peak',23.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',{0},{2}),('Side Breaker',20.6,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',{0},{5})," +
+                                                         "('Side Pounder',21.7,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',{0},{2}),('Side Trucker',12.0,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/17Red-White.jpg',{0},{5})," +
+                                                         "('Side Trilby',25.9,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/pac10602.jpg',{0},{2}),('Bottom Crump',26.9,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/pac10601_black.jpg',{0},{4})," +
+                                                         "('Bottom Squat',22.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',{0},{2}),('Bottom Flex',19.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/186_53.jpg',{0},{4})," +
+                                                         "('Bottom Peak',24.9,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/17Red-White.jpg',{0},{2}),('Bottom Breaker',11.4,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',{0},{4})," +
+                                                         "('Bottom Pounder',11.9,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/007-WH-ROY.jpg',{0},{2}),('Bottom Trucker',22.1,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Corporate-Caps-1.jpg',{0},{4})," +
+                                                         "('Bottom Trilby',16.7,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/long_peak_cap_2.jpg',{0},{2}),('Dour Crump',20.3,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/bamboo-507-ivy-cap.jpg',{0},{4})," +
+                                                         "('Dour Squat',14.7,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/bamboo-507-ivy-cap.jpg',{0},{3}),('Dour Flex',24.5,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/186_53.jpg',{0},{4})," +
+                                                         "('Dour Peak',20.4,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Corporate-Caps-1.jpg',{0},{3}),('Dour Breaker',20.1,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/bamboo-507-ivy-cap.jpg',{0},{4})," +
+                                                         "('Dour Pounder',10.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/GL-271-RED.jpg',{0},{3}),('Dour Trucker',25.0,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/pac10602.jpg',{0},{4})," +
+                                                         "('Dour Trilby',20.7,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/GL-271-RED.jpg',{0},{3}),('Bold Crump',22.8,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Corporate-Caps-1.jpg',{0},{4})," +
+                                                         "('Bold Squat',14.6,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/best-caps-20.jpg',{1},{3}),('Bold Flex',26.2,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',{0},{4})," +
+                                                         "('Bold Peak',21.6,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/GL-271-RED.jpg',{1},{3}),('Bold Breaker',19.3,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/186_53.jpg',{0},{4})," +
+                                                         "('Bold Pounder',19.1,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/186_53.jpg',{1},{3}),('Bold Trucker',23.2,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',{0},{4})," +
+                                                         "('Bold Trilby',16.3,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',{1},{3}),('Tall Crump',16.5,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/pac10601_black.jpg',{1},{4})," +
+                                                         "('Tall Squat',22.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/17Red-White.jpg',{1},{3}),('Tall Flex',10.7,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',{1},{4})," +
+                                                         "('Tall Peak',18.7,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/Cotton_Twill_Baseball_Caps_royalblue.jpg',{1},{3}),('Tall Breaker',11.2,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/pac10602.jpg',{1},{4})," +
+                                                         "('Tall Pounder',28.5,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/GL-271-RED.jpg',{1},{3}),('Tall Trucker',15.1,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',{1},{4})," +
+                                                         "('Tall Trilby',14.5,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',{1},{3}),('Wide Crump',21.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/pac10602.jpg',{1},{4})," +
+                                                         "('Wide Squat',19.8,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/long_peak_cap_2.jpg',{1},{3}),('Wide Flex',15.0,'This traditional garb will leave you the envy of your peers, jealously longing for the hedonistic nostalga of their fashion youth.','~/UploadFiles/hi-vis-cap-4356.jpg',{1},{4})," +
+                                                         "('Wide Peak',18.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/Corporate-Caps-1.jpg',{1},{3}),('Wide Breaker',25.6,'The romantic Lorum Ipsum of caps, your partner will fall in love with it and never let you wear it again.','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',{1},{4})," +
+                                                         "('Wide Pounder',14.2,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/ws-sandwich-peak-cap-CH18__35122_zoom.jpg',{1},{4}),('Wide Trucker',22.9,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/Corporate-Caps-1.jpg',{1},{4})," +
+                                                         "('Wide Trilby',24.0,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',{1},{4}),('Sassy Crump',10.8,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/pac10602.jpg',{1},{4})," +
+                                                         "('Sassy Squat',30.0,'A plain and simple jane of headwear, unshabby and inoffensive to peers, coworkers and family. ','~/UploadFiles/best-caps-20.jpg',{1},{4}),('Sassy Flex',19.2,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',{1},{4})," +
+                                                         "('Sassy Peak',29.0,'A pleasant look for the refined taste individual, screaming ''notice me senpai'' while not too loud.','~/UploadFiles/best-caps-20.jpg',{1},{4}),('Sassy Breaker',12.2,'A traditional style, this peak shall have you dapper and prim at every old-fashioned club and speak-easy you smuggle yourself into.','~/UploadFiles/best-caps-20.jpg',{1},{4});" +
                                                          "END ";
-        
+
+        private readonly string _insertDefaultOrders = "if (select count(id) from dbo.CustomerOrder) = 0 BEGIN " +
+                                                "insert into CustomerOrder (userId, status, datePlaced) values({0}, 'waiting', GETDATE()); " +
+                                                "END ";
+
+        private readonly string _insertDefaultOrderItems = "if (select count(orderId) from dbo.OrderItem) = 0 BEGIN " +
+                                                "insert into OrderItem (orderId, capId, colourId, quantity) " + 
+                                                "values({0}, {1}, {2}, 4)," +
+                                                "({0}, {3}, {4}, 3); " +
+                                                "END ";
+
         private readonly string _selectAllCustomers = "Select * from SiteUser where userType='C';";
 
         private readonly string _selectAllAdmins = "Select * from SiteUser where userType='A';";
@@ -172,7 +189,7 @@ namespace DataLayer
 
         private readonly string _selectSingleCapById = "Select * from Cap where id=?;";
 
-        private readonly string _insertCap = "insert into Cap (name, price, description, imageUrl, categoryId, supplierId) values (?, ?, ?);";
+        private readonly string _insertCap = "insert into Cap (name, price, description, imageUrl, categoryId, supplierId) values (?, ?, ?, ?, ?, ?);";
 
         private readonly string _updateCap = "update Cap set name=?, price=?, description=?, imageUrl=?, categoryId=?, supplierId=? where id=?;";
 
@@ -241,11 +258,82 @@ namespace DataLayer
             dbCommand = new OleDbCommand(_insertDefaultUserAdmin, _connection);
             RunDbCommandNoResults(dbCommand);
 
+            dbCommand = new OleDbCommand(_insertDefaultUserCustomers, _connection);
+            RunDbCommandNoResults(dbCommand);
+
             dbCommand = new OleDbCommand(_insertDefaultSuppliers, _connection);
             RunDbCommandNoResults(dbCommand);
 
-            dbCommand = new OleDbCommand(_insertDefaultProducts, _connection);
+            int[] categoryIds = new int[4];
+            int[] supplierIds = new int[2];
+
+            try
+            {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
+                categoryIds[0] = Convert.ToInt32((new OleDbCommand("select id from Category where name like'Children%'", _connection)).ExecuteScalar());
+                categoryIds[1] = Convert.ToInt32((new OleDbCommand("select id from Category where name like'Men%'", _connection)).ExecuteScalar());
+                categoryIds[2] = Convert.ToInt32((new OleDbCommand("select id from Category where name like'Women%'", _connection)).ExecuteScalar());
+                categoryIds[3] = Convert.ToInt32((new OleDbCommand("select id from Category where name like'Business%'", _connection)).ExecuteScalar());
+                supplierIds[0] = Convert.ToInt32((new OleDbCommand("select id from Supplier where name like 'Alto%'", _connection)).ExecuteScalar());
+                supplierIds[1] = Convert.ToInt32((new OleDbCommand("select id from Supplier where name like 'Escobar%'", _connection)).ExecuteScalar());
+
+            }
+            finally
+            {
+                _connection.Close();
+            }
+
+            dbCommand = new OleDbCommand(String.Format(_insertDefaultProducts, supplierIds[0], supplierIds[1], categoryIds[0], categoryIds[1], categoryIds[2], categoryIds[3] ), _connection);
             RunDbCommandNoResults(dbCommand);
+
+            int id;
+            int capIdFirst;
+            int capIdSecond;
+            int colourIdFirst;
+            int colourIdSecond;
+
+            try
+            {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
+                id = Convert.ToInt32((new OleDbCommand("select id from SiteUser where login='Customer111'", _connection)).ExecuteScalar());
+            }
+            finally
+            {
+                _connection.Close();
+            }
+
+            dbCommand = new OleDbCommand(String.Format(_insertDefaultOrders, id), _connection);
+            RunDbCommandNoResults(dbCommand);
+
+            try
+            {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
+                id = Convert.ToInt32((new OleDbCommand("select co.id from CustomerOrder co JOIN SiteUser su ON su.id=co.userId where su.login='Customer111'", _connection)).ExecuteScalar());
+                capIdFirst = Convert.ToInt32((new OleDbCommand("select id from cap where name = 'Dour Trilby'", _connection)).ExecuteScalar());
+                capIdSecond = Convert.ToInt32((new OleDbCommand("select id from cap where name = 'Top Breaker'", _connection)).ExecuteScalar());
+                colourIdFirst = Convert.ToInt32((new OleDbCommand("select id from colour where name = 'Blue'", _connection)).ExecuteScalar());
+                colourIdSecond = Convert.ToInt32((new OleDbCommand("select id from colour where name = 'Red'", _connection)).ExecuteScalar());
+            }
+            finally
+            {
+                _connection.Close();
+            }
+
+            dbCommand = new OleDbCommand(String.Format(_insertDefaultOrderItems, id, capIdFirst, colourIdFirst, capIdSecond, colourIdSecond), _connection);
+            RunDbCommandNoResults(dbCommand);
+            
         }
 
         /// <summary>
