@@ -179,6 +179,8 @@ public partial class AdminOrders : Page
             // Only updating (no Inserts or Deletes), therefore sidebar contents will not change.
             Reload_Sidebar();
 
+            ddlOrderStatus.Enabled = false;
+
             lblMessageJumboTron.Text = "SUCCESS: Order updated: " +
                                        lblOrderId.Text + ", " + ddlOrderStatus.Items[ddlOrderStatus.SelectedIndex].Text;
         }
