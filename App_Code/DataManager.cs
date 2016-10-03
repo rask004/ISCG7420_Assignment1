@@ -57,15 +57,15 @@ namespace DataLayer
                                                        "Constraint  orderItem_pk    Primary Key(colourId, capId, orderId)); END ";
 
         private readonly string _insertDefaultUserAdmin = "if (select count(id) from dbo.SiteUser where UserType='A') = 0 BEGIN " +
-                                                          "insert into SiteUser (login, password, userType, emailAddress) Values('Adin_Testing', " +
+                                                          "insert into SiteUser (login, password, userType, emailAddress) Values('Admin_Testing', " +
                                                           "'001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'A', 'AskewR04@myunitec.ac.nz'); " +
                                                           "END ";
 
         private readonly string _insertDefaultUserCustomers = "if (select count(id) from dbo.SiteUser where UserType='C') = 0 BEGIN " +
                                                           "insert into SiteUser (firstName, lastName, userType, login, password, emailAddress, homeNumber, workNumber, mobileNumber, streetAddress, suburb, city, isDisabled ) " + 
-                                                          "Values('Harry','Bloggs','C','Customer111','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0)," +
-                                                          "('Harry','Bloggs','C','SuspendedCustomer','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',1); " +
-                                                          "('Maude','Shaun','C','Customer222','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'AskewR04@myunitec.ac.nz','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0); " +
+                                                          "Values('Harry','Bloggs','C','Customer111','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'myCustomer111@mail.com','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0)," +
+                                                          "('Harry','Bloggs','C','SuspendedCustomer','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'myCustomer122@mail.com','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',1), " +
+                                                          "('Maude','Shaun','C','Customer222','001E26C5EA9AD6B9BC9E287C299B08559BFB34C5', 'myCustomer222@mail.com','095555555','095555555','0220555555','111 Evans Road','Pt Chevalier','Auckland',0); " +
                                                           "END ";
 
         private readonly string _insertDefaultColours = "if (select count(id) from dbo.Colour) = 0 BEGIN " +
@@ -118,14 +118,14 @@ namespace DataLayer
                                                          "END ";
 
         private readonly string _insertDefaultOrders = "if (select count(id) from dbo.CustomerOrder) = 0 BEGIN " +
-                                                "insert into CustomerOrder (userId, status, datePlaced) values(3, 'waiting',GETDATE()); " +
+                                                "insert into CustomerOrder (userId, status, datePlaced) values({0}, 'waiting', GETDATE()); " +
                                                 "END ";
 
-        private readonly string _insertDefaultOrderItems = "if (select count(id) from dbo.CustomerOrder) = 0 BEGIN " +
+        private readonly string _insertDefaultOrderItems = "if (select count(orderId) from dbo.OrderItem) = 0 BEGIN " +
                                                 "insert into OrderItem (orderId, capId, colourId, quantity) " + 
-                                                "values(1, 7, 2, 2); " +
-                                                "(1, 4, 2, 1); " +
-                                                "(1, 2, 4, 4); " +
+                                                "values({0}, {1}, 5, 2), " +
+                                                "({0}, {1}, 2, 1), " +
+                                                "({0}, {1}, 4, 4); " +
                                                 "END ";
 
         private readonly string _selectAllCustomers = "Select * from SiteUser where userType='C';";
@@ -190,7 +190,7 @@ namespace DataLayer
 
         private readonly string _selectSingleCapById = "Select * from Cap where id=?;";
 
-        private readonly string _insertCap = "insert into Cap (name, price, description, imageUrl, categoryId, supplierId) values (?, ?, ?);";
+        private readonly string _insertCap = "insert into Cap (name, price, description, imageUrl, categoryId, supplierId) values (?, ?, ?, ?, ?, ?);";
 
         private readonly string _updateCap = "update Cap set name=?, price=?, description=?, imageUrl=?, categoryId=?, supplierId=? where id=?;";
 
@@ -267,6 +267,45 @@ namespace DataLayer
 
             dbCommand = new OleDbCommand(_insertDefaultProducts, _connection);
             RunDbCommandNoResults(dbCommand);
+
+            int id;
+            int capId;
+
+            try
+            {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
+                id = Convert.ToInt32((new OleDbCommand("select id from SiteUser where login='Customer111'", _connection)).ExecuteScalar());
+            }
+            finally
+            {
+                _connection.Close();
+            }
+
+            dbCommand = new OleDbCommand(String.Format(_insertDefaultOrders, id), _connection);
+            RunDbCommandNoResults(dbCommand);
+
+            try
+            {
+                if (_connection.State != ConnectionState.Open)
+                {
+                    _connection.Open();
+                }
+
+                id = Convert.ToInt32((new OleDbCommand("select co.id from CustomerOrder co JOIN SiteUser su ON su.id=co.userId where su.login='Customer111'", _connection)).ExecuteScalar());
+                capId = Convert.ToInt32((new OleDbCommand("select id from cap where name = 'Dour Trilby'", _connection)).ExecuteScalar());
+            }
+            finally
+            {
+                _connection.Close();
+            }
+
+            dbCommand = new OleDbCommand(String.Format(_insertDefaultOrderItems, id, capId), _connection);
+            RunDbCommandNoResults(dbCommand);
+            
         }
 
         /// <summary>
