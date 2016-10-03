@@ -126,7 +126,7 @@ public partial class _Default : Page
         else
         {
             lblCurrentProductPage.Visible = true;
-            lblCurrentProductPage.Text = (AvailableProductsCurrentPageIndex + 1).ToString();
+            lblCurrentProductPage.Text = "Page " + datasource.PageCount.ToString() + " Of " + (AvailableProductsCurrentPageIndex + 1).ToString();
             btnPreviousProductPage.Visible = !datasource.IsFirstPage;
             btnNextProductPage.Visible = !datasource.IsLastPage;
         }
