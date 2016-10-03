@@ -199,7 +199,7 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight">
-                            <asp:TextBox ID="txtCapDescription" Rows="3" Enabled="false" runat="server" />
+                            <asp:TextBox ID="txtCapDescription" Rows="3" Enabled="false" TextMode="MultiLine" runat="server" />
                         </span>
     </div>
     <div class="col-md-2">
@@ -247,7 +247,7 @@
     </div>
     <div class="col-md-4">
         <span class="ContentShiftRight">
-                            <img style="max-height: 100%; max-width: 100%;" ID="imgCapImagePreview" 
+                            <img style="height: 100%; width: 100%; max-height: 100%; max-width: 100%;" ID="imgCapImagePreview" 
                             src="~\Images\Cap_NoImage.png" runat="server" />
                         </span>
     </div>
